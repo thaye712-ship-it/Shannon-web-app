@@ -25,6 +25,7 @@
     <span class="wordmark">Shannon</span>
   </button>
   <div class="topbar-right">
+    <button class="navlink" id="galleryBtn">Products</button>
     <button class="navlink" id="aboutBtn">About</button>
     <div class="topstats">
       <div class="stat" id="streakStat" title="Day streak">
@@ -89,6 +90,19 @@
       </button>
     </div>
 
+    <h2 class="section-label">Just want to browse?</h2>
+    <button class="mode-card mode-flash" data-start="flash">
+      <span class="mode-emoji">🃏</span>
+      <span class="mode-time">No timer, no score</span>
+      <span class="mode-name">Flashcards</span>
+      <span class="mode-desc">
+        Flip through every piece at your own pace. Photo on the front, the full
+        story on the back. Mark what you already know.
+      </span>
+      <span class="mode-tags"><i>Photo front</i><i>Self-paced</i><i>Track what you know</i></span>
+      <span class="mode-go">Start browsing <span class="arrow">→</span></span>
+    </button>
+
     <h2 class="section-label">Your mastery</h2>
     <div class="mastery" data-mastery></div>
 
@@ -121,11 +135,13 @@
       <p>
         For each piece: who designed it, what manufacturer makes it, what year
         it was introduced, the design movement it belongs to, what it is made
-        of, and a short piece of history worth repeating to a customer. A
-        separate materials and construction glossary covers vocabulary that
-        spans the assortment — cantilever frames, molded plywood, cane
-        webbing, tubular steel, powder coating, outdoor teak — so an associate
-        can explain how a piece is made, not only who made it.
+        of, and a short piece of history worth repeating to a customer — plus
+        recognizing it on sight, since a Photo ID question and the flashcard
+        deck both use the real product photo. A separate materials and
+        construction glossary covers vocabulary that spans the assortment —
+        cantilever frames, molded plywood, cane webbing, tubular steel,
+        powder coating, outdoor teak — so an associate can explain how a
+        piece is made, not only who made it.
       </p>
     </div>
 
@@ -170,17 +186,28 @@
           the browser. It does not sync across devices.</li>
         <li>There is no manager dashboard yet, so completion cannot currently
           be tracked across a team.</li>
-        <li>Not connected to dwr.com — no live pricing, inventory, or content
-          is pulled from the production site.</li>
+        <li>Product photos are hotlinked directly from DWR's own image
+          hosting so the Photo ID quiz and flashcards show the real piece,
+          but no pricing, inventory, or other content is pulled from the
+          production site.</li>
       </ul>
     </div>
 
     <button class="btn primary wide" data-back>Back to training</button>
   </section>
 
+  <!-- ============ QUIZ TOPIC PICKER ============ -->
+  <section class="screen" id="screen-topics">
+    <button class="back" data-back>← Back</button>
+    <h1 class="screen-title">What should this cover?</h1>
+    <p class="screen-sub">Pick as many as you like. Leave everything on for a full mix, or narrow it down to drill one thing.</p>
+    <div class="topic-picks" data-topic-picks></div>
+    <button class="btn primary wide" data-topics-continue>Continue <span class="arrow">→</span></button>
+  </section>
+
   <!-- ============ DEEP DIVE SETUP ============ -->
   <section class="screen" id="screen-setup">
-    <button class="back" data-back>← Back</button>
+    <button class="back" data-back-topics>← Back</button>
     <h1 class="screen-title">How long have you got?</h1>
     <p class="screen-sub">Both cover the same catalog. The longer one just goes deeper and quizzes more.</p>
     <div class="lengths">
@@ -194,6 +221,32 @@
         <span class="len-meta">7 chapters · 49 questions</span>
         <span class="len-desc">The full tour. Every product in this batch, plus the materials vocabulary.</span>
       </button>
+    </div>
+  </section>
+
+  <!-- ============ PRODUCT GALLERY ============ -->
+  <section class="screen" id="screen-gallery">
+    <button class="back" data-back>← Back</button>
+    <h1 class="screen-title">The catalog</h1>
+    <p class="screen-sub">Every piece currently in training, with a photo where DWR has one listed.</p>
+    <div class="gallery-grid" data-gallery></div>
+  </section>
+
+  <!-- ============ FLASHCARDS ============ -->
+  <section class="screen" id="screen-flash">
+    <div class="quiz-head">
+      <button class="back" data-quit>✕</button>
+      <div class="progress-line"><div class="progress-fill" data-flash-progress></div></div>
+      <div class="q-count" data-flash-count>1/65</div>
+    </div>
+    <div class="flash-wrap" data-flash-card></div>
+    <div class="flash-nav">
+      <button class="btn ghost" data-flash-prev>← Previous</button>
+      <button class="btn ghost" data-flash-next>Next →</button>
+    </div>
+    <div class="flash-mark">
+      <button class="btn mark-unknown" data-flash-unknown>😅 Still learning</button>
+      <button class="btn mark-known" data-flash-known>✅ Know it</button>
     </div>
   </section>
 
@@ -231,6 +284,7 @@
     </div>
 
     <div class="q-topic" data-q-topic>History &amp; Story</div>
+    <div class="q-photo" data-q-photo hidden><img data-q-photo-img alt=""></div>
     <h2 class="q-prompt" data-q-prompt></h2>
     <div class="answers" data-answers></div>
 

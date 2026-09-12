@@ -330,6 +330,11 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
   color:var(--grape);font-weight:700;font-size:12px
 }
 @media (prefers-color-scheme:dark){.q-topic{color:#C9B4FF}}
+.q-photo{
+  margin:0 0 16px;border-radius:var(--r-lg);overflow:hidden;max-width:340px;
+  background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)
+}
+.q-photo img{width:100%;display:block;aspect-ratio:4/3;object-fit:contain;background:#fff}
 .q-prompt{
   font-family:var(--display);font-weight:800;
   font-size:clamp(23px,5.6vw,32px);line-height:1.2;letter-spacing:-.02em;margin:0 0 22px
@@ -473,6 +478,60 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 .rev-a b{color:var(--mint)}
 .rev-empty{padding:22px;border-radius:var(--r-md);background:color-mix(in srgb,var(--mint) 13%,transparent);text-align:center;font-weight:700}
 .result-actions{display:grid;gap:11px}
+
+/* ---------- quiz topic picker ---------- */
+.topic-picks{display:grid;gap:10px;margin-bottom:24px}
+.topic-pick{
+  display:flex;align-items:center;gap:11px;padding:14px 16px;border-radius:var(--r-md);
+  background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);
+  cursor:pointer;font-weight:700;font-size:14.5px
+}
+.topic-pick input{width:19px;height:19px;accent-color:var(--grape);flex:none}
+.topic-pick-emoji{font-size:17px;line-height:1}
+
+/* ---------- product gallery ---------- */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px}
+.gallery-card{
+  border-radius:var(--r-md);background:var(--card);border:1px solid var(--line);
+  box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1)
+}
+.gallery-card:hover{transform:translateY(-3px)}
+.gallery-photo{width:100%;aspect-ratio:1;object-fit:contain;background:#fff;display:block}
+.gallery-noimg{width:100%;aspect-ratio:1;display:grid;place-items:center;font-size:34px;background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.gallery-info{padding:10px 12px;display:grid;gap:2px}
+.gallery-info b{font-size:13px;line-height:1.3}
+.gallery-info span{font-size:11.5px;color:var(--ink-soft)}
+
+/* ---------- flashcards ---------- */
+.flash-wrap{perspective:1400px;min-height:56vh;display:flex;align-items:center;justify-content:center;padding:10px 0}
+.flashcard{
+  position:relative;width:100%;max-width:420px;aspect-ratio:3/4;cursor:pointer;
+  transform-style:preserve-3d;transition:transform .5s cubic-bezier(.22,1,.36,1)
+}
+.flashcard.is-flipped{transform:rotateY(180deg)}
+.flash-face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:var(--r-xl);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-lg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:26px;text-align:center;overflow:auto
+}
+.flash-front{gap:6px}
+.flash-photo{max-width:100%;max-height:65%;object-fit:contain;background:#fff;border-radius:var(--r-md);margin-bottom:14px}
+.flash-noimg{font-size:64px;margin-bottom:10px}
+.flash-hint{margin:0;font-size:13px;color:var(--ink-soft);font-weight:600}
+.flash-back{transform:rotateY(180deg);align-items:flex-start;text-align:left;justify-content:flex-start;gap:6px}
+.flash-back h3{font-family:var(--display);font-weight:800;font-size:clamp(22px,5.6vw,28px);margin:0;line-height:1.1}
+.flash-sub{margin:0;font-size:13px;font-weight:600;color:var(--grape)}
+@media (prefers-color-scheme:dark){.flash-sub{color:#C9B4FF}}
+.flash-body{margin:4px 0 6px;font-size:14px;line-height:1.6;color:var(--ink-soft)}
+.flash-nav{display:flex;gap:11px;margin-top:16px}
+.flash-nav .btn{flex:1}
+.flash-mark{display:flex;gap:11px;margin-top:11px}
+.flash-mark .btn{flex:1}
+.mark-known{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.mark-unknown{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.mark-known.active{background:var(--mint);color:#04372A;border-color:transparent}
 
 /* ---------- responsive ---------- */
 @media (min-width:640px){

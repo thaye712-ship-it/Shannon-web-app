@@ -16,6 +16,7 @@ const CATALOG = {
   products: [
     {
       id: 'eames-lounge',
+      photo: "https://images.hermanmiller.group/asset/71f5a747-9615-4ed1-a54a-68fecc55c5c9/W/WS_ELO_5667_100077567.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Eames Lounge Chair and Ottoman',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',
@@ -38,6 +39,7 @@ const CATALOG = {
     },
     {
       id: 'eames-molded-plastic',
+      photo: "https://images.hermanmiller.group/m/4fac97ea917e9f62/W-HM_2552200_100366391_cocoa_chrome_walnut_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Eames Molded Plastic Armchair',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',
@@ -60,6 +62,7 @@ const CATALOG = {
     },
     {
       id: 'eames-wire',
+      photo: "https://images.hermanmiller.group/m/9c287f893071866a/W-HM_519_100068558_black_black_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Eames Wire Chair',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',
@@ -82,6 +85,7 @@ const CATALOG = {
     },
     {
       id: 'eames-aluminum-group',
+      photo: "https://images.hermanmiller.group/asset/5bd8699d-5903-4f3b-9fab-9733ba6c4bac/W/HM_841_425698_white_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Eames Aluminum Group Management Chair',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',
@@ -104,6 +108,7 @@ const CATALOG = {
     },
     {
       id: 'noguchi-table',
+      photo: "https://images.hermanmiller.group/m/22104549db2c5204/W-OCC_32058_20170721141830739.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Noguchi Table',
       designer: 'Isamu Noguchi',
       manufacturer: 'Herman Miller',
@@ -126,6 +131,7 @@ const CATALOG = {
     },
     {
       id: 'nelson-bench',
+      photo: "https://images.hermanmiller.group/asset/6a36c688-8e57-4b4b-8d25-904324e372ac/W/LI_NEL_P_20120715_176.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Nelson Platform Bench',
       designer: 'George Nelson',
       manufacturer: 'Herman Miller',
@@ -147,6 +153,7 @@ const CATALOG = {
     },
     {
       id: 'nelson-bubble-lamp',
+      photo: "https://images.hermanmiller.group/asset/b7ae9f8d-eb75-412b-9e89-89187cc0cb18/W/HM_6241_101738_white_f3.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Nelson Bubble Lamp (Saucer)',
       designer: 'George Nelson',
       manufacturer: 'Herman Miller',
@@ -169,6 +176,7 @@ const CATALOG = {
     },
     {
       id: 'barcelona-chair',
+      photo: "https://images.hermanmiller.group/asset/d5d43a76-fdb3-4d6c-9931-61c4d255b288/W/DWR_1318_100079557_tan_a.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Barcelona Chair',
       designer: 'Ludwig Mies van der Rohe and Lilly Reich',
       manufacturer: 'Knoll',
@@ -191,6 +199,7 @@ const CATALOG = {
     },
     {
       id: 'womb-chair',
+      photo: "https://images.hermanmiller.group/asset/d59faaf6-5be8-4b84-87dc-9c0e58daade2/W/DWR_7876_100360310_puff_cloud_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Womb Chair',
       designer: 'Eero Saarinen',
       manufacturer: 'Knoll',
@@ -213,6 +222,7 @@ const CATALOG = {
     },
     {
       id: 'saarinen-tulip-table',
+      photo: "https://images.hermanmiller.group/asset/35d4d8ca-3f8f-480c-9e53-d774ce1e6503/W/KNO_7204_100801207_oval_78_emperador_light_cream_f.png",
       name: 'Saarinen Dining Table',
       designer: 'Eero Saarinen',
       manufacturer: 'Knoll',
@@ -235,6 +245,7 @@ const CATALOG = {
     },
     {
       id: 'bertoia-diamond',
+      photo: "https://images.hermanmiller.group/m/20e16212ed67c314/W-KNO_463_100496928_air_a.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Bertoia Diamond Chair',
       designer: 'Harry Bertoia',
       manufacturer: 'Knoll',
@@ -257,6 +268,7 @@ const CATALOG = {
     },
     {
       id: 'wassily-chair',
+      photo: "https://images.hermanmiller.group/m/5dbcaaf6f152102d/W-KNO_7852_100547487_black_black_a.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Wassily Chair (Model B3)',
       designer: 'Marcel Breuer',
       manufacturer: 'Knoll',
@@ -279,6 +291,7 @@ const CATALOG = {
     },
     {
       id: 'cesca-chair',
+      photo: "https://images.hermanmiller.group/asset/e216ba27-43db-403b-88bc-d78316fdc51d/W/KNO_2020_341943_natural_beech_chrome_a-tif.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Cesca Chair',
       designer: 'Marcel Breuer',
       manufacturer: 'Knoll',
@@ -301,6 +314,7 @@ const CATALOG = {
     },
     {
       id: 'risom-lounge',
+      photo: "https://images.hermanmiller.group/m/549504ad223c12c0/W-DWR_2210_7119_FRAME_walnut_WEBBING_black-jpg.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Risom Lounge Chair',
       designer: 'Jens Risom',
       manufacturer: 'Knoll',
@@ -322,6 +336,7 @@ const CATALOG = {
     },
     {
       id: 'platner-collection',
+      photo: "https://images.hermanmiller.group/m/691a886381301079/W-DWR_1570_100208777_nickel_knoll_velvet_marina_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Platner Lounge Chair and Table',
       designer: 'Warren Platner',
       manufacturer: 'Knoll',
@@ -344,6 +359,7 @@ const CATALOG = {
     },
     {
       id: 'lc4-chaise',
+      photo: "https://images.hermanmiller.group/m/b169b147e945d8e6/W-DWR_6515_100130924_cowhide_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'LC4 Chaise Longue',
       designer: 'Le Corbusier, Pierre Jeanneret, and Charlotte Perriand',
       manufacturer: 'Cassina',
@@ -366,6 +382,7 @@ const CATALOG = {
     },
     {
       id: 'wishbone-chair',
+      photo: "https://images.hermanmiller.group/m/438cc11b4ce10460/W-DWR_2582_516396_oak_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Wishbone Chair (CH24)',
       designer: 'Hans Wegner',
       manufacturer: 'Carl Hansen & Søn',
@@ -388,6 +405,7 @@ const CATALOG = {
     },
     {
       id: 'series-7',
+      photo: "https://images.hermanmiller.group/asset/d629fbc1-c57a-4203-83cf-13c940c9306d/W/DWR_7318_100663657_lacquered_blue_chromed_f-tif.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Series 7 Chair',
       designer: 'Arne Jacobsen',
       manufacturer: 'Fritz Hansen',
@@ -409,6 +427,7 @@ const CATALOG = {
     },
     {
       id: 'egg-chair',
+      photo: "https://images.hermanmiller.group/asset/4ab1bb8e-88d3-495b-9e60-68c26b027b9d/W/DWR_1390_270953_black_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Egg Chair',
       designer: 'Arne Jacobsen',
       manufacturer: 'Fritz Hansen',
@@ -430,6 +449,7 @@ const CATALOG = {
     },
     {
       id: 'swan-chair',
+      photo: "https://images.hermanmiller.group/asset/72aac65b-651e-4bf2-9b3f-2df29d4beffe/W/DWR_7501_100521366_atom_green_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Swan Chair',
       designer: 'Arne Jacobsen',
       manufacturer: 'Fritz Hansen',
@@ -451,6 +471,7 @@ const CATALOG = {
     },
     {
       id: 'ant-chair',
+      photo: "https://images.hermanmiller.group/m/979c5c4744afb79c/W-DWR_711_653183_black_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Ant Chair',
       designer: 'Arne Jacobsen',
       manufacturer: 'Fritz Hansen',
@@ -472,6 +493,7 @@ const CATALOG = {
     },
     {
       id: 'panton-chair',
+      photo: "https://images.hermanmiller.group/asset/ce77dce8-324a-4591-b72a-4cd8a350acb2/W/DWR_6044_106412_white_f-tif.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Panton Chair',
       designer: 'Verner Panton',
       manufacturer: 'Vitra',
@@ -494,6 +516,7 @@ const CATALOG = {
     },
     {
       id: 'navy-chair',
+      photo: "https://images.hermanmiller.group/m/1fe5620b36f47231/W-DWR_2122_100281_brushed_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Navy Chair (1006)',
       designer: 'Emeco, developed with Alcoa',
       manufacturer: 'Emeco',
@@ -516,6 +539,7 @@ const CATALOG = {
     },
     {
       id: 'arco-lamp',
+      photo: "https://images.hermanmiller.group/asset/6f050174-9f13-4eaa-af9b-6f90a56074a4/W/DWR_780_158343_steel_grey_p.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f0f0f0&bg=f0f0f0&auto=format&w=1000&h=1000&fit=fill",
       name: 'Arco Floor Lamp',
       designer: 'Achille and Pier Giacomo Castiglioni',
       manufacturer: 'Flos',
@@ -538,6 +562,7 @@ const CATALOG = {
     },
     {
       id: 'ph5-lamp',
+      photo: "https://images.hermanmiller.group/asset/61d08bb5-9402-4a83-9add-d99812fb9620/W/DWR_6013_100738621_blue_chrome_f3.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'PH5 Pendant Lamp',
       designer: 'Poul Henningsen',
       manufacturer: 'Louis Poulsen',
@@ -560,6 +585,7 @@ const CATALOG = {
     },
     {
       id: 'aj-lamp',
+      photo: "https://images.hermanmiller.group/asset/4e17a021-4167-449f-a93a-19b8d6d8e02d/W/DWR_4621_100738616_olive_green_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f0f0f0&bg=f0f0f0&auto=format&w=1000&h=1000&fit=fill",
       name: 'AJ Floor Lamp',
       designer: 'Arne Jacobsen',
       manufacturer: 'Louis Poulsen',
@@ -581,6 +607,7 @@ const CATALOG = {
     },
     {
       id: 'bestlite-bl3',
+      photo: null,
       name: 'Bestlite BL3 Table Lamp',
       designer: 'Robert Dudley Best',
       manufacturer: 'Gubi',
@@ -603,6 +630,7 @@ const CATALOG = {
     },
     {
       id: 'schultz-outdoor',
+      photo: "https://images.hermanmiller.group/asset/67b1000b-4267-4dd6-bd65-0819ff120edd/W/DWR_3777_10002624_onyx_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Schultz 1966 Outdoor Lounge Chair',
       designer: 'Richard Schultz',
       manufacturer: 'Knoll',
@@ -625,6 +653,7 @@ const CATALOG = {
     },
     {
       id: 'tolix-a-chair',
+      photo: null,
       name: 'Tolix Chair A',
       designer: 'Xavier Pauchard',
       manufacturer: 'Tolix',
@@ -647,6 +676,7 @@ const CATALOG = {
     },
     {
       id: 'min-sofa',
+      photo: null,
       name: 'Min Sofa',
       designer: 'DWR Studio',
       manufacturer: 'Design Within Reach',
@@ -669,6 +699,7 @@ const CATALOG = {
     },
     {
       id: 'eames-storage-unit',
+      photo: "https://images.hermanmiller.group/m/86a81230d035578a/W-HM_5280_194884_multi_a.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Eames Storage Unit (ESU)',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',
@@ -691,6 +722,7 @@ const CATALOG = {
     },
     {
       id: 'eames-shell-rocker',
+      photo: "https://images.hermanmiller.group/m/92af71e2ac4c0e8c/W-HM_2197712_100366457_white_chrome_maple_a.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Eames Molded Plastic Armchair, Rocker Base',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',
@@ -713,6 +745,7 @@ const CATALOG = {
     },
     {
       id: 'marshmallow-sofa',
+      photo: "https://images.hermanmiller.group/asset/7c59b182-dfb5-46ac-8c3d-9bd1b695f8c8/W/HM_6230_100590820_alder_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f0f0f0&bg=f0f0f0&auto=format&w=1000&h=1000&fit=fill",
       name: 'Marshmallow Sofa',
       designer: 'George Nelson (Irving Harper)',
       manufacturer: 'Herman Miller',
@@ -735,6 +768,7 @@ const CATALOG = {
     },
     {
       id: 'coconut-chair',
+      photo: "https://images.hermanmiller.group/asset/c7cdf648-9a86-402f-bd59-2529619f6862/W/HM_975_100188160_goldenrod_white_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Coconut Chair',
       designer: 'George Nelson (Irving Harper)',
       manufacturer: 'Herman Miller',
@@ -756,6 +790,7 @@ const CATALOG = {
     },
     {
       id: 'sayl-chair',
+      photo: "https://images.hermanmiller.group/m/37240250314b7974/W-HM_2294_100209035_fog_studio_white_cadet_hghtadjs_a.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Sayl Chair',
       designer: 'Yves Béhar',
       manufacturer: 'Herman Miller',
@@ -778,6 +813,7 @@ const CATALOG = {
     },
     {
       id: 'aeron-chair',
+      photo: "https://images.hermanmiller.group/asset/1008c72d-64bd-4146-905e-3e54dfd39b53/W/HM_2195348_100069170_graphite_f-tif.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Aeron Chair',
       designer: 'Bill Stumpf and Don Chadwick',
       manufacturer: 'Herman Miller',
@@ -800,6 +836,7 @@ const CATALOG = {
     },
     {
       id: 'eames-walnut-stool',
+      photo: "https://images.hermanmiller.group/asset/75d47e3a-e29b-425c-a05a-60ae1ddcaa14/W/HM_237_103701_walnut_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Eames Turned Stool',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',
@@ -822,6 +859,7 @@ const CATALOG = {
     },
     {
       id: 'nelson-ball-clock',
+      photo: "https://images.hermanmiller.group/m/66434da5ad173583/W-HM_1745_110259_multi_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f0f0f0&bg=f0f0f0&auto=format&w=1000&h=1000&fit=fill",
       name: 'Nelson Ball Clock',
       designer: 'George Nelson (Irving Harper)',
       manufacturer: 'Vitra',
@@ -844,6 +882,7 @@ const CATALOG = {
     },
     {
       id: 'pollock-chair',
+      photo: "https://images.hermanmiller.group/asset/3005e654-295c-4537-b7f3-39a5bf443a54/W/DWR_4461_100290232_volo_leather_aluminum_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f0f0f0&bg=f0f0f0&auto=format&w=1000&h=1000&fit=fill",
       name: 'Pollock Executive Chair',
       designer: 'Charles Pollock',
       manufacturer: 'Knoll',
@@ -866,6 +905,7 @@ const CATALOG = {
     },
     {
       id: 'florence-knoll-sofa',
+      photo: "https://images.hermanmiller.group/asset/8eb620a8-bccf-42ca-bc5b-fc58d46e8ffb/W/DWR_4034_452311_volo_leather_black_a.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Florence Knoll Sofa',
       designer: 'Florence Knoll',
       manufacturer: 'Knoll',
@@ -888,6 +928,7 @@ const CATALOG = {
     },
     {
       id: 'barcelona-stool',
+      photo: "https://images.hermanmiller.group/asset/003a5b88-3cd0-49c0-b465-1e50696be314/W/KNO_6823_204316_volo_black_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Barcelona Stool',
       designer: 'Ludwig Mies van der Rohe and Lilly Reich',
       manufacturer: 'Knoll',
@@ -909,6 +950,7 @@ const CATALOG = {
     },
     {
       id: 'brno-chair',
+      photo: "https://images.hermanmiller.group/asset/0bee86dd-1d8d-430f-ab96-ee6a003f2931/W/DWR_4840_207577_black_f.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Brno Chair',
       designer: 'Ludwig Mies van der Rohe',
       manufacturer: 'Knoll',
@@ -931,6 +973,7 @@ const CATALOG = {
     },
     {
       id: 'mr-chair',
+      photo: "https://images.hermanmiller.group/m/46c695bf2e9545be/W-DWR_968_100132443_rattan_a.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'MR Chair',
       designer: 'Ludwig Mies van der Rohe',
       manufacturer: 'Knoll',
@@ -952,6 +995,7 @@ const CATALOG = {
     },
     {
       id: 'saarinen-tulip-armchair',
+      photo: "https://images.hermanmiller.group/asset/c6202920-9357-4b08-a5cb-6896494467e7/W/KNO_7224_100789545_seatpad_cato_brunette_cream_a.png?trim=auto&trim-sd=2&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1200&q=68&h=1200&pad=120&fit=fill",
       name: 'Saarinen Tulip Armchair',
       designer: 'Eero Saarinen',
       manufacturer: 'Knoll',
@@ -973,6 +1017,7 @@ const CATALOG = {
     },
     {
       id: 'drop-chair',
+      photo: "https://images.hermanmiller.group/asset/9ca5657d-f241-4e63-be30-bbc11c6668e7/W/DWR_1206_100702863_black_chrome_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Drop Chair',
       designer: 'Arne Jacobsen',
       manufacturer: 'Fritz Hansen',
@@ -994,6 +1039,7 @@ const CATALOG = {
     },
     {
       id: 'ch07-shell-chair',
+      photo: "https://images.hermanmiller.group/m/3bd69fe3c3ab3c97/W-DWR_7345_516402_walnut_black_a-jpg.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'CH07 Shell Chair',
       designer: 'Hans Wegner',
       manufacturer: 'Carl Hansen & Søn',
@@ -1015,6 +1061,7 @@ const CATALOG = {
     },
     {
       id: 'ch25-lounge',
+      photo: "https://images.hermanmiller.group/m/c036d2e1803946bc/W-DWR_5305_699921_oiled_oak_natural_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'CH25 Lounge Chair',
       designer: 'Hans Wegner',
       manufacturer: 'Carl Hansen & Søn',
@@ -1036,6 +1083,7 @@ const CATALOG = {
     },
     {
       id: 'lc2-armchair',
+      photo: "https://images.hermanmiller.group/m/bab4a7280e6b5de6/W-DWR_4026_100130881_grafite_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=2500&h=2500&q=60&fit=fill&fill=solid",
       name: 'LC2 Petit Modele Armchair',
       designer: 'Le Corbusier, Pierre Jeanneret, and Charlotte Perriand',
       manufacturer: 'Cassina',
@@ -1058,6 +1106,7 @@ const CATALOG = {
     },
     {
       id: 'lc3-sofa',
+      photo: "https://images.hermanmiller.group/m/6b5447cbf3721379/W-DWR_1855_100213213_anthracite_black_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'LC3 Grand Modele Sofa',
       designer: 'Le Corbusier, Pierre Jeanneret, and Charlotte Perriand',
       manufacturer: 'Cassina',
@@ -1079,6 +1128,7 @@ const CATALOG = {
     },
     {
       id: 'ph-artichoke-lamp',
+      photo: "https://images.hermanmiller.group/asset/10c10eb6-2aee-4f26-8557-523f6f4d2636/W/DWR_4215_100668050_smokey_blue-brass_f1.png",
       name: 'PH Artichoke Lamp',
       designer: 'Poul Henningsen',
       manufacturer: 'Louis Poulsen',
@@ -1101,6 +1151,7 @@ const CATALOG = {
     },
     {
       id: 'taccia-lamp',
+      photo: "https://images.hermanmiller.group/m/832e394fdf16b8f3/W-DWR_7532_100127744_black_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Taccia Lamp',
       designer: 'Achille and Pier Giacomo Castiglioni',
       manufacturer: 'Flos',
@@ -1123,6 +1174,7 @@ const CATALOG = {
     },
     {
       id: 'snoopy-lamp',
+      photo: "https://images.hermanmiller.group/m/29f23c00844060ae/W-DWR_2514587_100581698_blue_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Snoopy Lamp',
       designer: 'Achille and Pier Giacomo Castiglioni',
       manufacturer: 'Flos',
@@ -1145,6 +1197,7 @@ const CATALOG = {
     },
     {
       id: 'navy-111-chair',
+      photo: "https://images.hermanmiller.group/m/4b5968d2824c58b0/W-DWR_3773_458382_red_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: '111 Navy Chair',
       designer: 'Emeco, developed with Coca-Cola',
       manufacturer: 'Emeco',
@@ -1167,6 +1220,7 @@ const CATALOG = {
     },
     {
       id: 'broom-chair',
+      photo: "https://images.hermanmiller.group/m/f81cd6ed322a23a4/W-DWR_4644_9017289_white_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Broom Counter Stool',
       designer: 'Philippe Starck',
       manufacturer: 'Emeco',
@@ -1188,6 +1242,7 @@ const CATALOG = {
     },
     {
       id: 'beetle-chair',
+      photo: "https://images.hermanmiller.group/asset/b1fca7c3-e31c-4efb-910c-a556f1971a58/W/DWR_2197545_100148691_dove_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Beetle Chair',
       designer: 'GamFratesi',
       manufacturer: 'Gubi',
@@ -1209,6 +1264,7 @@ const CATALOG = {
     },
     {
       id: 'multi-lite-pendant',
+      photo: "https://images.hermanmiller.group/m/adf41b9a54784d52/W-DWR_2197921_100106242_brass_f.png",
       name: 'Multi-Lite Pendant',
       designer: 'Louis Weisdorf',
       manufacturer: 'Gubi',
@@ -1230,6 +1286,7 @@ const CATALOG = {
     },
     {
       id: 'tolix-stool',
+      photo: "https://images.hermanmiller.group/asset/93ecd1cd-aad2-4560-8fae-3cab4aae2aa9/W/DWR_6345_9039306_white_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Tolix Marais Stool',
       designer: 'Xavier Pauchard',
       manufacturer: 'Tolix',
@@ -1251,6 +1308,7 @@ const CATALOG = {
     },
     {
       id: 'usm-haller',
+      photo: "https://images.hermanmiller.group/m/fa9282a2a7bcea40/W-DWR_2609576_100157741_white_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'USM Haller Modular Shelving',
       designer: 'Fritz Haller and Paul Schärer',
       manufacturer: 'USM',
@@ -1273,6 +1331,7 @@ const CATALOG = {
     },
     {
       id: 'eames-plywood-lounge',
+      photo: "https://images.hermanmiller.group/asset/06420238-b6cb-457c-8fc3-5f6c64a9b12b/W/DWR_1378_675956_santos_palisander_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Eames Molded Plywood Lounge Chair (LCW)',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',
@@ -1295,6 +1354,7 @@ const CATALOG = {
     },
     {
       id: 'ch20-elbow-chair',
+      photo: "https://images.hermanmiller.group/m/d5c1c433e4a44b89/W-DWR_4020_100159059_soaped_oak_brown_vendor_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'CH20 Elbow Chair',
       designer: 'Hans Wegner',
       manufacturer: 'Carl Hansen & Søn',
@@ -1317,6 +1377,7 @@ const CATALOG = {
     },
     {
       id: 'ox-chair',
+      photo: "https://images.hermanmiller.group/asset/e9186ce5-9dd3-4e5d-b602-446967557c46/W/DWR_2613539_100774885_cognac_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Ox Chair',
       designer: 'Hans Wegner',
       manufacturer: 'Fredericia',
@@ -1340,6 +1401,7 @@ const CATALOG = {
     },
     {
       id: 'palissade-chair',
+      photo: "https://images.hermanmiller.group/m/c1f424bf7d45b979/W-HAY_2514621_100127981_olive_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Palissade Chair',
       designer: 'Ronan and Erwan Bouroullec',
       manufacturer: 'HAY',
@@ -1362,6 +1424,7 @@ const CATALOG = {
     },
     {
       id: 'cherner-chair',
+      photo: "https://images.hermanmiller.group/m/31c83cd4be1b3b7a/W-DWR_5641_100073191_classic_ebony_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Cherner Chair',
       designer: 'Norman Cherner',
       manufacturer: 'Cherner Chair Company',
@@ -1384,6 +1447,7 @@ const CATALOG = {
     },
     {
       id: 'nelson-swag-leg',
+      photo: "https://images.hermanmiller.group/m/59a20595d4244975/W-LI_NSL_P_20120815_131.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
       name: 'Nelson Swag Leg Armchair',
       designer: 'George Nelson',
       manufacturer: 'Herman Miller',
@@ -1406,6 +1470,7 @@ const CATALOG = {
     },
     {
       id: 'eames-plywood-lounge-metal',
+      photo: "https://images.hermanmiller.group/asset/1d84af65-f13d-4cd4-8954-afc7f0a746c6/W/HM_628_100098815_palisander_alder_chrome_a.png",
       name: 'Eames Molded Plywood Lounge Chair (LCM)',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',

@@ -16,7 +16,8 @@ const TOPICS = {
   style:     { id: 'style',     label: 'Style & Type',        emoji: '🎨' },
   materials: { id: 'materials', label: 'Materials',           emoji: '🪵' },
   designer:  { id: 'designer',  label: 'Designers & Makers',  emoji: '✏️' },
-  knowhow:   { id: 'knowhow',   label: 'Product Know-How',    emoji: '🔧' }
+  knowhow:   { id: 'knowhow',   label: 'Product Know-How',    emoji: '🔧' },
+  photo:     { id: 'photo',     label: 'Photo ID',            emoji: '📷' }
 };
 
 /* ---------- small helpers ---------- */
@@ -75,6 +76,22 @@ function choiceQuestion(topic, prompt, correct, wrongPool, why, tag) {
 /* ---------- generators, one per question flavor ---------- */
 
 const GENERATORS = [
+
+  /* Photo ID: show the piece, name it. */
+  function photoToName(product) {
+    if (!product.photo) return null;
+    const pool = PRODUCTS.map(p => p.name);
+    const q = choiceQuestion(
+      'photo',
+      'What is this piece called?',
+      product.name,
+      pool,
+      'That\'s the ' + product.name + '.',
+      product.id
+    );
+    if (q) q.image = product.photo;
+    return q;
+  },
 
   /* Who designed it? */
   function designerOf(product) {
@@ -279,8 +296,12 @@ function buildDeck(count, topics) {
     }
 
     if (!q) continue;
-    if (seen.has(q.prompt)) continue;
-    seen.add(q.prompt);
+    // Keyed on prompt + tag, not prompt alone: photo questions all share the
+    // same prompt text ("What is this piece called?"), so prompt alone would
+    // treat every photo question after the first as a duplicate.
+    const key = q.prompt + '|' + (q.tag || '');
+    if (seen.has(key)) continue;
+    seen.add(key);
     deck.push(q);
   }
 
@@ -320,7 +341,8 @@ function knowHowCard(entry) {
   minute session covers the catalog instead of repeating the same
   three names.
 */
-function buildChapters(n, questionsPerChapter) {
+function buildChapters(n, questionsPerChapter, topics) {
+  const allowed = topics && topics.length ? topics : Object.keys(TOPICS);
   const productOrder = shuffle(PRODUCTS);
   const termOrder = shuffle(KNOWHOW);
   const chapters = [];
@@ -334,22 +356,23 @@ function buildChapters(n, questionsPerChapter) {
     const cards = roster.slice(0, 3).map(productCard);
     cards.push(knowHowCard(term));
 
-    /* Questions drawn only from what the cards just taught. */
+    /* Questions drawn only from what the cards just taught, filtered to the allowed topics. */
     const pool = [];
     roster.forEach(p => {
       GENERATORS.forEach(gen => {
         const q = gen(p);
-        if (q) pool.push(q);
+        if (q && allowed.includes(q.topic)) pool.push(q);
       });
     });
-    pool.push(knowHowQuestion(term));
+    if (allowed.includes('knowhow')) pool.push(knowHowQuestion(term));
 
     const questions = [];
     const seen = new Set();
     shuffle(pool).forEach(q => {
       if (questions.length >= questionsPerChapter) return;
-      if (seen.has(q.prompt)) return;
-      seen.add(q.prompt);
+      const key = q.prompt + '|' + (q.tag || '');
+      if (seen.has(key)) return;
+      seen.add(key);
       questions.push(q);
     });
 

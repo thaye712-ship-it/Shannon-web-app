@@ -202,7 +202,7 @@
     wrap.innerHTML = '';
     const colors = {
       history: '#FF4FA3', style: '#FFC53D', materials: '#3BC9FF',
-      designer: '#6C3BF4', knowhow: '#1FD6A6'
+      designer: '#6C3BF4', knowhow: '#1FD6A6', photo: '#FF8A3D'
     };
 
     Object.keys(TOPICS).forEach(id => {
@@ -254,11 +254,14 @@
   /* ---------------- session state ---------------- */
 
   let session = null;
+  let pendingMode = null;
+  let pendingTopics = null;
 
-  function startSprint() {
+  function startSprint(topics) {
     session = {
       mode: 'sprint',
-      deck: buildDeck(SPRINT_QUESTIONS, null),
+      topics: topics || null,
+      deck: buildDeck(SPRINT_QUESTIONS, topics),
       i: 0,
       correct: 0,
       xp: 0,
@@ -271,13 +274,14 @@
     show('quiz');
   }
 
-  function startDive(minutes) {
+  function startDive(minutes, topics) {
     const chapters = minutes === 60 ? 7 : 4;
     const perChapter = minutes === 60 ? 7 : 6;
     session = {
       mode: 'dive',
       minutes,
-      chapters: buildChapters(chapters, perChapter),
+      topics: topics || null,
+      chapters: buildChapters(chapters, perChapter, topics),
       chapter: 0,
       card: 0,
       deck: [],
@@ -291,6 +295,149 @@
       timed: false
     };
     openChapter(0);
+  }
+
+  /* ---------------- quiz topic picker ---------------- */
+
+  function renderTopicPicks() {
+    const wrap = $('[data-topic-picks]');
+    wrap.innerHTML = '';
+    Object.keys(TOPICS).forEach(id => {
+      const t = TOPICS[id];
+      const label = el('label', 'topic-pick');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = id;
+      cb.checked = true;
+      label.appendChild(cb);
+      label.appendChild(el('span', 'topic-pick-emoji', t.emoji));
+      label.appendChild(el('span', 'topic-pick-label', t.label));
+      wrap.appendChild(label);
+    });
+  }
+
+  function selectedTopics() {
+    const ids = $$('[data-topic-picks] input:checked').map(b => b.value);
+    return ids.length ? ids : Object.keys(TOPICS);
+  }
+
+  /* ---------------- product gallery ---------------- */
+
+  function renderGallery() {
+    const wrap = $('[data-gallery]');
+    wrap.innerHTML = '';
+    PRODUCTS.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(p => {
+      const card = el('div', 'gallery-card');
+      if (p.photo) {
+        const img = document.createElement('img');
+        img.src = p.photo;
+        img.alt = p.name;
+        img.loading = 'lazy';
+        img.className = 'gallery-photo';
+        card.appendChild(img);
+      } else {
+        card.appendChild(el('div', 'gallery-noimg', '🪑'));
+      }
+      const info = el('div', 'gallery-info');
+      info.appendChild(el('b', null, p.name));
+      info.appendChild(el('span', null, p.designer + ' · ' + p.manufacturer));
+      card.appendChild(info);
+      wrap.appendChild(card);
+    });
+  }
+
+  /* ---------------- flashcards ---------------- */
+
+  const FLASH_KEY = 'shannon.flashKnown.v1';
+
+  function loadKnown() {
+    try { return new Set(JSON.parse(localStorage.getItem(FLASH_KEY) || '[]')); }
+    catch (e) { return new Set(); }
+  }
+  function saveKnown(set) {
+    try { localStorage.setItem(FLASH_KEY, JSON.stringify(Array.from(set))); }
+    catch (e) { /* private mode */ }
+  }
+  let knownSet = loadKnown();
+
+  let flash = null;
+
+  function startFlash() {
+    flash = { order: shuffle(PRODUCTS), i: 0, flipped: false };
+    renderFlash();
+    show('flash');
+  }
+
+  function renderFlash() {
+    const p = flash.order[flash.i];
+    $('[data-flash-count]').textContent = (flash.i + 1) + '/' + flash.order.length;
+    $('[data-flash-progress]').style.width = (flash.i / flash.order.length * 100) + '%';
+
+    const wrap = $('[data-flash-card]');
+    wrap.innerHTML = '';
+
+    const card = el('div', 'flashcard' + (flash.flipped ? ' is-flipped' : ''));
+
+    const front = el('div', 'flash-face flash-front');
+    if (p.photo) {
+      const img = document.createElement('img');
+      img.src = p.photo;
+      img.alt = '';
+      img.className = 'flash-photo';
+      front.appendChild(img);
+    } else {
+      front.appendChild(el('div', 'flash-noimg', '🪑'));
+    }
+    front.appendChild(el('p', 'flash-hint', 'Tap to reveal'));
+
+    const back = el('div', 'flash-face flash-back');
+    back.appendChild(el('h3', null, p.name));
+    back.appendChild(el('p', 'flash-sub', p.designer + ' · ' + p.manufacturer + ' · est. ' + p.year));
+    back.appendChild(el('p', 'flash-body', p.history));
+    const chips = el('div', 'chips');
+    [p.category, p.style].forEach(c => chips.appendChild(el('span', 'chip', c)));
+    back.appendChild(chips);
+
+    card.appendChild(front);
+    card.appendChild(back);
+    card.addEventListener('click', flipFlash);
+    wrap.appendChild(card);
+
+    $('[data-flash-prev]').disabled = flash.i === 0;
+    $('[data-flash-known]').classList.toggle('active', knownSet.has(p.id));
+  }
+
+  function flipFlash() {
+    flash.flipped = !flash.flipped;
+    sfx.tap();
+    renderFlash();
+  }
+
+  function flashNext() {
+    sfx.tap();
+    if (flash.i < flash.order.length - 1) {
+      flash.i++;
+      flash.flipped = false;
+      renderFlash();
+    } else {
+      quit();
+    }
+  }
+
+  function flashPrev() {
+    if (flash.i > 0) {
+      sfx.tap();
+      flash.i--;
+      flash.flipped = false;
+      renderFlash();
+    }
+  }
+
+  function markFlash(known) {
+    const p = flash.order[flash.i];
+    if (known) knownSet.add(p.id); else knownSet.delete(p.id);
+    saveKnown(knownSet);
+    flashNext();
   }
 
   function openChapter(index) {
@@ -409,6 +556,14 @@
     $('[data-q-topic]').textContent = TOPICS[q.topic].emoji + '  ' + TOPICS[q.topic].label;
     $('[data-q-prompt]').textContent = q.prompt;
     $('[data-feedback]').hidden = true;
+
+    const photoBox = $('[data-q-photo]');
+    if (q.image) {
+      photoBox.hidden = false;
+      $('[data-q-photo-img]').src = q.image;
+    } else {
+      photoBox.hidden = true;
+    }
 
     const combo = $('[data-combo]');
     if (session.combo >= 2) {
@@ -689,18 +844,35 @@
   $('#aboutBtn').addEventListener('click', () => show('about'));
   $$('[data-show-about]').forEach(b => b.addEventListener('click', () => show('about')));
 
+  $('#galleryBtn').addEventListener('click', () => { renderGallery(); show('gallery'); });
+
   $$('[data-start]').forEach(btn => {
     btn.addEventListener('click', () => {
       sfx.tap();
-      if (btn.dataset.start === 'sprint') startSprint();
-      else show('setup');
+      if (btn.dataset.start === 'flash') { startFlash(); return; }
+      pendingMode = btn.dataset.start;
+      renderTopicPicks();
+      show('topics');
     });
   });
+
+  $('[data-topics-continue]').addEventListener('click', () => {
+    sfx.tap();
+    const topics = selectedTopics();
+    if (pendingMode === 'sprint') {
+      startSprint(topics);
+    } else {
+      pendingTopics = topics;
+      show('setup');
+    }
+  });
+
+  $('[data-back-topics]').addEventListener('click', () => show('topics'));
 
   $$('[data-length]').forEach(btn => {
     btn.addEventListener('click', () => {
       sfx.tap();
-      startDive(parseInt(btn.dataset.length, 10));
+      startDive(parseInt(btn.dataset.length, 10), pendingTopics);
     });
   });
 
@@ -711,11 +883,16 @@
   $('[data-learn-prev]').addEventListener('click', learnPrev);
   $('[data-home]').addEventListener('click', quit);
 
+  $('[data-flash-prev]').addEventListener('click', flashPrev);
+  $('[data-flash-next]').addEventListener('click', flashNext);
+  $('[data-flash-known]').addEventListener('click', () => markFlash(true));
+  $('[data-flash-unknown]').addEventListener('click', () => markFlash(false));
+
   $('[data-again]').addEventListener('click', () => {
     sfx.tap();
-    if (!session) { startSprint(); return; }
-    if (session.mode === 'sprint') startSprint();
-    else startDive(session.minutes);
+    if (!session) { startSprint(null); return; }
+    if (session.mode === 'sprint') startSprint(session.topics);
+    else startDive(session.minutes, session.topics);
   });
 
   const soundBtn = $('#soundBtn');
