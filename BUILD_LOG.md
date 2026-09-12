@@ -10,6 +10,60 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-12 — Corrected catalog against dwr.com's actual listings
+
+The previous entry's 41 new products were researched from general design
+history, on the assumption that dwr.com could not be reached from this
+environment. That assumption turned out to be wrong: dwr.com's brand
+list, designer list, and on-site search are reachable and were used here
+to check every new product against what DWR actually carries.
+
+- **Removed 12 products** that are real, well-documented designs but are
+  not part of DWR's actual assortment (confirmed via dwr.com search
+  returning zero results, or unrelated results): PK22 Lounge Chair, PK24
+  Chaise Longue (Kjærholm/Fritz Hansen — Kjærholm is not a DWR-carried
+  designer), Grand Prix Chair (Jacobsen/Fritz Hansen), Round Chair
+  (PP501) and Peacock Chair (PP550) (Wegner/PP Møbler — DWR sells Wegner
+  only via Carl Hansen & Søn and Fredericia), Superleggera Chair
+  (Ponti/Cassina), Ball Chair (Aarnio/Adelta), Parentesi Lamp
+  (Castiglioni/Flos), Hudson Chair (Starck/Emeco), Cyclone Dining Table
+  (fabricated DWR Studio product — no match on dwr.com), Akari Light
+  Sculpture (Noguchi/Vitra), and Papa Bear Chair (AP19, Wegner/PP Møbler
+  — DWR's actual Wegner wing chair is sold by Fredericia under a
+  different name, which this pass couldn't verify with confidence, so it
+  was replaced rather than guessed at).
+- **Fixed 2 records** to match DWR's actual listings: Nelson Ball Clock's
+  manufacturer corrected from Howard Miller to Vitra (DWR sells it as
+  part of Vitra's Design Museum collection); Broom Chair renamed to
+  Broom Counter Stool with corrected category and materials to match the
+  real product.
+- **Renamed 4 products** to match DWR's on-site naming exactly: LC2
+  Petit Confort Armchair → LC2 Petit Modele Armchair, LC3 Grand Confort
+  Sofa → LC3 Grand Modele Sofa, Eames Walnut Stool → Eames Turned Stool
+  (broadened to cover its four turned shapes, not just walnut), Tolix
+  Stool (Model H) → Tolix Marais Stool.
+- **Added 6 verified replacements**, each confirmed on dwr.com before
+  being written: Ox Chair (Wegner/Fredericia), Palissade Chair
+  (Bouroullec brothers/HAY), Cherner Chair (Norman Cherner/Cherner Chair
+  Company), CH20 Elbow Chair (Wegner/Carl Hansen & Søn — sat in Wegner's
+  archive for nearly 50 years before production), Nelson Swag Leg
+  Armchair (Herman Miller), and the Eames Molded Plywood Lounge Chair
+  metal-base variant (LCM, Herman Miller).
+- Net effect: catalog goes from 71 to **65 products**, still just over
+  half (54%) of the ~120-product eventual catalog and still past the 50%
+  target, but now with every entry checked against DWR's real assortment
+  rather than assumed from design history alone.
+- Updated `README.md`, `PURPOSE.md`, and on-site copy (home disclaimer,
+  About screen status card) to describe this verification step, and to
+  flag that any future addition should be checked against dwr.com first.
+- Verified: JS syntax check passes, 65 products + 20 know-how entries
+  load with no duplicate or incomplete records.
+
+Branch: `claude/site-changes-build-log-m4xymb`, to be merged into `main`
+immediately after this entry.
+
+---
+
 ## 2026-09-12 — Catalog expanded to 71 products, over half of full assortment
 
 - Added 41 new products to `js/data.js`, taking the catalog from 30 to

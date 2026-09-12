@@ -44,14 +44,14 @@ game.
 
 ## Current status
 
-The catalog in `js/data.js` holds 71 real DWR products (Eames, Saarinen,
-Bertoia, Jacobsen, Wegner, Le Corbusier, Kjærholm, Mies van der Rohe, the
-Castiglioni brothers and others) plus 20 construction/materials terms,
-researched from published design history rather than scraped from
-dwr.com. That covers well over half of the eventual full catalog. See
-`BUILD_LOG.md` for the change history and `README.md` for the technical
-shape of a catalog record — more products can be appended there in the
-same shape with no other code changes.
+The catalog in `js/data.js` holds 65 real DWR products (Eames, Saarinen,
+Bertoia, Jacobsen, Wegner, Le Corbusier, Mies van der Rohe, the Castiglioni
+brothers and others) plus 20 construction/materials terms, each checked
+against dwr.com's own brand, designer and search listings rather than
+assumed from general design history alone. That covers just over half of
+the eventual full catalog. See `BUILD_LOG.md` for the change history and
+`README.md` for the technical shape of a catalog record — more products
+can be appended there in the same shape, verified against dwr.com first.
 
 ## What it is not
 
