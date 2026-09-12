@@ -10,6 +10,66 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-12 — Product photos, Photo ID quiz, quiz topic picker, Flashcards mode
+
+- **Product photos.** Every product record in `js/data.js` can now carry a
+  `photo` field: a direct hotlink to DWR's own product image (not a
+  download — nothing is stored in this repo). Researched via three
+  parallel background agents that searched dwr.com for each of the 65
+  products and extracted the exact image URL from its real product page.
+  62 of 65 resolved to a confirmed real photo; 3 (`bestlite-bl3`,
+  `tolix-a-chair`, `min-sofa`) came back with no confident match, which
+  is itself worth a second look — it's the same "may not be a current DWR
+  SKU" signal the earlier catalog verification pass flagged elsewhere.
+  Spot-checked several resulting URLs directly with `curl`: all returned
+  HTTP 200 with real image content.
+- **Photo ID question type.** New `photo` topic in `js/questions.js`:
+  shows the real product photo, asks the associate to pick the matching
+  name from four options. Products without a photo simply never generate
+  one (graceful skip, same pattern as every other generator).
+- **Quiz topic picker.** Both Morning Sprint and Deep Dive now open on a
+  new topics screen (checkboxes for History & Story, Style & Type,
+  Materials, Designers & Makers, Product Know-How, Photo ID) before
+  starting, so a session can be narrowed to specific question types
+  instead of always mixing everything. `buildDeck` already supported a
+  topic filter; added the same filter to `buildChapters` for Deep Dive.
+- **Flashcards mode.** A third, non-quiz way to study: a full-catalog
+  flip-card browser (photo front, full profile back), with Prev/Next and
+  "know it" / "still learning" marking persisted to `localStorage` under
+  `shannon.flashKnown.v1`. No score, no timer — for studying rather than
+  testing, per the user's ask for "an easy/fun way to learn besides
+  quizzes."
+- **Product gallery.** New "Products" link in the top bar lists all 65
+  pieces with photo (or a placeholder) and designer/manufacturer, so
+  associates or management can browse the whole catalog at a glance.
+- **Bug found and fixed during testing:** the dedup logic in both
+  `buildDeck` and `buildChapters` kept a `Set` of `q.prompt` strings to
+  drop duplicates — but every Photo ID question shares the identical
+  prompt text ("What is this piece called?"), so after the first one,
+  every subsequent photo question was silently discarded as a
+  "duplicate." Fixed by keying dedup on `prompt + tag` instead of prompt
+  alone (`tag` is already the product id on every generator). Verified
+  with a direct `buildDeck(8, ['photo'])` call: went from 1 question to
+  the full 8, all carrying a valid image.
+- Updated `README.md`, `PURPOSE.md`, and on-site About-screen copy: the
+  "not connected to dwr.com in any way" claim was no longer accurate
+  once photos started hotlinking from DWR's own CDN, so that language
+  was corrected rather than left stale.
+- Verified end-to-end in a real browser: topic picker → photo-only sprint
+  (8/8 unique questions, images render), full mixed sprint to completion,
+  Deep Dive topic picker → setup → back-to-topics round trip, Flashcards
+  front/flip/mark-known with persistence confirmed via localStorage
+  inspection, and the product gallery grid. Zero console errors across
+  all of it. Image loads themselves couldn't be visually confirmed
+  in-session (this sandbox's network proxy blocks the CDN domain for the
+  headless browser), but `curl` from the same environment confirmed the
+  URLs are live, real images — the deployed site's real users hit no such
+  restriction.
+
+Branch: `claude/site-changes-build-log-m4xymb`
+
+---
+
 ## 2026-09-12 — Corrected catalog against dwr.com's actual listings
 
 The previous entry's 41 new products were researched from general design

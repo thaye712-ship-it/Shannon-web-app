@@ -36,7 +36,7 @@ python3 -m http.server 8000
 
 It is a static site, so GitHub Pages serves it as-is.
 
-## The two modes
+## The modes
 
 **Morning Sprint** — five minutes. Eight questions, twenty seconds each. Correct
 answers build a combo multiplier that raises the experience points earned, and
@@ -48,6 +48,15 @@ comes out of nowhere. Thirty minutes is four chapters and twenty-four questions.
 Sixty is seven chapters and forty-nine questions; a full run through the catalog
 takes several sessions at this pace.
 
+**Flashcards** — no timer, no score. Flip through the catalog at your own pace:
+a photo on the front, the full profile (designer, manufacturer, year, history)
+on the back. Mark each one "know it" or "still learning"; that's saved locally
+under `shannon.flashKnown.v1` so it persists between sessions.
+
+Both Sprint and Deep Dive open on a topic picker first, so a session can be
+narrowed to just one or two question types (e.g. only Photo ID, or only Style
+& Type) instead of the full mix.
+
 ## Question formats
 
 | Format | Looks like |
@@ -56,6 +65,19 @@ takes several sessions at this pace.
 | True or false | Two large tap targets |
 | Introduced year | A slider; within five years still counts |
 | Style / material match | The design movement or material behind a piece |
+| Photo ID | A real DWR product photo; pick the matching name from four options |
+
+## Product photos
+
+Each product can carry a `photo` field: a direct URL to DWR's own hosted
+product image, hotlinked (not downloaded — no image files live in this repo).
+62 of 65 products currently have one; the rest (`bestlite-bl3`, `tolix-a-chair`,
+`min-sofa`) turned up no confident match on dwr.com when researched, so they
+were left photo-less rather than guessed at — they may not be current DWR
+SKUs at all (same category of issue the catalog verification pass caught
+elsewhere; worth checking). A product with no photo simply never generates
+a Photo ID question and shows a 🪑 placeholder in the gallery and flashcards
+instead of erroring.
 
 ## Files
 
@@ -77,6 +99,7 @@ A product record:
 ```js
 {
   id: 'eames-lounge',                    // unique, lowercase, no spaces
+  photo: 'https://...',                  // optional: direct hotlink to DWR's own product photo
   name: 'Eames Lounge Chair and Ottoman',
   designer: 'Charles and Ray Eames',
   manufacturer: 'Herman Miller',
@@ -90,6 +113,10 @@ A product record:
   facts: ['...', '...', '...']           // three or more; used for true/false
 }
 ```
+
+Leave `photo` out (or set it to `null`) if there's no confident image match —
+don't guess at a URL. Find the product's real page on dwr.com first and grab
+the exact image URL from there.
 
 A product know-how record:
 
