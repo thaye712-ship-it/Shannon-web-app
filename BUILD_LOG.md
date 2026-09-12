@@ -10,6 +10,26 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-12 — On-site "About" page for associates and management
+
+- Added an in-app About screen (`#screen-about`) explaining what Shannon is,
+  who it's for (sales associates vs. store/regional management), what the
+  catalog currently covers, and how progress/data work — written for a
+  professional audience, distinct from the game-like training screens.
+- Added an "About" link in the top bar and an inline "What is this,
+  exactly?" link under the home page hero, both routing to the new screen.
+- New CSS for the about screen (`.about-section`, `.about-grid`,
+  `.about-card`, `.status-card`, `.about-list`) and a restructured top bar
+  (`.topbar-right`, `.navlink`) to fit the new nav item without disturbing
+  the streak/XP/sound controls.
+- Verified: JS syntax check passes; manually clicked through About → Back
+  → home on desktop (900px) and mobile (420px) widths with no console
+  errors and correct screen routing.
+
+Branch: `claude/site-changes-build-log-m4xymb`
+
+---
+
 ## 2026-09-12 — Real DWR catalog (first batch) merged, purpose doc added
 
 - Merged branch `claude/friendly-dijkstra-nuqtk7`: replaced the sample

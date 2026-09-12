@@ -24,16 +24,19 @@
     <span class="mark">S</span>
     <span class="wordmark">Shannon</span>
   </button>
-  <div class="topstats">
-    <div class="stat" id="streakStat" title="Day streak">
-      <span class="stat-icon">🔥</span><span class="stat-val" data-streak>0</span>
+  <div class="topbar-right">
+    <button class="navlink" id="aboutBtn">About</button>
+    <div class="topstats">
+      <div class="stat" id="streakStat" title="Day streak">
+        <span class="stat-icon">🔥</span><span class="stat-val" data-streak>0</span>
+      </div>
+      <div class="stat" id="xpStat" title="Experience points">
+        <span class="stat-icon">⭐</span><span class="stat-val" data-xp>0</span>
+      </div>
+      <button class="stat tappable" id="soundBtn" title="Sound on or off" aria-pressed="true">
+        <span class="stat-icon" data-sound-icon>🔊</span>
+      </button>
     </div>
-    <div class="stat" id="xpStat" title="Experience points">
-      <span class="stat-icon">⭐</span><span class="stat-val" data-xp>0</span>
-    </div>
-    <button class="stat tappable" id="soundBtn" title="Sound on or off" aria-pressed="true">
-      <span class="stat-icon" data-sound-icon>🔊</span>
-    </button>
   </div>
 </header>
 
@@ -47,6 +50,7 @@
       <p class="hero-sub">
         Bite-sized training on the Design Within Reach catalog. Who designed each piece,
         the style it belongs to, what it is made of, and the story that closes a sale.
+        <button class="link-inline" data-show-about>What is this, exactly? →</button>
       </p>
       <div class="levelbar">
         <div class="levelbar-head">
@@ -96,6 +100,82 @@
       the floor gets asked about most. More products will be added the same way, with no
       other changes needed.
     </p>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="screen" id="screen-about">
+    <button class="back" data-back>← Back</button>
+    <p class="eyebrow">For associates and management</p>
+    <h1 class="screen-title">About Shannon</h1>
+    <p class="screen-sub">
+      Shannon is an internal training tool built for Design Within Reach retail
+      teams. It exists to close one specific gap: associates are expected to
+      speak knowledgeably about the designers, history, materials and
+      construction behind DWR's assortment — knowledge that normally builds
+      slowly, on the floor, over months. Shannon compresses it into short,
+      repeatable sessions instead.
+    </p>
+
+    <div class="about-section">
+      <h2>What it teaches</h2>
+      <p>
+        For each piece: who designed it, what manufacturer makes it, what year
+        it was introduced, the design movement it belongs to, what it is made
+        of, and a short piece of history worth repeating to a customer. A
+        separate materials and construction glossary covers vocabulary that
+        spans the assortment — cantilever frames, molded plywood, cane
+        webbing, tubular steel, powder coating, outdoor teak — so an associate
+        can explain how a piece is made, not only who made it.
+      </p>
+    </div>
+
+    <div class="about-section">
+      <h2>Who it's for</h2>
+      <div class="about-grid">
+        <div class="about-card">
+          <h3>Sales associates</h3>
+          <p>
+            A five-minute daily habit or a longer onboarding session that
+            builds the product knowledge a floor conversation depends on —
+            without sitting through a manual or a slideshow.
+          </p>
+        </div>
+        <div class="about-card">
+          <h3>Store &amp; regional management</h3>
+          <p>
+            A consistent, repeatable way to raise product knowledge across a
+            team, especially for new hires, without building or running a
+            training program from scratch.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <h2>Current status</h2>
+      <div class="status-card">
+        <b>First batch: 30 products, 14 construction &amp; materials terms</b>
+        Roughly a quarter of the eventual catalog, covering the design
+        classics associates are asked about most. Content is researched from
+        published, verifiable design history — not pulled or scraped from
+        dwr.com — and more is being added the same way on a rolling basis.
+      </div>
+    </div>
+
+    <div class="about-section">
+      <h2>Data &amp; access</h2>
+      <ul class="about-list">
+        <li>No login or account — anyone with the link can train.</li>
+        <li>Progress (XP, level, streak, badges) is stored on-device only, in
+          the browser. It does not sync across devices.</li>
+        <li>There is no manager dashboard yet, so completion cannot currently
+          be tracked across a team.</li>
+        <li>Not connected to dwr.com — no live pricing, inventory, or content
+          is pulled from the production site.</li>
+      </ul>
+    </div>
+
+    <button class="btn primary wide" data-back>Back to training</button>
   </section>
 
   <!-- ============ DEEP DIVE SETUP ============ -->

@@ -686,6 +686,9 @@
 
   $('#homeBtn').addEventListener('click', quit);
 
+  $('#aboutBtn').addEventListener('click', () => show('about'));
+  $$('[data-show-about]').forEach(b => b.addEventListener('click', () => show('about')));
+
   $$('[data-start]').forEach(btn => {
     btn.addEventListener('click', () => {
       sfx.tap();
