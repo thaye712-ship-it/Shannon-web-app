@@ -86,6 +86,9 @@
     },
     saveIndex(ix) {
       try { localStorage.setItem(USERS_KEY, JSON.stringify(ix)); } catch (e) { /* private mode */ }
+      /* activeId is deliberately NOT synced — it means "who is using this
+         device right now", which is per-device, not per-team. */
+      if (backend) ix.users.forEach(u => backend.pushProfile(u));
     },
     list() { return this.index().users; },
     activeId() { return this.index().activeId; },
@@ -133,6 +136,7 @@
       if (ix.activeId === id) ix.activeId = null;
       this.saveIndex(ix);
       try { localStorage.removeItem(userKey(id)); } catch (e) { /* private mode */ }
+      if (backend) backend.removeProfile(id);
       return true;
     },
     managers() { return this.list().filter(u => u.role === 'manager'); },
@@ -147,8 +151,37 @@
     },
     saveProgress(id, data) {
       try { localStorage.setItem(userKey(id), JSON.stringify(data)); } catch (e) { /* private mode */ }
+      if (backend) backend.pushProgress(id, data);
     }
   };
+
+  /*
+    Set once the Firestore adapter reports in. Null means local-only, which
+    is the normal state until firebase-config.js is switched over.
+  */
+  let backend = null;
+
+  /* Remote is treated as the source of truth for the roster on boot, then
+     cached locally so the rest of the app can keep reading synchronously. */
+  async function hydrateFromBackend() {
+    if (!backend) return false;
+    const remote = await backend.hydrate();
+    if (!remote || !remote.users.length) return false;
+
+    const localActive = Profiles.activeId();
+    try {
+      localStorage.setItem(USERS_KEY, JSON.stringify({
+        /* Keep this device's current user if that person still exists. */
+        activeId: remote.users.some(u => u.id === localActive) ? localActive : null,
+        users: remote.users
+      }));
+      Object.keys(remote.progress).forEach(id => {
+        localStorage.setItem(userKey(id), JSON.stringify(
+          Object.assign(defaults(), remote.progress[id])));
+      });
+    } catch (e) { /* private mode: stay with whatever is in memory */ }
+    return true;
+  }
 
   /* ---------------- manager sign-in ----------------
 
@@ -524,52 +557,88 @@
 
   function openManager() {
     if (managerUnlocked) { renderManager(); show('manager'); return; }
+
+    const remote = !!backend;
     const configured = ManagerAuth.isConfigured();
-    $('[data-auth-title]').textContent = configured ? 'Manager sign-in' : 'Set a manager password';
-    $('[data-auth-sub]').textContent = configured
-      ? 'Managers can add and remove other managers and see the team roster.'
-      : 'No manager password has been set on this device yet. Choose one now — it unlocks the manager view here.';
-    $('[data-auth-submit]').textContent = configured ? 'Sign in' : 'Set password';
+
+    $('[data-auth-email]').hidden = !remote;
+    $('[data-auth-note-local]').hidden = remote;
+    $('[data-auth-note-firebase]').hidden = !remote;
+
+    if (remote) {
+      $('[data-auth-title]').textContent = 'Manager sign-in';
+      $('[data-auth-sub]').textContent =
+        'Sign in with the manager account from your Firebase project.';
+      $('[data-auth-submit]').textContent = 'Sign in';
+    } else {
+      $('[data-auth-title]').textContent = configured ? 'Manager sign-in' : 'Set a manager password';
+      $('[data-auth-sub]').textContent = configured
+        ? 'Managers can add and remove other managers and see the team roster.'
+        : 'No manager password has been set on this device yet. Choose one now — it unlocks the manager view here.';
+      $('[data-auth-submit]').textContent = configured ? 'Sign in' : 'Set password';
+      $('[data-auth-password]').setAttribute('autocomplete', configured ? 'current-password' : 'new-password');
+    }
+
+    $('[data-auth-email]').value = '';
     $('[data-auth-password]').value = '';
-    $('[data-auth-password]').setAttribute('autocomplete', configured ? 'current-password' : 'new-password');
     $('[data-auth-error]').hidden = true;
     show('manager-auth');
-    setTimeout(() => $('[data-auth-password]').focus(), 80);
+    setTimeout(() => (remote ? $('[data-auth-email]') : $('[data-auth-password]')).focus(), 80);
+  }
+
+  function unlockManager() {
+    managerUnlocked = true;
+    sfx.right();
+    renderManager();
+    show('manager');
+  }
+
+  function authFail(message) {
+    const err = $('[data-auth-error]');
+    err.textContent = message;
+    err.hidden = false;
+    $('[data-auth-password]').value = '';
+    $('[data-auth-password]').focus();
+    sfx.wrong();
   }
 
   async function submitManagerAuth() {
-    const input = $('[data-auth-password]');
+    const pwInput = $('[data-auth-password]');
     const err = $('[data-auth-error]');
-    const value = input.value;
+    const password = pwInput.value;
 
-    if (!value) { input.focus(); return; }
+    /* Firebase mode: a real account check, not a local gate. */
+    if (backend) {
+      const email = $('[data-auth-email]').value.trim();
+      if (!email || !password) { (email ? pwInput : $('[data-auth-email]')).focus(); return; }
+      $('[data-auth-submit]').disabled = true;
+      const res = await backend.signInManager(email, password);
+      $('[data-auth-submit]').disabled = false;
+      if (!res.ok) { authFail(res.error); return; }
+      if (!res.manager) {
+        await backend.signOutManager();
+        authFail('That account signed in, but it does not have manager access.');
+        return;
+      }
+      unlockManager();
+      return;
+    }
+
+    if (!password) { pwInput.focus(); return; }
 
     if (!ManagerAuth.isConfigured()) {
-      if (value.length < 4) {
+      if (password.length < 4) {
         err.textContent = 'Use at least four characters.';
         err.hidden = false;
         return;
       }
-      await ManagerAuth.setPassword(value);
-      managerUnlocked = true;
-      sfx.right();
-      renderManager();
-      show('manager');
+      await ManagerAuth.setPassword(password);
+      unlockManager();
       return;
     }
 
-    if (await ManagerAuth.verify(value)) {
-      managerUnlocked = true;
-      sfx.right();
-      renderManager();
-      show('manager');
-    } else {
-      err.textContent = 'That password does not match.';
-      err.hidden = false;
-      input.value = '';
-      input.focus();
-      sfx.wrong();
-    }
+    if (await ManagerAuth.verify(password)) unlockManager();
+    else authFail('That password does not match.');
   }
 
   function rosterCard(u) {
@@ -1415,18 +1484,41 @@
     if (e.key === 'Enter') { e.preventDefault(); submitManagerAuth(); }
   });
 
-  $('[data-manager-signout]').addEventListener('click', () => {
+  $('[data-manager-signout]').addEventListener('click', async () => {
     sfx.tap();
     managerUnlocked = false;
+    if (backend) await backend.signOutManager();
     show('home');
   });
 
   $('[data-manager-change-pw]').addEventListener('click', async () => {
+    if (backend) {
+      window.alert('Manager passwords are managed in the Firebase console now, not here.');
+      return;
+    }
     const next = window.prompt('New manager password (at least four characters):');
     if (next == null) return;
     if (next.trim().length < 4) { window.alert('Password not changed — it needs at least four characters.'); return; }
     await ManagerAuth.setPassword(next.trim());
     window.alert('Manager password updated on this device.');
+  });
+
+  /*
+    The Firestore adapter loads as a module, so it reports in after this
+    script has already booted the UI locally. Adopt it when it arrives.
+  */
+  window.addEventListener('provenance:backend-ready', async () => {
+    backend = window.ProvenanceBackend;
+    $('[data-manager-change-pw]').hidden = true;
+    const pulled = await hydrateFromBackend();
+    if (!pulled) {
+      /* Nothing remote yet — seed the roster this device already has. */
+      Profiles.list().forEach(u => backend.pushProfile(u));
+      return;
+    }
+    seedRootManager();
+    if (Profiles.activeId()) enterApp();
+    else { renderProfiles(); show('profiles'); }
   });
 
   $('[data-profile-create]').addEventListener('click', createProfile);

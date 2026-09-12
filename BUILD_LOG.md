@@ -57,6 +57,51 @@ Branch: `claude/site-changes-build-log-m4xymb`
 
 ---
 
+## 2026-09-12 — Firebase adapter written and wired, shipped switched off
+
+- Added the real backend, behind a flag that is **off** by default:
+  `js/firebase-config.js` (project config + `mode` switch),
+  `js/firebase-store.js` (Firestore + Auth adapter, loads the SDK from
+  Google's CDN so there is still no build step), and `firestore.rules`.
+- Shipped as `mode: 'local'` on purpose. Pointing the app at Firestore
+  before the rules are published and Shannon's account exists would either
+  fail against locked default rules or run wide open against test-mode
+  rules. Turning it on is a one-line change once the console work is done;
+  `BACKEND.md` has the five steps and a first-run checklist.
+- **Write-through cache rather than an async refactor.** Making every
+  profile read async would have been a wide, regression-prone change across
+  a dozen call sites for no user-visible gain. Instead localStorage stays
+  what the UI reads and the adapter keeps it in step — hydrate on boot,
+  push in the background on write. Losing wifi now degrades to the old
+  local behaviour instead of breaking the app, which is the right failure
+  mode for a showroom floor. Conflicts are last-write-wins, documented.
+- `activeId` is deliberately not synced: who is using *this* iPad right now
+  is a property of the device, not of the team.
+- Manager sign-in switches to real Firebase Auth when the backend is live —
+  email plus password, with manager powers read from a **custom claim** on
+  the token rather than a Firestore field. A field can be edited by whoever
+  can write the document; a claim can only be set server-side, so the rules
+  can actually trust it. An account that signs in successfully but lacks
+  the claim is signed straight back out and told why.
+- The rules file carries an explicit warning where it is loose: associates
+  train without accounts, so anyone can write anyone's progress. Fine for
+  practice scores, not fine if this ever informs a review, with the tighter
+  rule written out ready to swap in.
+- Analytics is off by default. This is an internal tool used by named staff,
+  so tracking them is a decision to make deliberately rather than inherit.
+- Verified: local mode is completely unaffected — adapter stays inert, boot,
+  profile creation, dropdown and the local manager gate all behave exactly
+  as before, zero errors. **Not verified: the live Firestore round-trip or
+  Auth.** This sandbox's browser proxy resets connections to Google's CDN,
+  so the SDK cannot load here. What that did confirm is the failure path:
+  the app logged its warning, stayed on local storage and remained fully
+  usable. The real round-trip needs testing in a browser on a normal
+  network, which is why BACKEND.md ends with a first-run checklist.
+
+Branch: `claude/site-changes-build-log-m4xymb`
+
+---
+
 ## 2026-09-12 — User dropdown, manager role, Shannon seeded as root manager
 
 - **User dropdown.** The avatar in the top bar now opens a menu: who you're

@@ -131,23 +131,68 @@ key the rule to `request.auth.uid`.
 - Names that identify real employees, which makes this employee data and
   brings the usual retention and consent questions with it
 
-## Order of work
+## The code is already written
 
-1. Enable Email/Password auth; create Shannon's account and set her password
-   in the console
-2. Decide whether associates stay passwordless (they can, for now)
-3. Add the Firebase web config to a `js/firebase-config.js` — safe to commit,
-   it is not a secret
-4. Write the rules above and test them in the console's rules playground
-   **before** pointing the app at them
-5. Reimplement the `Profiles` and `ManagerAuth` functions against Firestore
-   and Auth; make the ~12 call sites async
-6. Add a one-time import that pushes existing localStorage profiles up, so
-   nobody loses progress from the local phase
-7. Optionally keep localStorage as an offline cache if showroom wifi is bad
+The adapter exists and is wired in, sitting behind an off switch:
 
-Steps 1, 2 and 4 need a human. Steps 3 and 5 through 7 are mechanical.
+| File | Role |
+| --- | --- |
+| `js/firebase-config.js` | Project config and the `mode` switch. Committed on purpose — a web config is not a secret. |
+| `js/firebase-store.js` | The Firestore + Auth adapter. Loads the SDK from Google's CDN, no build step. Completely inert unless `mode` is `'firebase'`. |
+| `firestore.rules` | The rules to publish. Paste into the console. |
+
+Rather than making the whole app async, the adapter is a **write-through
+cache**: localStorage stays what the UI reads, and the adapter keeps it in
+step with Firestore — hydrate on boot, push in the background on write. Two
+consequences worth knowing:
+
+- Losing wifi degrades to exactly the old local behaviour rather than
+  breaking the app, which is the right failure mode for a showroom.
+- Conflicts are last-write-wins. One person on one device at a time is fine;
+  simultaneous edits to the same profile would need revisiting.
+
+`activeId` — who is using *this* device right now — is deliberately not
+synced. It is a property of the iPad, not of the team.
+
+## Turning it on
+
+1. **Enable Email/Password** in Firebase console → Authentication → Sign-in
+   method.
+2. **Create Shannon's account** there (Authentication → Users → Add user).
+   Set her password in the console. It never enters this repo and nobody
+   needs to send it over chat.
+3. **Grant her the manager claim.** Rules trust
+   `request.auth.token.manager`, which can only be set server-side. From a
+   trusted machine with a service account — never from this repo:
+
+   ```js
+   const admin = require('firebase-admin');
+   admin.initializeApp({ credential: admin.credential.cert(require('./service-account.json')) });
+   admin.auth().getUserByEmail('shannon@yourdomain.com')
+     .then(u => admin.auth().setCustomUserClaims(u.uid, { manager: true }));
+   ```
+
+   She must sign out and back in for the new claim to appear on her token.
+4. **Publish the rules** from `firestore.rules` (console → Firestore →
+   Rules). Test them in the Rules Playground *before* step 5.
+5. **Flip the switch**: set `mode: 'firebase'` in `js/firebase-config.js`.
+
+Steps 1 through 4 need a human with console access. Step 5 is one line.
+
+### What to check on first run
+
+- Open the app, add a profile, then confirm it appears in Firestore under
+  `orgs/dwr-default/profiles`
+- Open on a second device and confirm the same roster loads
+- Sign in as Shannon and confirm the manager view opens
+- Sign in as a non-manager account and confirm it is refused with "does not
+  have manager access" — that proves the claim is doing the work
+- Run a quiz, then confirm the XP change lands in `orgs/.../progress`
+
+If the SDK can't load or the rules reject a read, the app logs a warning and
+carries on with local storage. Check the browser console rather than assuming
+it worked.
 
 **Never commit** a service account JSON or any Admin SDK credential. Those
-bypass all rules. The web config (`apiKey`, `authDomain`, `projectId`, …) is
+bypass every rule. The web config (`apiKey`, `authDomain`, `projectId`, …) is
 fine and is meant to be public.

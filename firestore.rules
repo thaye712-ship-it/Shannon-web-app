@@ -1,0 +1,75 @@
+rules_version = '2';
+
+/*
+  Provenance — Firestore security rules
+  ------------------------------------------------------------------
+  Paste these into Firebase console → Firestore Database → Rules, and
+  Publish, BEFORE flipping js/firebase-config.js to mode 'firebase'.
+
+  These rules are the only thing protecting this data. The app is a
+  static site in a public repository, so the web config is visible to
+  anyone — that is expected and fine, but it means nothing here can
+  rely on the client behaving honestly.
+
+  Manager status is read from a CUSTOM CLAIM on the auth token
+  (request.auth.token.manager), never from a Firestore field. A field
+  could be edited by whoever can write that document; a claim can only
+  be set server-side with the Admin SDK, so rules can actually trust it.
+
+  To grant the claim to Shannon, run once from a trusted machine with a
+  service account (never from this repo, never from the browser):
+
+    admin.auth().setCustomUserClaims(uid, { manager: true })
+
+  She must sign out and back in for a new claim to appear on her token.
+*/
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /orgs/{orgId} {
+
+      function isManager() {
+        return request.auth != null && request.auth.token.manager == true;
+      }
+
+      // ---- Profiles: name, avatar, role ----
+      match /profiles/{profileId} {
+
+        // Anyone can see the roster: picking your name from the dropdown
+        // happens before any sign-in exists.
+        allow read: if true;
+
+        // Anyone can add themselves, but only as an associate, and never
+        // as root. Without these checks a visitor could create their own
+        // manager account and grant themselves the run of the place.
+        allow create: if request.resource.data.role == 'associate'
+                      && request.resource.data.root == false;
+
+        // Promoting, demoting, renaming or deleting is managers only, and
+        // the root manager is untouchable by anyone.
+        allow update, delete: if isManager() && resource.data.root != true;
+      }
+
+      // ---- Progress: XP, streak, badges, mastery, flashcard marks ----
+      match /progress/{profileId} {
+
+        allow read: if true;
+
+        // NOTE, and read this before relying on the numbers:
+        //
+        // Associates train without signing in, so there is no identity to
+        // check a write against — anyone can write anyone's progress. That
+        // is an acceptable trade for practice scores, and NOT acceptable if
+        // this data ever informs a performance conversation.
+        //
+        // To tighten it, give associates real accounts and swap this for:
+        //   allow write: if request.auth != null
+        //                && request.auth.uid == profileId;
+        allow write: if true;
+      }
+    }
+
+    // Anything not matched above is denied.
+  }
+}

@@ -96,6 +96,8 @@
     </p>
 
     <div class="profile-new">
+      <input class="profile-input" data-auth-email type="email" hidden
+             placeholder="Manager email" autocomplete="username" spellcheck="false">
       <input class="profile-input" data-auth-password type="password"
              placeholder="Manager password" autocomplete="current-password">
       <p class="auth-error" data-auth-error hidden></p>
@@ -105,12 +107,20 @@
       </div>
     </div>
 
-    <div class="auth-note">
+    <div class="auth-note" data-auth-note-local>
       <b>About this password</b>
       It is stored as a salted hash on this device only, so it keeps the
       manager view off the showroom floor but is not real security — anyone
       with browser dev tools can get around it, and it does not follow you to
       another device. Proper accounts arrive when Firebase Auth is connected.
+    </div>
+
+    <div class="auth-note" data-auth-note-firebase hidden>
+      <b>Signing in against Firebase</b>
+      Managers sign in with the email and password set in the Firebase
+      console. Manager powers come from a custom claim on the account, not
+      from anything this page can change, so the check is real rather than
+      cosmetic.
     </div>
   </section>
 
@@ -441,8 +451,11 @@
 
 </main>
 
+<script src="js/firebase-config.js"></script>
 <script src="js/data.js"></script>
 <script src="js/questions.js"></script>
 <script src="js/app.js"></script>
+<!-- Loads after the app and stays inert unless firebase-config.js opts in. -->
+<script type="module" src="js/firebase-store.js"></script>
 </body>
 </html>
