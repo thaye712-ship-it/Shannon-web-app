@@ -10,6 +10,43 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-12 — Manager sign-in removed; everyone is just a user
+
+Progress is stored per device. A password guarding a device-local roster
+was protecting nothing — anyone holding the iPad could clear site data or
+open dev tools and be past it in seconds — while costing a real person a
+real login. So the whole manager tier is gone.
+
+- **Removed the manager role, the passcode screen and the roster screen.**
+  Also gone: the salted SHA-256 hashing, the unlock/lockout handling, the
+  seeded root profile, and the `role`/`root` fields on profile records.
+  Profiles are now `{ id, name, emoji, createdAt }` and nothing else.
+- **The avatar dropdown is just people plus "＋ Add someone."**
+- **Upgrade path for anyone already on the old build.** On boot,
+  `dropSeededManager()` looks for a seeded root profile: if it was never
+  used (0 XP, 0 sessions) it is deleted, and if it *was* used it is kept
+  and demoted, so nobody loses progress either way. Both paths are tested.
+- **Firebase adapter and rules follow.** `js/firebase-store.js` lost its
+  auth functions; `firestore.rules` was rewritten for the no-accounts model
+  — a shape check on profiles, open progress writes — with the tighter
+  account-based rules kept at the bottom as a commented sketch for whenever
+  these numbers need to be trustworthy. The adapter is still switched off
+  (`mode: 'local'`).
+
+To be explicit about what this trades away: there is still no manager view
+of who completed what, and progress written without accounts is fine for
+practice scores and not fine for a performance conversation. Both of those
+need a backend and real sign-in, and `BACKEND.md` says what that costs.
+
+Verified end to end in a headless browser: first run boots to the profile
+picker with nothing pre-seeded, a full eight-question sprint banks XP,
+browsing filters (Lighting, 18 of 121) and opens detail views, a flashcard
+"know it" mark persists, a second profile starts at zero, switching back
+restores the first profile's XP, and both upgrade paths behave. No
+JavaScript errors.
+
+---
+
 ## 2026-09-12 — Catalog nearly doubled, browse by type, and user profiles
 
 - **56 new products, 65 → 121.** Gathered by four parallel research agents

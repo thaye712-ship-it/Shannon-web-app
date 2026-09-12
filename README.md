@@ -101,9 +101,15 @@ listed in any group falls into an "Other" bucket rather than disappearing.
 ## Profiles
 
 Anyone can create a profile from the front screen — a name and an avatar, no
-password. Each profile keeps its own XP, streak, badges, per-topic mastery
-and flashcard marks, so a shared showroom device works for a whole team. The
-avatar button in the top bar switches between people.
+password, no roles. Each profile keeps its own XP, streak, badges, per-topic
+mastery and flashcard marks, so a shared showroom device works for a whole
+team. The avatar menu in the top bar switches between people and adds new
+ones.
+
+There is deliberately no manager tier. Everything is stored per device, so a
+password guarding a device-local roster would have been friction with nothing
+behind it. If progress ever moves to a backend, real accounts and manager
+roles become worth adding — `firestore.rules` sketches what that takes.
 
 Progress is stored per profile in `localStorage`, which means it does not
 follow someone to another device. `BACKEND.md` documents exactly what moving
