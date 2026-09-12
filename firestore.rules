@@ -3,27 +3,27 @@ rules_version = '2';
 /*
   Provenance — Firestore security rules
   ------------------------------------------------------------------
-  Paste into Firebase console → Firestore Database → Rules → Publish,
-  BEFORE setting mode to 'firebase' in js/firebase-config.js.
+  Only needed if you switch js/firebase-config.js to mode 'firebase'.
+  Until then the app runs entirely on the device and none of this
+  applies.
 
-  These rules are the only thing protecting this data. The app is a
-  static site in a public repo, so the web config is visible to anyone
-  — that's expected and fine, but nothing here can assume the client
-  is behaving honestly.
+  Paste into Firebase console → Firestore Database → Rules → Publish
+  BEFORE flipping that switch.
 
-  HOW MANAGER ACCESS WORKS
-  A signed-in account is a manager if a document exists for its UID at
-  orgs/{orgId}/managers/{uid}. That collection is writable only by
-  existing managers, and the first one is created by hand in the
-  console, so there is no way to promote yourself from the app.
+  WHAT THIS PROTECTS, HONESTLY
+  The app has no accounts. Anyone picks a name and trains. That means
+  these rules cannot tell one person from another, so anyone with the
+  link can read the roster, add a name, and write progress. That is
+  the intended trust model for a shared showroom device, and it is
+  fine for practice scores.
 
-  This replaces the more common custom-claims approach on purpose.
-  Claims are marginally stronger (they ride on the token, so no extra
-  read) but require the Admin SDK, a downloaded service account key
-  and a local Node install — a lot of moving parts, including a
-  credential file that must never be committed. At this scale the
-  read-per-check costs nothing and everything can be done from the
-  console, which is the safer trade.
+  It is NOT fine if these numbers ever inform a performance
+  conversation. At that point people need real accounts — see the
+  block at the bottom for what changes.
+
+  The rules still do real work: they stop the database being used as
+  free storage for anything other than this app's shape, and they
+  keep the collections scoped to one org.
 */
 
 service cloud.firestore {
@@ -31,54 +31,23 @@ service cloud.firestore {
 
     match /orgs/{orgId} {
 
-      function isManager() {
-        return request.auth != null
-          && exists(/databases/$(database)/documents/orgs/$(orgId)/managers/$(request.auth.uid));
-      }
-
-      // ---- Who is a manager ----
-      // Readable so the app can confirm its own status after sign-in.
-      // Writable only by an existing manager, which is what stops anyone
-      // handing themselves the keys. Bootstrap the first one in console.
-      match /managers/{uid} {
-        allow read: if request.auth != null;
-        allow write: if isManager();
-      }
-
-      // ---- Profiles: name, avatar, role ----
+      // ---- Profiles: name, avatar ----
       match /profiles/{profileId} {
-
-        // Anyone can see the roster — picking your name from the dropdown
-        // happens before any sign-in exists.
         allow read: if true;
 
-        // Anyone can add themselves, but only as an associate and never as
-        // root. Without these two checks a visitor could create their own
-        // manager-looking profile.
-        allow create: if request.resource.data.role == 'associate'
-                      && request.resource.data.root == false;
+        // Shape check: keeps the collection to profiles and nothing else.
+        allow create, update: if request.resource.data.keys().hasOnly(
+                                   ['name', 'emoji', 'createdAt'])
+                              && request.resource.data.name is string
+                              && request.resource.data.name.size() > 0
+                              && request.resource.data.name.size() <= 40;
 
-        // Renaming, promoting, demoting and deleting are managers only,
-        // and the root manager is untouchable by anyone.
-        allow update, delete: if isManager() && resource.data.root != true;
+        allow delete: if true;
       }
 
       // ---- Progress: XP, streak, badges, mastery, flashcard marks ----
       match /progress/{profileId} {
-
         allow read: if true;
-
-        // READ THIS BEFORE TRUSTING THE NUMBERS.
-        //
-        // Associates train without signing in, so there is no identity to
-        // check a write against — meaning anyone can write anyone's
-        // progress. That is an acceptable trade for practice scores and
-        // NOT acceptable if this data ever informs a performance
-        // conversation.
-        //
-        // To close it, give associates real accounts and swap this for:
-        //   allow write: if request.auth != null
-        //                && request.auth.uid == profileId;
         allow write: if true;
       }
     }
@@ -86,3 +55,38 @@ service cloud.firestore {
     // Anything not matched above is denied.
   }
 }
+
+/*
+  ------------------------------------------------------------------
+  WHEN YOU WANT MANAGERS AND TRUSTWORTHY NUMBERS
+
+  Two changes, both in the console:
+
+  1. Give people real accounts (Authentication → Email/Password), then
+     tie progress to the signed-in user so nobody can write anyone
+     else's:
+
+       match /progress/{profileId} {
+         allow read: if request.auth != null;
+         allow write: if request.auth != null
+                      && request.auth.uid == profileId;
+       }
+
+  2. Add managers as documents in a `managers` collection, writable
+     only by existing managers, with the first created by hand in the
+     console so there is no way to promote yourself from the app:
+
+       function isManager() {
+         return request.auth != null
+           && exists(/databases/$(database)/documents/orgs/$(orgId)/managers/$(request.auth.uid));
+       }
+
+       match /managers/{uid} {
+         allow read: if request.auth != null;
+         allow write: if isManager();
+       }
+
+     Then restrict profile edits with `allow update, delete: if isManager();`
+
+  The app would need matching UI for both. Ask and I'll build it.
+*/

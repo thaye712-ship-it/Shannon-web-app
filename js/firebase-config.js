@@ -16,16 +16,13 @@ window.PROVENANCE_BACKEND = {
     'local'    — profiles live in this browser only (default)
     'firebase' — profiles sync to Firestore
 
-    Leave this on 'local' until all three of these are done, or the
-    app will either fail against locked rules or run wide open
-    against test-mode rules:
-
-      1. Email/Password sign-in is enabled in Firebase Auth
-      2. Shannon's manager account exists, with a password set in
-         the console (never in this repo)
-      3. The contents of firestore.rules are published
+    Leave this on 'local' until the Firestore database exists and
+    the contents of firestore.rules are published, or the app will
+    either fail against locked default rules or run wide open
+    against test-mode rules.
 
     Flipping this to 'firebase' is the only change needed here.
+    SETUP-FIREBASE.md has the click-by-click version.
   */
   mode: 'local',
 

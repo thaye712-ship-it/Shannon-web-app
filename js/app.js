@@ -39,9 +39,6 @@
 
   const AVATARS = ['🦊', '🐙', '🦉', '🐝', '🦜', '🐢', '🦩', '🐳', '🦁', '🐼', '🦒', '🐨'];
 
-  const MANAGER_AUTH_KEY = 'provenance.managerAuth.v1';
-  const ROOT_MANAGER = 'Shannon';
-
   /* ---------------- tiny DOM helpers ---------------- */
 
   const $  = (sel, root) => (root || document).querySelector(sel);
@@ -103,8 +100,6 @@
         id: 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         name: String(name).trim().slice(0, 40),
         emoji: emoji || AVATARS[Math.floor(Math.random() * AVATARS.length)],
-        role: o.role === 'manager' ? 'manager' : 'associate',
-        root: !!o.root,          // the root manager cannot be removed or demoted
         createdAt: new Date().toISOString()
       };
       ix.users.push(user);
@@ -130,8 +125,6 @@
     },
     remove(id) {
       const ix = this.index();
-      const target = ix.users.find(u => u.id === id);
-      if (target && target.root) return false;   // root manager is not deletable
       ix.users = ix.users.filter(u => u.id !== id);
       if (ix.activeId === id) ix.activeId = null;
       this.saveIndex(ix);
@@ -139,7 +132,6 @@
       if (backend) backend.removeProfile(id);
       return true;
     },
-    managers() { return this.list().filter(u => u.role === 'manager'); },
     loadProgress(id) {
       try {
         const raw = localStorage.getItem(userKey(id));
@@ -183,73 +175,26 @@
     return true;
   }
 
-  /* ---------------- manager sign-in ----------------
-
-     IMPORTANT, and worth reading before changing any of this:
-
-     This is a static site served from a public repository. Any password
-     written into this file would be visible to every associate and to the
-     internet, so no password is stored here and none ever should be. What
-     this module does is hold a salted SHA-256 hash in the device's own
-     local storage, set by a manager on first use.
-
-     That makes it a device-level gate — it keeps an associate from casually
-     opening the manager view on the showroom iPad. It is NOT real security:
-     anyone with dev tools can bypass it, and it does not travel between
-     devices. Real authentication arrives when Firebase Auth is wired up
-     (see BACKEND.md), at which point the password lives in Firebase, is set
-     in its console, and never touches this repository.
-  */
-
-  const ManagerAuth = {
-    record() {
-      try { return JSON.parse(localStorage.getItem(MANAGER_AUTH_KEY) || 'null'); }
-      catch (e) { return null; }
-    },
-    isConfigured() { return !!(this.record() || {}).hash; },
-
-    async hash(password, salt) {
-      const bytes = new TextEncoder().encode(salt + '::' + password);
-      const digest = await crypto.subtle.digest('SHA-256', bytes);
-      return Array.from(new Uint8Array(digest))
-        .map(b => b.toString(16).padStart(2, '0')).join('');
-    },
-
-    async setPassword(password) {
-      const salt = Array.from(crypto.getRandomValues(new Uint8Array(16)))
-        .map(b => b.toString(16).padStart(2, '0')).join('');
-      const hash = await this.hash(password, salt);
-      try {
-        localStorage.setItem(MANAGER_AUTH_KEY, JSON.stringify({ salt, hash, setAt: new Date().toISOString() }));
-      } catch (e) { /* private mode */ }
-    },
-
-    async verify(password) {
-      const rec = this.record();
-      if (!rec || !rec.hash) return false;
-      return (await this.hash(password, rec.salt)) === rec.hash;
-    }
-  };
-
-  /* Signed-in-as-manager state lives for the session only, never persisted. */
-  let managerUnlocked = false;
-
-  /*
-    Shannon is the root manager: seeded once, cannot be removed or demoted,
-    and is the only account that starts with authority to add and remove
-    other managers. Her password is not set here — see ManagerAuth above.
-  */
-  function seedRootManager() {
-    if (Profiles.list().some(u => u.root)) return;
-    Profiles.create(ROOT_MANAGER, '🦉', { role: 'manager', root: true, activate: false });
-  }
-
   /*
     Nobody loses progress to a rename or to the arrival of profiles. Two
     older shapes get pulled forward, in order:
       1. profiles saved under the previous app name
       2. the single-player record from before profiles existed at all
   */
+  /*
+    An earlier build seeded a "Shannon" manager profile. Managers are gone —
+    everyone is just a user now — so drop that profile if nobody ever trained
+    as it. If it has progress, somebody used it, so it stays as a normal user.
+  */
+  function dropSeededManager() {
+    Profiles.list().forEach(u => {
+      if (!u.root) return;
+      const prog = Profiles.loadProgress(u.id);
+      if (prog.xp === 0 && prog.sessions === 0) Profiles.remove(u.id);
+      else Profiles.update(u.id, { root: false, role: 'associate' });
+    });
+  }
+
   function migrateLegacy() {
     if (Profiles.list().length) return;
     if (migrateRenamedProfiles()) return;
@@ -528,7 +473,7 @@
   function renderUserMenu() {
     const active = Profiles.active();
     $('[data-usermenu-current]').textContent = active
-      ? active.emoji + '  ' + active.name + (active.role === 'manager' ? '  · manager' : '')
+      ? active.emoji + '  ' + active.name
       : 'Nobody yet';
 
     const list = $('[data-usermenu-list]');
@@ -539,171 +484,14 @@
         const item = el('button', 'usermenu-item');
         item.appendChild(el('span', 'usermenu-item-icon', u.emoji));
         item.appendChild(el('span', null, u.name));
-        if (u.role === 'manager') item.appendChild(el('span', 'usermenu-tag', 'manager'));
         item.addEventListener('click', () => {
           sfx.tap();
           Profiles.select(u.id);
-          managerUnlocked = false;      // switching people drops manager access
           closeUserMenu();
           enterApp();
         });
         list.appendChild(item);
       });
-
-    $('[data-manager-label]').textContent = managerUnlocked ? 'Team & managers' : 'Manager sign-in';
-  }
-
-  /* ---------------- manager area ---------------- */
-
-  function openManager() {
-    if (managerUnlocked) { renderManager(); show('manager'); return; }
-
-    const remote = !!backend;
-    const configured = ManagerAuth.isConfigured();
-
-    $('[data-auth-email]').hidden = !remote;
-    $('[data-auth-note-local]').hidden = remote;
-    $('[data-auth-note-firebase]').hidden = !remote;
-
-    if (remote) {
-      $('[data-auth-title]').textContent = 'Manager sign-in';
-      $('[data-auth-sub]').textContent =
-        'Sign in with the manager account from your Firebase project.';
-      $('[data-auth-submit]').textContent = 'Sign in';
-    } else {
-      $('[data-auth-title]').textContent = configured ? 'Manager sign-in' : 'Set a manager password';
-      $('[data-auth-sub]').textContent = configured
-        ? 'Managers can add and remove other managers and see the team roster.'
-        : 'No manager password has been set on this device yet. Choose one now — it unlocks the manager view here.';
-      $('[data-auth-submit]').textContent = configured ? 'Sign in' : 'Set password';
-      $('[data-auth-password]').setAttribute('autocomplete', configured ? 'current-password' : 'new-password');
-    }
-
-    $('[data-auth-email]').value = '';
-    $('[data-auth-password]').value = '';
-    $('[data-auth-error]').hidden = true;
-    show('manager-auth');
-    setTimeout(() => (remote ? $('[data-auth-email]') : $('[data-auth-password]')).focus(), 80);
-  }
-
-  function unlockManager() {
-    managerUnlocked = true;
-    sfx.right();
-    renderManager();
-    show('manager');
-  }
-
-  function authFail(message) {
-    const err = $('[data-auth-error]');
-    err.textContent = message;
-    err.hidden = false;
-    $('[data-auth-password]').value = '';
-    $('[data-auth-password]').focus();
-    sfx.wrong();
-  }
-
-  async function submitManagerAuth() {
-    const pwInput = $('[data-auth-password]');
-    const err = $('[data-auth-error]');
-    const password = pwInput.value;
-
-    /* Firebase mode: a real account check, not a local gate. */
-    if (backend) {
-      const email = $('[data-auth-email]').value.trim();
-      if (!email || !password) { (email ? pwInput : $('[data-auth-email]')).focus(); return; }
-      $('[data-auth-submit]').disabled = true;
-      const res = await backend.signInManager(email, password);
-      $('[data-auth-submit]').disabled = false;
-      if (!res.ok) { authFail(res.error); return; }
-      if (!res.manager) {
-        await backend.signOutManager();
-        authFail('That account signed in, but it does not have manager access.');
-        return;
-      }
-      unlockManager();
-      return;
-    }
-
-    if (!password) { pwInput.focus(); return; }
-
-    if (!ManagerAuth.isConfigured()) {
-      if (password.length < 4) {
-        err.textContent = 'Use at least four characters.';
-        err.hidden = false;
-        return;
-      }
-      await ManagerAuth.setPassword(password);
-      unlockManager();
-      return;
-    }
-
-    if (await ManagerAuth.verify(password)) unlockManager();
-    else authFail('That password does not match.');
-  }
-
-  function rosterCard(u) {
-    const card = el('div', 'roster-row');
-
-    const who = el('div', 'roster-who');
-    who.appendChild(el('span', 'roster-emoji', u.emoji));
-    const text = el('div', 'roster-text');
-    text.appendChild(el('b', null, u.name));
-    const prog = Profiles.loadProgress(u.id);
-    text.appendChild(el('span', null,
-      'Level ' + levelOf(prog.xp) + '  ·  ' + prog.xp.toLocaleString() + ' XP' +
-      (u.root ? '  ·  root manager' : '')));
-    who.appendChild(text);
-    card.appendChild(who);
-
-    const actions = el('div', 'roster-actions');
-
-    if (!u.root) {
-      const toggle = el('button', 'btn ghost roster-btn',
-        u.role === 'manager' ? 'Make associate' : 'Make manager');
-      toggle.addEventListener('click', () => {
-        sfx.tap();
-        Profiles.update(u.id, { role: u.role === 'manager' ? 'associate' : 'manager' });
-        renderManager();
-        renderUserChip();
-      });
-      actions.appendChild(toggle);
-
-      const del = el('button', 'btn ghost roster-btn danger', 'Remove');
-      del.addEventListener('click', () => {
-        if (!window.confirm('Remove ' + u.name + '? Their progress on this device is deleted and cannot be recovered.')) return;
-        Profiles.remove(u.id);
-        if (!Profiles.activeId()) {
-          /* Removed whoever was signed in — fall back to the profile picker. */
-          renderProfiles();
-          show('profiles');
-          return;
-        }
-        renderManager();
-      });
-      actions.appendChild(del);
-    } else {
-      actions.appendChild(el('span', 'roster-locked', 'Cannot be removed'));
-    }
-
-    card.appendChild(actions);
-    return card;
-  }
-
-  function renderManager() {
-    const mgr = $('[data-manager-roster]');
-    const assoc = $('[data-associate-roster]');
-    mgr.innerHTML = '';
-    assoc.innerHTML = '';
-
-    const managers = Profiles.list().filter(u => u.role === 'manager');
-    const associates = Profiles.list().filter(u => u.role !== 'manager');
-
-    managers.forEach(u => mgr.appendChild(rosterCard(u)));
-    if (!associates.length) {
-      assoc.appendChild(el('p', 'roster-empty', 'No associates on this device yet.'));
-    } else {
-      associates.forEach(u => assoc.appendChild(rosterCard(u)));
-    }
   }
 
   /* ---------------- home screen rendering ---------------- */
@@ -1473,50 +1261,18 @@
     openNewProfile();
   });
 
-  $('[data-usermenu-manager]').addEventListener('click', () => {
-    sfx.tap();
-    closeUserMenu();
-    openManager();
-  });
-
-  $('[data-auth-submit]').addEventListener('click', submitManagerAuth);
-  $('[data-auth-password]').addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); submitManagerAuth(); }
-  });
-
-  $('[data-manager-signout]').addEventListener('click', async () => {
-    sfx.tap();
-    managerUnlocked = false;
-    if (backend) await backend.signOutManager();
-    show('home');
-  });
-
-  $('[data-manager-change-pw]').addEventListener('click', async () => {
-    if (backend) {
-      window.alert('Manager passwords are managed in the Firebase console now, not here.');
-      return;
-    }
-    const next = window.prompt('New manager password (at least four characters):');
-    if (next == null) return;
-    if (next.trim().length < 4) { window.alert('Password not changed — it needs at least four characters.'); return; }
-    await ManagerAuth.setPassword(next.trim());
-    window.alert('Manager password updated on this device.');
-  });
-
   /*
     The Firestore adapter loads as a module, so it reports in after this
     script has already booted the UI locally. Adopt it when it arrives.
   */
   window.addEventListener('provenance:backend-ready', async () => {
     backend = window.ProvenanceBackend;
-    $('[data-manager-change-pw]').hidden = true;
     const pulled = await hydrateFromBackend();
     if (!pulled) {
       /* Nothing remote yet — seed the roster this device already has. */
       Profiles.list().forEach(u => backend.pushProfile(u));
       return;
     }
-    seedRootManager();
     if (Profiles.activeId()) enterApp();
     else { renderProfiles(); show('profiles'); }
   });
@@ -1609,7 +1365,7 @@
   /* ---------------- boot ---------------- */
 
   migrateLegacy();
-  seedRootManager();
+  dropSeededManager();
 
   if (Profiles.activeId()) {
     enterApp();
@@ -1617,8 +1373,7 @@
     /* No one picked yet: the profile screen is the front door. */
     syncSoundButton();
     renderProfiles();
-    /* Only Shannon exists on a brand new device, so open the add form too. */
-    if (Profiles.list().every(u => u.root)) openNewProfile();
+    if (!Profiles.list().length) openNewProfile();
     show('profiles');
   }
 

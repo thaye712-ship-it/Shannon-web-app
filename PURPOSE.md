@@ -49,11 +49,11 @@ filter the catalog by type — sofas, lighting, tables, outdoor — and open
 any piece to read its full profile. Useful when someone gets a question on
 the floor about a specific model and wants the story behind it.
 
-Anyone can make a profile with a name and an avatar, no password. Each
-person keeps their own XP, streak, badges, mastery and flashcard marks, so
-one shared showroom device serves a whole team. Progress is stored on that
-device, so it does not follow someone to their phone, and there is no
-manager dashboard yet — `BACKEND.md` covers what changing that requires.
+Anyone can make a profile with a name and an avatar, no password and no
+roles. Each person keeps their own XP, streak, badges, mastery and flashcard
+marks, so one shared showroom device serves a whole team. Progress is stored
+on that device, so it does not follow someone to their phone, and there is no
+manager dashboard — `BACKEND.md` covers what changing that requires.
 The whole thing is built to feel like a mobile game rather than a
 compliance module, on the theory that associates will actually come back
 to something that feels like one.
