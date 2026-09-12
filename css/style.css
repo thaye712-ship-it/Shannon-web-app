@@ -80,6 +80,10 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
   animation:pop-in .5s cubic-bezier(.34,1.56,.64,1) both;
 }
 .wordmark{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.02em}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.navlink{font-weight:700;font-size:13.5px;color:var(--ink-soft);padding:6px 4px;transition:color .2s}
+.navlink:hover{color:var(--grape)}
+@media (prefers-color-scheme:dark){.navlink:hover{color:#C9B4FF}}
 .topstats{display:flex;align-items:center;gap:8px}
 .stat{
   display:flex;align-items:center;gap:5px;
@@ -117,6 +121,9 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
   -webkit-background-clip:text;background-clip:text;color:transparent
 }
 .hero-sub{margin:0;color:var(--ink-soft);font-size:16px;line-height:1.6;max-width:52ch}
+.link-inline{display:inline;font-weight:700;font-size:inherit;color:var(--grape);text-decoration:underline;text-underline-offset:3px;padding:0;white-space:nowrap}
+.link-inline:hover{color:var(--grape-deep)}
+@media (prefers-color-scheme:dark){.link-inline{color:#C9B4FF}.link-inline:hover{color:#fff}}
 
 /* ---------- level bar ---------- */
 .levelbar{
@@ -258,6 +265,29 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 .len-meta{font-size:12.5px;color:var(--grape);font-weight:700;margin-top:7px}
 @media (prefers-color-scheme:dark){.len-meta{color:#C9B4FF}}
 .len-desc{font-size:14px;color:var(--ink-soft);margin-top:6px;line-height:1.5}
+
+/* ---------- about ---------- */
+.about-section{margin:0 0 30px}
+.about-section h2{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.01em;margin:0 0 12px}
+.about-section > p{margin:0;color:var(--ink-soft);font-size:15px;line-height:1.65;max-width:64ch}
+.about-grid{display:grid;gap:14px}
+.about-card{padding:20px;border-radius:var(--r-md);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.about-card h3{font-family:var(--display);font-weight:800;font-size:16.5px;margin:0 0 8px}
+.about-card p{margin:0;color:var(--ink-soft);font-size:14px;line-height:1.6}
+.status-card{
+  padding:18px 20px;border-radius:var(--r-md);line-height:1.6;font-size:14px;color:var(--ink-soft);
+  background:color-mix(in srgb,var(--mint) 12%,transparent);
+  border:1px solid color-mix(in srgb,var(--mint) 35%,transparent)
+}
+.status-card b{display:block;font-family:var(--display);font-weight:800;font-size:15.5px;color:var(--ink);margin-bottom:6px}
+.about-list{margin:0;padding:0;list-style:none;display:grid;gap:9px}
+.about-list li{
+  display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.55;color:var(--ink-soft);
+  padding:12px 14px;border-radius:var(--r-sm);
+  background:color-mix(in srgb,var(--ink) 4%,transparent)
+}
+.about-list li::before{content:'—';color:var(--grape);font-weight:800;flex:none}
+@media (min-width:640px){.about-grid{grid-template-columns:1fr 1fr}}
 
 /* ---------- quiz chrome ---------- */
 .quiz-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
