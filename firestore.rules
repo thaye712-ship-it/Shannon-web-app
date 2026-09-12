@@ -3,25 +3,27 @@ rules_version = '2';
 /*
   Provenance — Firestore security rules
   ------------------------------------------------------------------
-  Paste these into Firebase console → Firestore Database → Rules, and
-  Publish, BEFORE flipping js/firebase-config.js to mode 'firebase'.
+  Paste into Firebase console → Firestore Database → Rules → Publish,
+  BEFORE setting mode to 'firebase' in js/firebase-config.js.
 
   These rules are the only thing protecting this data. The app is a
-  static site in a public repository, so the web config is visible to
-  anyone — that is expected and fine, but it means nothing here can
-  rely on the client behaving honestly.
+  static site in a public repo, so the web config is visible to anyone
+  — that's expected and fine, but nothing here can assume the client
+  is behaving honestly.
 
-  Manager status is read from a CUSTOM CLAIM on the auth token
-  (request.auth.token.manager), never from a Firestore field. A field
-  could be edited by whoever can write that document; a claim can only
-  be set server-side with the Admin SDK, so rules can actually trust it.
+  HOW MANAGER ACCESS WORKS
+  A signed-in account is a manager if a document exists for its UID at
+  orgs/{orgId}/managers/{uid}. That collection is writable only by
+  existing managers, and the first one is created by hand in the
+  console, so there is no way to promote yourself from the app.
 
-  To grant the claim to Shannon, run once from a trusted machine with a
-  service account (never from this repo, never from the browser):
-
-    admin.auth().setCustomUserClaims(uid, { manager: true })
-
-  She must sign out and back in for a new claim to appear on her token.
+  This replaces the more common custom-claims approach on purpose.
+  Claims are marginally stronger (they ride on the token, so no extra
+  read) but require the Admin SDK, a downloaded service account key
+  and a local Node install — a lot of moving parts, including a
+  credential file that must never be committed. At this scale the
+  read-per-check costs nothing and everything can be done from the
+  console, which is the safer trade.
 */
 
 service cloud.firestore {
@@ -30,24 +32,34 @@ service cloud.firestore {
     match /orgs/{orgId} {
 
       function isManager() {
-        return request.auth != null && request.auth.token.manager == true;
+        return request.auth != null
+          && exists(/databases/$(database)/documents/orgs/$(orgId)/managers/$(request.auth.uid));
+      }
+
+      // ---- Who is a manager ----
+      // Readable so the app can confirm its own status after sign-in.
+      // Writable only by an existing manager, which is what stops anyone
+      // handing themselves the keys. Bootstrap the first one in console.
+      match /managers/{uid} {
+        allow read: if request.auth != null;
+        allow write: if isManager();
       }
 
       // ---- Profiles: name, avatar, role ----
       match /profiles/{profileId} {
 
-        // Anyone can see the roster: picking your name from the dropdown
+        // Anyone can see the roster — picking your name from the dropdown
         // happens before any sign-in exists.
         allow read: if true;
 
-        // Anyone can add themselves, but only as an associate, and never
-        // as root. Without these checks a visitor could create their own
-        // manager account and grant themselves the run of the place.
+        // Anyone can add themselves, but only as an associate and never as
+        // root. Without these two checks a visitor could create their own
+        // manager-looking profile.
         allow create: if request.resource.data.role == 'associate'
                       && request.resource.data.root == false;
 
-        // Promoting, demoting, renaming or deleting is managers only, and
-        // the root manager is untouchable by anyone.
+        // Renaming, promoting, demoting and deleting are managers only,
+        // and the root manager is untouchable by anyone.
         allow update, delete: if isManager() && resource.data.root != true;
       }
 
@@ -56,14 +68,15 @@ service cloud.firestore {
 
         allow read: if true;
 
-        // NOTE, and read this before relying on the numbers:
+        // READ THIS BEFORE TRUSTING THE NUMBERS.
         //
         // Associates train without signing in, so there is no identity to
-        // check a write against — anyone can write anyone's progress. That
-        // is an acceptable trade for practice scores, and NOT acceptable if
-        // this data ever informs a performance conversation.
+        // check a write against — meaning anyone can write anyone's
+        // progress. That is an acceptable trade for practice scores and
+        // NOT acceptable if this data ever informs a performance
+        // conversation.
         //
-        // To tighten it, give associates real accounts and swap this for:
+        // To close it, give associates real accounts and swap this for:
         //   allow write: if request.auth != null
         //                && request.auth.uid == profileId;
         allow write: if true;

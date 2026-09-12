@@ -156,42 +156,37 @@ synced. It is a property of the iPad, not of the team.
 
 ## Turning it on
 
-1. **Enable Email/Password** in Firebase console → Authentication → Sign-in
-   method.
-2. **Create Shannon's account** there (Authentication → Users → Add user).
-   Set her password in the console. It never enters this repo and nobody
-   needs to send it over chat.
-3. **Grant her the manager claim.** Rules trust
-   `request.auth.token.manager`, which can only be set server-side. From a
-   trusted machine with a service account — never from this repo:
+**See `SETUP-FIREBASE.md`** for the click-by-click version. In summary:
+create the Firestore database in production mode, publish `firestore.rules`,
+enable Email/Password auth, create Shannon's account, add a document at
+`orgs/dwr-default/managers/{her UID}`, then set `mode: 'firebase'`.
 
-   ```js
-   const admin = require('firebase-admin');
-   admin.initializeApp({ credential: admin.credential.cert(require('./service-account.json')) });
-   admin.auth().getUserByEmail('shannon@yourdomain.com')
-     .then(u => admin.auth().setCustomUserClaims(u.uid, { manager: true }));
-   ```
+### Why manager status is a document, not a custom claim
 
-   She must sign out and back in for the new claim to appear on her token.
-4. **Publish the rules** from `firestore.rules` (console → Firestore →
-   Rules). Test them in the Rules Playground *before* step 5.
-5. **Flip the switch**: set `mode: 'firebase'` in `js/firebase-config.js`.
+The usual Firebase answer is a custom claim (`request.auth.token.manager`).
+Claims are slightly stronger — they ride on the token, so checking one costs
+no extra read — but setting one requires the Admin SDK, a downloaded service
+account key and a local Node install. That's a lot of moving parts for this,
+including a credential file that must never be committed and that tends to
+linger in a Downloads folder.
 
-Steps 1 through 4 need a human with console access. Step 5 is one line.
+Instead a person is a manager if a document exists at
+`orgs/{orgId}/managers/{uid}`. That collection is writable only by existing
+managers, and the first one is created by hand in the console, so there is no
+path from the app to promoting yourself. The cost is one document read per
+rule evaluation, which is nothing at this scale, and the entire setup can be
+done by clicking.
+
+If this ever grows to many stores and the read-per-check starts to matter,
+switching to claims means changing `isManager()` in the rules and the check
+in `signInManager()` — nothing else.
 
 ### What to check on first run
 
-- Open the app, add a profile, then confirm it appears in Firestore under
-  `orgs/dwr-default/profiles`
-- Open on a second device and confirm the same roster loads
-- Sign in as Shannon and confirm the manager view opens
-- Sign in as a non-manager account and confirm it is refused with "does not
-  have manager access" — that proves the claim is doing the work
-- Run a quiz, then confirm the XP change lands in `orgs/.../progress`
-
-If the SDK can't load or the rules reject a read, the app logs a warning and
-carries on with local storage. Check the browser console rather than assuming
-it worked.
+The full checklist is in `SETUP-FIREBASE.md`. The one that matters most:
+**sign in with an account that is not in the `managers` collection and
+confirm it is refused.** If that account gets into the manager view, the
+rules are not doing their job and everything else is a false positive.
 
 **Never commit** a service account JSON or any Admin SDK credential. Those
 bypass every rule. The web config (`apiKey`, `authDomain`, `projectId`, …) is

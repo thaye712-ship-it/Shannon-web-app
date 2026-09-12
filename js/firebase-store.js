@@ -106,11 +106,23 @@
 
     /* ---- manager auth, real this time ---- */
 
+    /*
+      Manager status is a document at orgs/{org}/managers/{uid}, which only
+      existing managers can write. Checking it here is a convenience for the
+      UI — the rules check it independently on every write, so a tampered
+      client gains nothing by lying about this result.
+    */
     async signInManager(email, password) {
       try {
         const cred = await authApi.signInWithEmailAndPassword(auth, email, password);
-        const token = await cred.user.getIdTokenResult();
-        return { ok: true, manager: token.claims.manager === true, email: cred.user.email };
+        let manager = false;
+        try {
+          const snap = await fs.getDoc(fs.doc(db, 'orgs', org, 'managers', cred.user.uid));
+          manager = snap.exists();
+        } catch (e) {
+          return { ok: false, error: 'Signed in, but could not read manager status. Are the rules published?' };
+        }
+        return { ok: true, manager, email: cred.user.email, uid: cred.user.uid };
       } catch (e) {
         return { ok: false, error: friendlyAuthError(e) };
       }
