@@ -10,10 +10,28 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
-## 2026-09-12 — Build log added
+## 2026-09-12 — Real DWR catalog (first batch) merged, purpose doc added
 
-- Added this file to track future changes.
-- No functional or content changes to the app.
+- Merged branch `claude/friendly-dijkstra-nuqtk7`: replaced the sample
+  brand data with a first batch of **30 real Design Within Reach products**
+  (Eames, Saarinen, Bertoia, Jacobsen, Le Corbusier, Wegner and others),
+  researched from published design history — dwr.com was not reachable
+  from that build environment, so nothing was scraped from the live site.
+  Roughly a quarter of the eventual catalog; more can be appended to
+  `js/data.js` in the same shape.
+- Reworked the question engine and app copy from brand-based topics
+  (origin/history/lineup/family) to product-based topics (history, style,
+  materials, designer, know-how).
+- Refreshed the construction/materials vocabulary deck (14 terms) to match
+  DWR's modern-design assortment (cantilever frames, molded plywood, cane
+  webbing, tubular steel, powder coating, outdoor teak) in place of
+  mattress- and recliner-specific terms.
+- Added `PURPOSE.md` documenting who the app is for, what it teaches, how
+  it's meant to be used, and current status/limitations.
+- Added this build log to track future changes.
+
+Verified after merge: all three JS files pass a syntax check, catalog
+loads 30 products + 14 know-how entries, no merge conflicts.
 
 Branch: `claude/site-changes-build-log-m4xymb`
 
