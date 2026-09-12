@@ -11,15 +11,14 @@ compliance module.
 
 ## Status
 
-Loaded with a **first batch of real Design Within Reach products** — 30
-pieces researched from published design history (dwr.com itself could not
-be reached directly from this build environment, so nothing here was
-scraped; it was written from verified design-history sources instead).
-This batch is weighted toward the iconic, licensed design classics DWR is
-best known for selling, since those are the pieces associates get asked
-about most. It is roughly a quarter of the eventual catalog — more
-products can be added to `js/data.js` in the same shape, and the whole
-question bank regenerates from it automatically with no other changes.
+Loaded with **71 real Design Within Reach products and 20 construction and
+materials terms**, researched from published design history rather than
+scraped from dwr.com. The catalog is weighted toward the iconic, licensed
+design classics DWR is best known for selling, since those are the pieces
+associates get asked about most. It covers well over half of the eventual
+full catalog — more products can be added to `js/data.js` in the same
+shape, and the whole question bank regenerates from it automatically with
+no other changes.
 
 ## Running it
 
@@ -42,7 +41,8 @@ finishing extends the daily streak.
 **Deep Dive** — thirty or sixty minutes, split into chapters. Each chapter shows
 learn cards first and then quizzes only on what those cards taught, so nothing
 comes out of nowhere. Thirty minutes is four chapters and twenty-four questions.
-Sixty is seven chapters and forty-nine questions, which covers this batch in full.
+Sixty is seven chapters and forty-nine questions; a full run through the catalog
+takes several sessions at this pace.
 
 ## Question formats
 
@@ -126,8 +126,8 @@ theme. Sound is off with one tap and the choice is remembered.
 
 ## Known limits of this build
 
-- Only a first batch (roughly a quarter) of the DWR catalog is loaded. The
-  rest can be added the same way, whenever the next batch is ready.
+- The catalog covers well over half of the eventual full DWR assortment,
+  not all of it. The rest can be added the same way, whenever ready.
 - Session length is set by question count rather than a wall clock, so the
   thirty and sixty minute labels are estimates.
 - There is no server, so progress cannot follow a person across devices and

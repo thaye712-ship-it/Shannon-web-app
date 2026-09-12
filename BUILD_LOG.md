@@ -10,6 +10,40 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-12 — Catalog expanded to 71 products, over half of full assortment
+
+- Added 41 new products to `js/data.js`, taking the catalog from 30 to
+  **71 real DWR products** (roughly 59% of the ~120-product eventual
+  catalog implied by the original "first batch" framing — past the 50%
+  target). New entries span Herman Miller (Eames Storage Unit, Eames
+  Molded Plywood Lounge Chair, Eames Shell Rocker, Marshmallow Sofa,
+  Coconut Chair, Sayl, Aeron, Eames Walnut Stool), Knoll (Pollock
+  Executive Chair, Florence Knoll Sofa, Barcelona Stool, Brno Chair, MR
+  Chair, Saarinen Tulip Armchair), Fritz Hansen (PK22, PK24, Grand Prix,
+  Drop Chair), Carl Hansen & Søn (CH07, CH25), PP Møbler (Round Chair,
+  Peacock Chair, Papa Bear Chair), Cassina (LC2, LC3, Superleggera),
+  Louis Poulsen (PH Artichoke), Flos (Taccia, Snoopy, Parentesi), Emeco
+  (111 Navy, Hudson, Broom), Gubi (Beetle Chair, Multi-Lite Pendant),
+  Tolix (Stool), USM (Haller Modular Shelving), Adelta (Ball Chair),
+  Vitra (Akari Light Sculpture), Howard Miller (Ball Clock) and DWR
+  Studio (Cyclone Dining Table).
+- Added 6 new construction/materials know-how terms (sled base,
+  book-matched veneer, ball-joint connector, solution-dyed acrylic,
+  chrome plating, wool felt), taking that glossary from 14 to 20 entries.
+- Updated `README.md`, `PURPOSE.md`, and the on-site home disclaimer and
+  About screen status card to reflect the new counts.
+- Verified after the change: JS syntax check passes, catalog loads 71
+  products + 20 know-how entries with no duplicate IDs and no incomplete
+  records, and a full click-through of a Morning Sprint and a 60-minute
+  Deep Dive (now correctly computing 7 chapters from the larger catalog)
+  produced no console errors.
+
+Branch: `claude/site-changes-build-log-m4xymb`, merged into `main`
+immediately after this entry — see the merge commit for the exact point
+this went live.
+
+---
+
 ## 2026-09-12 — On-site "About" page for associates and management
 
 - Added an in-app About screen (`#screen-about`) explaining what Shannon is,
