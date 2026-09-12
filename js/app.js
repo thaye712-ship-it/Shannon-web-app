@@ -201,8 +201,8 @@
     const wrap = $('[data-mastery]');
     wrap.innerHTML = '';
     const colors = {
-      origins: '#3BC9FF', history: '#FF4FA3', lineup: '#FFC53D',
-      family: '#6C3BF4', knowhow: '#1FD6A6'
+      history: '#FF4FA3', style: '#FFC53D', materials: '#3BC9FF',
+      designer: '#6C3BF4', knowhow: '#1FD6A6'
     };
 
     Object.keys(TOPICS).forEach(id => {
@@ -316,7 +316,7 @@
     wrap.innerHTML = '';
 
     const node = el('article', 'lcard');
-    node.appendChild(el('span', 'lcard-kind', card.kind === 'brand' ? 'Brand profile' : 'Know the term'));
+    node.appendChild(el('span', 'lcard-kind', card.kind === 'product' ? 'Product profile' : 'Know the term'));
     node.appendChild(el('h3', null, card.title));
     node.appendChild(el('p', 'lcard-sub', card.subtitle));
     node.appendChild(el('p', 'lcard-body', card.body));

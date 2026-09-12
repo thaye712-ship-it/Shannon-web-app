@@ -2,7 +2,7 @@
    Shannon — question engine
    ------------------------------------------------------------
    Questions are generated from the catalog rather than written
-   one at a time. Add a brand to data.js and it starts appearing
+   one at a time. Add a product to data.js and it starts appearing
    in quizzes with no change here.
 
    Question shapes:
@@ -12,11 +12,11 @@
    ============================================================ */
 
 const TOPICS = {
-  origins:  { id: 'origins',  label: 'Where They Are From', emoji: '🗺️' },
-  history:  { id: 'history',  label: 'Brand Stories',       emoji: '📖' },
-  lineup:   { id: 'lineup',   label: 'Who Makes What',      emoji: '🛋️' },
-  family:   { id: 'family',   label: 'Parent Companies',    emoji: '🏢' },
-  knowhow:  { id: 'knowhow',  label: 'Product Know-How',    emoji: '🔧' }
+  history:   { id: 'history',   label: 'History & Story',    emoji: '📖' },
+  style:     { id: 'style',     label: 'Style & Type',        emoji: '🎨' },
+  materials: { id: 'materials', label: 'Materials',           emoji: '🪵' },
+  designer:  { id: 'designer',  label: 'Designers & Makers',  emoji: '✏️' },
+  knowhow:   { id: 'knowhow',   label: 'Product Know-How',    emoji: '🔧' }
 };
 
 /* ---------- small helpers ---------- */
@@ -40,8 +40,8 @@ function pick(list) {
 
 /*
   Lowercase a phrase for mid-sentence use, but leave product names that
-  carry their own capitalization alone: "BILLY bookcase" must not become
-  "billy bookcase", and "Eames Lounge Chair" keeps its capitals.
+  carry their own capitalization alone: "PH5 Pendant Lamp" must not become
+  "pH5 pendant lamp", and "Eames Lounge Chair" keeps its capitals.
 */
 function softLower(text) {
   const first = text.split(' ')[0];
@@ -76,144 +76,155 @@ function choiceQuestion(topic, prompt, correct, wrongPool, why, tag) {
 
 const GENERATORS = [
 
-  /* Where is this brand headquartered? */
-  function hqCity(brand) {
-    const place = brand.city + ', ' + brand.state;
-    const pool = BRANDS.map(b => b.city + ', ' + b.state);
+  /* Who designed it? */
+  function designerOf(product) {
+    const pool = PRODUCTS.map(p => p.designer);
     return choiceQuestion(
-      'origins',
-      'Where is ' + brand.name + ' headquartered?',
-      place,
+      'designer',
+      'Who designed the ' + product.name + '?',
+      product.designer,
       pool,
-      brand.name + ' is based in ' + place + ', ' + brand.country + '.',
-      brand.id
+      'The ' + product.name + ' was designed by ' + product.designer + '.',
+      product.id
     );
   },
 
-  /* Which country? Only interesting when a non-US brand is in the mix. */
-  function hqCountry(brand) {
-    const pool = BRANDS.map(b => b.country);
+  /* Which company manufactures it? */
+  function manufacturerOf(product) {
+    const pool = PRODUCTS.map(p => p.manufacturer);
     return choiceQuestion(
-      'origins',
-      'Which country is ' + brand.name + ' from?',
-      brand.country,
-      pool.concat(['Denmark', 'Canada', 'Germany']),
-      brand.name + ' is based in ' + brand.city + ', ' + brand.country + '.',
-      brand.id
+      'designer',
+      'Which company manufactures the ' + product.name + '?',
+      product.manufacturer,
+      pool,
+      'The ' + product.name + ' is manufactured by ' + product.manufacturer + '.',
+      product.id
     );
   },
 
-  /* Founding year, answered on a slider. */
-  function foundedYear(brand) {
+  /* Where did the design originate? */
+  function originCountry(product) {
+    const pool = PRODUCTS.map(p => p.origin);
+    return choiceQuestion(
+      'history',
+      'Which country is the design of the ' + product.name + ' most associated with?',
+      product.origin,
+      pool,
+      'The ' + product.name + ' traces back to ' + product.origin + '.',
+      product.id
+    );
+  },
+
+  /* Year introduced, answered on a slider. */
+  function yearIntroduced(product) {
     return {
       type: 'year',
       topic: 'history',
-      tag: brand.id,
-      prompt: 'What year was ' + brand.name + ' founded?',
-      answer: brand.founded,
-      range: [1870, 2025],
-      why: brand.name + ' was founded in ' + brand.founded + ' in ' +
-           brand.city + ', ' + brand.state + '.'
+      tag: product.id,
+      prompt: 'What year was the ' + product.name + ' introduced?',
+      answer: product.year,
+      range: [1900, 2025],
+      why: 'The ' + product.name + ' was introduced in ' + product.year + ' by ' + product.manufacturer + '.'
     };
   },
 
-  /* Known for. */
-  function knownFor(brand) {
-    const pool = BRANDS.map(b => b.knownFor);
-    const correct = brand.knownFor;
-    const q = choiceQuestion(
-      'lineup',
-      'What is ' + brand.name + ' best known for?',
+  /* Which design movement? */
+  function styleMovement(product) {
+    const pool = PRODUCTS.map(p => p.style);
+    return choiceQuestion(
+      'style',
+      'Which design movement is the ' + product.name + ' most associated with?',
+      product.style,
+      pool,
+      'The ' + product.name + ' is associated with ' + product.style + '.',
+      product.id
+    );
+  },
+
+  /* What type of piece is it? */
+  function typeOf(product) {
+    const pool = PRODUCTS.map(p => p.category);
+    return choiceQuestion(
+      'style',
+      'What type of piece is the ' + product.name + '?',
+      product.category,
+      pool,
+      'The ' + product.name + ' is a ' + product.category.toLowerCase() + '.',
+      product.id
+    );
+  },
+
+  /* Primary material. */
+  function primaryMaterial(product) {
+    const correct = product.materials[0];
+    const pool = PRODUCTS.map(p => p.materials[0]);
+    return choiceQuestion(
+      'materials',
+      'What is the primary material used in the ' + product.name + '?',
       correct,
       pool,
-      brand.name + ' is known for ' + correct + '.',
-      brand.id
+      'The ' + product.name + ' is built primarily from ' + softLower(correct) + '.',
+      product.id
+    );
+  },
+
+  /* Known for. */
+  function knownFor(product) {
+    const pool = PRODUCTS.map(p => p.knownFor);
+    const correct = product.knownFor;
+    const q = choiceQuestion(
+      'style',
+      'What is the ' + product.name + ' best known for?',
+      correct,
+      pool,
+      'The ' + product.name + ' is known for ' + correct + '.',
+      product.id
     );
     if (q) q.options = q.options.map(o => o.charAt(0).toUpperCase() + o.slice(1));
     if (q) q.answer = q.options.indexOf(correct.charAt(0).toUpperCase() + correct.slice(1));
     return q;
   },
 
-  /* Signature product back to brand. */
-  function signature(brand) {
-    const item = pick(brand.signature);
-    const pool = BRANDS.filter(b => b.id !== brand.id).map(b => b.name);
-    return choiceQuestion(
-      'lineup',
-      'Which brand is known for ' + softLower(item) + '?',
-      brand.name,
-      pool,
-      item + ' is a signature line for ' + brand.name + '.',
-      brand.id
-    );
-  },
-
-  /* Parent company. */
-  function parentCo(brand) {
-    if (brand.parent === brand.name) return null;
-    const pool = BRANDS.map(b => b.parent);
-    return choiceQuestion(
-      'family',
-      'Which company is the parent of ' + brand.name + '?',
-      brand.parent,
-      pool,
-      brand.name + ' sits under ' + brand.parent + '.',
-      brand.id
-    );
-  },
-
-  /* Price tier positioning. */
-  function priceTier(brand) {
-    return choiceQuestion(
-      'lineup',
-      'Where does ' + brand.name + ' generally sit on price?',
-      brand.tier,
-      ['Value', 'Mid', 'Premium', 'Luxury'],
-      brand.name + ' generally sits in the ' + brand.tier.toLowerCase() + ' range.',
-      brand.id
-    );
-  },
-
-  /* True / false built from a real fact, or a fact stolen from another brand. */
-  function factCheck(brand) {
+  /* True / false built from a real fact, or a fact stolen from another product. */
+  function factCheck(product) {
     const isTrue = Math.random() < 0.5;
     if (isTrue) {
       return {
         type: 'truefalse',
         topic: 'history',
-        tag: brand.id,
-        prompt: brand.name + ': ' + pick(brand.facts),
+        tag: product.id,
+        prompt: product.name + ': ' + pick(product.facts),
         answer: true,
-        why: 'True. That one belongs to ' + brand.name + '.'
+        why: 'True. That one belongs to the ' + product.name + '.'
       };
     }
-    const other = pick(BRANDS.filter(b => b.id !== brand.id));
+    const other = pick(PRODUCTS.filter(p => p.id !== product.id));
     return {
       type: 'truefalse',
       topic: 'history',
-      tag: brand.id,
-      prompt: brand.name + ': ' + pick(other.facts),
+      tag: product.id,
+      prompt: product.name + ': ' + pick(other.facts),
       answer: false,
-      why: 'False. That one actually belongs to ' + other.name + '.'
+      why: 'False. That one actually belongs to the ' + other.name + '.'
     };
   },
 
-  /* Older of two brands. */
-  function whichOlder(brand) {
-    const other = pick(BRANDS.filter(b => b.id !== brand.id && b.founded !== brand.founded));
+  /* Older of two products. */
+  function whichOlder(product) {
+    const other = pick(PRODUCTS.filter(p => p.id !== product.id && p.year !== product.year));
     if (!other) return null;
-    const older = brand.founded < other.founded ? brand : other;
-    const younger = older === brand ? other : brand;
-    const options = shuffle([brand.name, other.name]);
+    const older = product.year < other.year ? product : other;
+    const younger = older === product ? other : product;
+    const options = shuffle([product.name, other.name]);
     return {
       type: 'choice',
       topic: 'history',
-      tag: brand.id,
-      prompt: 'Which of these two has been around longer?',
+      tag: product.id,
+      prompt: 'Which of these two designs came first?',
       options,
       answer: options.indexOf(older.name),
-      why: older.name + ' started in ' + older.founded + ', ' +
-           (younger.founded - older.founded) + ' years before ' + younger.name + '.'
+      why: 'The ' + older.name + ' arrived in ' + older.year + ', ' +
+           (younger.year - older.year) + ' years before the ' + younger.name + '.'
     };
   }
 ];
@@ -244,7 +255,7 @@ function buildDeck(count, topics) {
   const seen = new Set();
   let guard = 0;
 
-  const brandGens = GENERATORS;
+  const productGens = GENERATORS;
   const wantKnowHow = allowed.includes('knowhow');
   const knowHowPool = shuffle(KNOWHOW);
   let knowHowIndex = 0;
@@ -254,7 +265,7 @@ function buildDeck(count, topics) {
     let q = null;
 
     // Roughly a third know-how when it is in play, so quizzes mix
-    // brand recall with the vocabulary used on the floor.
+    // product recall with the vocabulary used on the floor.
     const goKnowHow = wantKnowHow &&
       (allowed.length === 1 || Math.random() < 0.34) &&
       knowHowIndex < knowHowPool.length;
@@ -262,8 +273,8 @@ function buildDeck(count, topics) {
     if (goKnowHow) {
       q = knowHowQuestion(knowHowPool[knowHowIndex++]);
     } else {
-      const gen = pick(brandGens);
-      q = gen(pick(BRANDS));
+      const gen = pick(productGens);
+      q = gen(pick(PRODUCTS));
       if (q && !allowed.includes(q.topic)) q = null;
     }
 
@@ -282,14 +293,14 @@ function buildDeck(count, topics) {
   A chapter teaches first and quizzes second. Learn cards are pulled from
   the same catalog, so the answer to every question was on a card.
 */
-function brandCard(brand) {
+function productCard(product) {
   return {
-    kind: 'brand',
-    title: brand.name,
-    subtitle: brand.city + ', ' + brand.state + '  ·  est. ' + brand.founded,
-    body: brand.history,
-    bullets: brand.facts,
-    chips: [brand.tier, brand.parent].concat(brand.categories.slice(0, 2))
+    kind: 'product',
+    title: product.name,
+    subtitle: product.designer + '  ·  ' + product.manufacturer + '  ·  est. ' + product.year,
+    body: product.history,
+    bullets: product.facts,
+    chips: [product.category, product.style].concat(product.materials.slice(0, 2))
   };
 }
 
@@ -305,29 +316,29 @@ function knowHowCard(entry) {
 }
 
 /*
-  Build `n` chapters. Each gets its own slice of brands, so a sixty
+  Build `n` chapters. Each gets its own slice of products, so a sixty
   minute session covers the catalog instead of repeating the same
   three names.
 */
 function buildChapters(n, questionsPerChapter) {
-  const brandOrder = shuffle(BRANDS);
+  const productOrder = shuffle(PRODUCTS);
   const termOrder = shuffle(KNOWHOW);
   const chapters = [];
-  const perChapter = Math.max(2, Math.ceil(brandOrder.length / n));
+  const perChapter = Math.max(2, Math.ceil(productOrder.length / n));
 
   for (let i = 0; i < n; i++) {
-    const brands = brandOrder.slice(i * perChapter, i * perChapter + perChapter);
-    const roster = brands.length ? brands : sample(BRANDS, perChapter);
+    const products = productOrder.slice(i * perChapter, i * perChapter + perChapter);
+    const roster = products.length ? products : sample(PRODUCTS, perChapter);
     const term = termOrder[i % termOrder.length];
 
-    const cards = roster.slice(0, 3).map(brandCard);
+    const cards = roster.slice(0, 3).map(productCard);
     cards.push(knowHowCard(term));
 
     /* Questions drawn only from what the cards just taught. */
     const pool = [];
-    roster.forEach(b => {
+    roster.forEach(p => {
       GENERATORS.forEach(gen => {
-        const q = gen(b);
+        const q = gen(p);
         if (q) pool.push(q);
       });
     });
@@ -344,7 +355,7 @@ function buildChapters(n, questionsPerChapter) {
 
     chapters.push({
       index: i,
-      title: roster.map(b => b.name).slice(0, 2).join(' + ') +
+      title: roster.map(p => p.name).slice(0, 2).join(' + ') +
              (roster.length > 2 ? ' and more' : ''),
       cards,
       questions

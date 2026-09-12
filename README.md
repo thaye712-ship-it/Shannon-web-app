@@ -1,18 +1,25 @@
 # Shannon — product knowledge training
 
-A fast, playful training app for retail furniture teams. It quizzes people on the
-vendors, manufacturers and products on their floor: where the brands come from,
-who owns them, what they are famous for, and the construction vocabulary that
-justifies a price tag.
+A fast, playful training app for Design Within Reach sales associates. It
+quizzes people on the pieces on the floor: who designed each one, the style
+and type of furniture it is, what it is made of, and the story that closes
+a sale.
 
 Built for a young audience first. Big type, motion, sound, streaks, combos,
-levels and badges. It should feel closer to a mobile game than to a compliance
-module.
+levels and badges. It should feel closer to a mobile game than to a
+compliance module.
 
 ## Status
 
-Demo build running on **placeholder brand data**. Everything works end to end.
-Swap in the real catalog and the whole question bank regenerates from it.
+Loaded with a **first batch of real Design Within Reach products** — 30
+pieces researched from published design history (dwr.com itself could not
+be reached directly from this build environment, so nothing here was
+scraped; it was written from verified design-history sources instead).
+This batch is weighted toward the iconic, licensed design classics DWR is
+best known for selling, since those are the pieces associates get asked
+about most. It is roughly a quarter of the eventual catalog — more
+products can be added to `js/data.js` in the same shape, and the whole
+question bank regenerates from it automatically with no other changes.
 
 ## Running it
 
@@ -35,7 +42,7 @@ finishing extends the daily streak.
 **Deep Dive** — thirty or sixty minutes, split into chapters. Each chapter shows
 learn cards first and then quizzes only on what those cards taught, so nothing
 comes out of nowhere. Thirty minutes is four chapters and twenty-four questions.
-Sixty is seven chapters and forty-nine questions, which covers the full catalog.
+Sixty is seven chapters and forty-nine questions, which covers this batch in full.
 
 ## Question formats
 
@@ -43,8 +50,8 @@ Sixty is seven chapters and forty-nine questions, which covers the full catalog.
 | --- | --- |
 | Multiple choice | Four options, keyboard keys 1 through 4 |
 | True or false | Two large tap targets |
-| Founding year | A slider; within five years still counts |
-| Brand matching | Signature product back to the brand that makes it |
+| Introduced year | A slider; within five years still counts |
+| Style / material match | The design movement or material behind a piece |
 
 ## Files
 
@@ -52,30 +59,29 @@ Sixty is seven chapters and forty-nine questions, which covers the full catalog.
 | --- | --- |
 | `index.html` | Screen shells for home, setup, learn, quiz and results |
 | `css/style.css` | All styling, animation and the dark mode palette |
-| `js/data.js` | **The catalog.** Brands and product know-how entries |
+| `js/data.js` | **The catalog.** Products and product know-how entries |
 | `js/questions.js` | Turns catalog records into questions and chapters |
 | `js/app.js` | Screens, scoring, timers, progress, confetti, sound |
 
-## Swapping in the real data
+## Adding more of the catalog
 
-Replace `js/data.js` only. Nothing else needs to change as long as each record
-keeps its shape.
+Add entries to the `products` array in `js/data.js` only. Nothing else needs
+to change as long as each record keeps its shape.
 
-A brand record:
+A product record:
 
 ```js
 {
-  id: 'ashley',                         // unique, lowercase, no spaces
-  name: 'Ashley Furniture',
-  parent: 'Ashley Furniture Industries',
-  founded: 1945,                        // number, drives the year slider
-  city: 'Arcadia',
-  state: 'Wisconsin',
-  country: 'United States',
-  tier: 'Value',                        // Value | Mid | Premium | Luxury
-  categories: ['Living room', 'Bedroom'],
-  signature: ['Upholstered sectionals'], // product lines
-  knownFor: 'being the largest ...',     // lowercase, completes "known for ___"
+  id: 'eames-lounge',                    // unique, lowercase, no spaces
+  name: 'Eames Lounge Chair and Ottoman',
+  designer: 'Charles and Ray Eames',
+  manufacturer: 'Herman Miller',
+  year: 1956,                            // number, drives the year slider
+  origin: 'United States',               // country the design traces to
+  category: 'Lounge chair',              // the type of piece
+  style: 'Mid-Century Modern',           // design movement
+  materials: ['Molded plywood', 'Leather upholstery', 'Aluminum base'],
+  knownFor: 'a bent-plywood shell ...',  // lowercase, completes "known for ___"
   history: 'One paragraph ...',          // shown on the learn card
   facts: ['...', '...', '...']           // three or more; used for true/false
 }
@@ -86,11 +92,11 @@ A product know-how record:
 ```js
 {
   id: 'eight-way',
-  topic: 'Construction',                 // Construction | Materials | Leather | Mattress
+  topic: 'Construction',                 // Construction | Materials | Leather
   term: 'Eight-way hand-tied',
   short: 'One line, shown under the title',
   detail: 'The full explanation, shown on the card and after an answer',
-  question: 'What does "eight-way hand-tied" describe on a sofa?',
+  question: 'What does "eight-way hand-tied" describe on upholstered seating?',
   answer: 'The correct option',
   distractors: ['wrong', 'wrong', 'wrong']   // exactly three
 }
@@ -98,12 +104,12 @@ A product know-how record:
 
 Two rules the engine depends on:
 
-1. Every brand needs at least three entries in `facts`, because true/false
-   questions are built by swapping a real fact for another brand's fact.
-2. At least four brands must exist, so multiple choice can find three wrong
+1. Every product needs at least three entries in `facts`, because true/false
+   questions are built by swapping a real fact for another product's fact.
+2. At least four products must exist, so multiple choice can find three wrong
    answers for every correct one.
 
-Add a brand and it immediately starts appearing in both modes. No other edits.
+Add a product and it immediately starts appearing in both modes. No other edits.
 
 ## Progress and privacy
 
@@ -120,7 +126,8 @@ theme. Sound is off with one tap and the choice is remembered.
 
 ## Known limits of this build
 
-- Brand data is filler and should be treated as such, not quoted to a customer.
+- Only a first batch (roughly a quarter) of the DWR catalog is loaded. The
+  rest can be added the same way, whenever the next batch is ready.
 - Session length is set by question count rather than a wall clock, so the
   thirty and sixty minute labels are estimates.
 - There is no server, so progress cannot follow a person across devices and
