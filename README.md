@@ -1,4 +1,4 @@
-# Shannon — product knowledge training
+# Provenance — product knowledge training
 
 A fast, playful training app for Design Within Reach sales associates. It
 quizzes people on the pieces on the floor: who designed each one, the style
@@ -56,7 +56,7 @@ takes several sessions at this pace.
 **Flashcards** — no timer, no score. Flip through the catalog at your own pace:
 a photo on the front, the full profile (designer, manufacturer, year, history)
 on the back. Mark each one "know it" or "still learning"; that's saved locally
-under `shannon.flashKnown.v1` so it persists between sessions.
+with the rest of that profile's progress, so it persists between sessions.
 
 Both Sprint and Deep Dive open on a topic picker first, so a session can be
 narrowed to just one or two question types (e.g. only Photo ID, or only Style

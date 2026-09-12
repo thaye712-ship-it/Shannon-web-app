@@ -55,8 +55,31 @@ step). A change is live within a few minutes of landing on `main`.
 
 Branch: `claude/site-changes-build-log-m4xymb`
 
-Still open: the site is still called Shannon — a rename was offered and the
-options were declined, so nothing was renamed.
+---
+
+## 2026-09-12 — Renamed from Shannon to Provenance
+
+- The app is now **Provenance**. A piece's provenance is where it came
+  from — who drew it, who builds it, what year, what it's made of — which
+  is precisely what the app teaches, so the name states the subject rather
+  than decorating it.
+- Updated the page title, meta description, wordmark, brand mark letter,
+  About screen, and the header comments in every source file. The About
+  screen now explains the name, since it earns a sentence.
+- **Storage keys moved** from `shannon.*` to `provenance.*`, with a
+  migration that carries existing profiles and their progress across
+  rather than stranding them under the old names. `migrateLegacy()` now
+  handles two older shapes in order: profiles saved under the previous
+  app name, then the pre-profiles single-player record. Anyone who has
+  used the live site keeps their XP, streak, badges and flashcard marks.
+- Historical entries below deliberately still say "Shannon" — they are a
+  record of what happened at the time, not a place to retrofit the name.
+- **Not renamed:** the GitHub repository and therefore the live URL, which
+  is still `.../Shannon-web-app/`. Renaming the repo changes that URL and
+  breaks any existing link or bookmark, so that is the owner's call to
+  make rather than something to do unprompted.
+
+Branch: `claude/site-changes-build-log-m4xymb`
 
 ---
 

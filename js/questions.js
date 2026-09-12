@@ -1,5 +1,5 @@
 /* ============================================================
-   Shannon — question engine
+   Provenance — question engine
    ------------------------------------------------------------
    Questions are generated from the catalog rather than written
    one at a time. Add a product to data.js and it starts appearing

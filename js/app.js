@@ -1,5 +1,5 @@
 /* ============================================================
-   Shannon — app engine
+   Provenance — app engine
    Screen routing, session running, scoring, progress, effects.
    ============================================================ */
 
@@ -28,10 +28,14 @@
     { id: 'xp1000',  emoji: '👑', name: 'Four Figures',  req: 'Bank 1,000 XP' }
   ];
 
-  const USERS_KEY = 'shannon.users.v1';
-  const LEGACY_KEY = 'shannon.progress.v1';
+  const USERS_KEY = 'provenance.users.v1';
+  const userKey = id => 'provenance.user.' + id + '.v1';
+
+  /* Key names from before the app was renamed, read once and migrated forward. */
+  const LEGACY_USERS_KEY = 'shannon.users.v1';
+  const legacyUserKey = id => 'shannon.user.' + id + '.v1';
+  const LEGACY_SOLO_KEY = 'shannon.progress.v1';
   const LEGACY_FLASH_KEY = 'shannon.flashKnown.v1';
-  const userKey = id => 'shannon.user.' + id + '.v1';
 
   const AVATARS = ['🦊', '🐙', '🦉', '🐝', '🦜', '🐢', '🦩', '🐳', '🦁', '🐼', '🦒', '🐨'];
 
@@ -129,15 +133,44 @@
   };
 
   /*
-    Anyone who used the app before profiles existed keeps their progress:
-    the old single-player record becomes the first profile rather than
-    being silently dropped.
+    Nobody loses progress to a rename or to the arrival of profiles. Two
+    older shapes get pulled forward, in order:
+      1. profiles saved under the previous app name
+      2. the single-player record from before profiles existed at all
   */
   function migrateLegacy() {
     if (Profiles.list().length) return;
+    if (migrateRenamedProfiles()) return;
+    migrateSoloRecord();
+  }
+
+  function migrateRenamedProfiles() {
+    let old = null;
+    try {
+      const raw = localStorage.getItem(LEGACY_USERS_KEY);
+      if (raw) old = JSON.parse(raw);
+    } catch (e) { /* nothing to migrate */ }
+    if (!old || !Array.isArray(old.users) || !old.users.length) return false;
+
+    old.users.forEach(u => {
+      let progress = defaults();
+      try {
+        const raw = localStorage.getItem(legacyUserKey(u.id));
+        if (raw) progress = Object.assign(defaults(), JSON.parse(raw));
+      } catch (e) { /* keep defaults */ }
+      Profiles.saveProgress(u.id, progress);
+      try { localStorage.removeItem(legacyUserKey(u.id)); } catch (e) { /* ignore */ }
+    });
+
+    Profiles.saveIndex({ activeId: old.activeId || null, users: old.users });
+    try { localStorage.removeItem(LEGACY_USERS_KEY); } catch (e) { /* ignore */ }
+    return true;
+  }
+
+  function migrateSoloRecord() {
     let legacy = null;
     try {
-      const raw = localStorage.getItem(LEGACY_KEY);
+      const raw = localStorage.getItem(LEGACY_SOLO_KEY);
       if (raw) legacy = JSON.parse(raw);
     } catch (e) { /* nothing to migrate */ }
     if (!legacy) return;
@@ -150,7 +183,7 @@
       flashKnown: Array.isArray(flashKnown) ? flashKnown : []
     }));
     try {
-      localStorage.removeItem(LEGACY_KEY);
+      localStorage.removeItem(LEGACY_SOLO_KEY);
       localStorage.removeItem(LEGACY_FLASH_KEY);
     } catch (e) { /* ignore */ }
   }

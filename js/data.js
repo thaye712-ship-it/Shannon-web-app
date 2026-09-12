@@ -1,5 +1,5 @@
 /* ============================================================
-   Shannon — Design Within Reach product catalog
+   Provenance — Design Within Reach product catalog
    ------------------------------------------------------------
    Real products sold by Design Within Reach (dwr.com), cross-checked
    against dwr.com's own brand, designer and search listings, plus

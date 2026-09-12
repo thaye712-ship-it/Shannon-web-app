@@ -1,10 +1,10 @@
-# What Shannon is for
+# What Provenance is for
 
-Shannon is a training tool for Design Within Reach retail sales associates.
+Provenance is a training tool for Design Within Reach retail sales associates.
 It exists to close a specific gap: associates are expected to talk
 knowledgeably about the designers, history, materials and construction
 behind DWR's assortment, but that knowledge is normally picked up slowly,
-on the floor, by osmosis. Shannon compresses it into short, repeatable
+on the floor, by osmosis. Provenance compresses it into short, repeatable
 sessions instead.
 
 ## Who it's for
