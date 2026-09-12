@@ -44,26 +44,38 @@ Both Sprint and Deep Dive open on a topic picker, so a session can be
 narrowed to specific question types — say, only Photo ID for someone who
 already knows the history but can't yet recognize pieces on sight.
 
-Progress (XP, level, streak, badges, per-topic mastery) is local to the
-device and browser — there's no login and no manager dashboard. It's
-built to feel like a mobile game, not a compliance module, on the theory
-that associates will actually come back to something that feels like a
-game.
+There is also a **Products** screen for browsing rather than training:
+filter the catalog by type — sofas, lighting, tables, outdoor — and open
+any piece to read its full profile. Useful when someone gets a question on
+the floor about a specific model and wants the story behind it.
+
+Anyone can make a profile with a name and an avatar, no password. Each
+person keeps their own XP, streak, badges, mastery and flashcard marks, so
+one shared showroom device serves a whole team. Progress is stored on that
+device, so it does not follow someone to their phone, and there is no
+manager dashboard yet — `BACKEND.md` covers what changing that requires.
+The whole thing is built to feel like a mobile game rather than a
+compliance module, on the theory that associates will actually come back
+to something that feels like one.
 
 ## Current status
 
-The catalog in `js/data.js` holds 65 real DWR products (Eames, Saarinen,
-Bertoia, Jacobsen, Wegner, Le Corbusier, Mies van der Rohe, the Castiglioni
-brothers and others) plus 20 construction/materials terms, each checked
-against dwr.com's own brand, designer and search listings rather than
-assumed from general design history alone. That covers just over half of
-the eventual full catalog. 62 of the 65 also carry a real product photo,
-hotlinked directly from DWR's own image hosting — the other 3
-(`bestlite-bl3`, `tolix-a-chair`, `min-sofa`) turned up no confident photo
-match on dwr.com, which is itself a signal they may not be current DWR
-SKUs and worth re-checking. See `BUILD_LOG.md` for the change history and
-`README.md` for the technical shape of a catalog record — more products
-can be appended there in the same shape, verified against dwr.com first.
+The catalog in `js/data.js` holds 121 real DWR products plus 20
+construction/materials terms, covering seating, sofas, tables, desks,
+lighting, storage, bedroom and outdoor. Every entry is sourced from DWR's
+own listings rather than assumed from design history, and 118 carry a real
+product photo hotlinked from DWR's image hosting.
+
+It is not the whole DWR catalog and is not trying to be: variants of one
+design are collapsed into a single entry, because an associate needs to
+learn the piece, not each fabric option. Three products
+(`bestlite-bl3`, `tolix-a-chair`, `min-sofa`) have no photo match on
+dwr.com, which suggests they may no longer be current SKUs and are worth
+re-checking.
+
+See `BUILD_LOG.md` for the change history, `README.md` for the shape of a
+catalog record, and `BACKEND.md` for what moving profiles off this device
+would involve.
 
 ## What it is not
 

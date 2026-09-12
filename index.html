@@ -37,11 +37,38 @@
       <button class="stat tappable" id="soundBtn" title="Sound on or off" aria-pressed="true">
         <span class="stat-icon" data-sound-icon>🔊</span>
       </button>
+      <button class="stat tappable" id="userBtn" title="Switch profile">
+        <span class="stat-icon" data-user-emoji>🦊</span>
+      </button>
     </div>
   </div>
 </header>
 
 <main id="stage">
+
+  <!-- ============ PROFILES ============ -->
+  <section class="screen" id="screen-profiles">
+    <p class="eyebrow">Pick up where you left off</p>
+    <h1 class="screen-title">Who's training?</h1>
+    <p class="screen-sub">
+      Everyone keeps their own XP, streak, badges and flashcard progress. Saved on
+      this device, so pick your name each time you come back to it.
+    </p>
+
+    <div class="profile-grid" data-profile-grid></div>
+
+    <div class="profile-new" data-profile-new hidden>
+      <h2 class="section-label">Add someone</h2>
+      <input class="profile-input" data-profile-name type="text"
+             placeholder="First name" maxlength="40" autocomplete="off" spellcheck="false">
+      <p class="profile-label">Pick an avatar</p>
+      <div class="avatar-row" data-avatar-row></div>
+      <div class="profile-actions">
+        <button class="btn ghost" data-profile-cancel>Cancel</button>
+        <button class="btn primary" data-profile-create>Create profile</button>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ HOME ============ -->
   <section class="screen is-active" id="screen-home">
@@ -110,9 +137,9 @@
     <div class="badges" data-badges></div>
 
     <p class="disclaimer">
-      Covers 65 pieces of the Design Within Reach catalog, just over half of the eventual
-      full assortment — the core design classics the floor gets asked about most. More
-      products will be added the same way, with no other changes needed.
+      Covers 121 pieces of the Design Within Reach catalog across seating, sofas, tables,
+      lighting, storage, bedroom and outdoor. Variants of the same design are collapsed
+      into one entry — there's one piece to learn, not twelve fabric options.
     </p>
   </section>
 
@@ -170,20 +197,22 @@
     <div class="about-section">
       <h2>Current status</h2>
       <div class="status-card">
-        <b>65 products, 20 construction &amp; materials terms</b>
-        Just over half of the eventual catalog, covering the design classics
-        associates are asked about most. Each product is cross-checked
-        against dwr.com's own brand, designer and search listings before
-        being added, so the training set matches what DWR actually sells.
+        <b>121 products, 20 construction &amp; materials terms</b>
+        Spanning seating, sofas, tables, desks, lighting, storage, bedroom
+        and outdoor. Every product is sourced from DWR's own listings, so
+        the training set matches what DWR actually sells. Variants of one
+        design are deliberately collapsed into a single entry.
       </div>
     </div>
 
     <div class="about-section">
       <h2>Data &amp; access</h2>
       <ul class="about-list">
-        <li>No login or account — anyone with the link can train.</li>
-        <li>Progress (XP, level, streak, badges) is stored on-device only, in
-          the browser. It does not sync across devices.</li>
+        <li>Profiles need only a name — no password, no email. Anyone can
+          make one, and each person keeps their own progress, so a shared
+          showroom device works for a whole team.</li>
+        <li>Progress (XP, level, streak, badges) is stored on that device
+          only. It does not follow someone to their phone.</li>
         <li>There is no manager dashboard yet, so completion cannot currently
           be tracked across a team.</li>
         <li>Product photos are hotlinked directly from DWR's own image
@@ -227,9 +256,20 @@
   <!-- ============ PRODUCT GALLERY ============ -->
   <section class="screen" id="screen-gallery">
     <button class="back" data-back>← Back</button>
-    <h1 class="screen-title">The catalog</h1>
-    <p class="screen-sub">Every piece currently in training, with a photo where DWR has one listed.</p>
+    <h1 class="screen-title">Browse the catalog</h1>
+    <p class="screen-sub">
+      Pick a type to study just those pieces, or scroll the whole floor. Tap any
+      piece to read its full story.
+    </p>
+    <div class="group-chips" data-group-chips></div>
+    <p class="group-count" data-group-count></p>
     <div class="gallery-grid" data-gallery></div>
+  </section>
+
+  <!-- ============ PRODUCT DETAIL ============ -->
+  <section class="screen" id="screen-product">
+    <button class="back" data-back-gallery>← Back to browsing</button>
+    <div class="product-detail" data-product-detail></div>
   </section>
 
   <!-- ============ FLASHCARDS ============ -->

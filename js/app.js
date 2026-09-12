@@ -28,7 +28,12 @@
     { id: 'xp1000',  emoji: '👑', name: 'Four Figures',  req: 'Bank 1,000 XP' }
   ];
 
-  const KEY = 'shannon.progress.v1';
+  const USERS_KEY = 'shannon.users.v1';
+  const LEGACY_KEY = 'shannon.progress.v1';
+  const LEGACY_FLASH_KEY = 'shannon.flashKnown.v1';
+  const userKey = id => 'shannon.user.' + id + '.v1';
+
+  const AVATARS = ['🦊', '🐙', '🦉', '🐝', '🦜', '🐢', '🦩', '🐳', '🦁', '🐼', '🦒', '🐨'];
 
   /* ---------------- tiny DOM helpers ---------------- */
 
@@ -41,7 +46,14 @@
     return n;
   };
 
-  /* ---------------- saved progress ---------------- */
+  /* ---------------- profiles + saved progress ----------------
+
+     Every read and write of a person's progress goes through Profiles.
+     That is the point: swapping localStorage for a real backend later
+     means reimplementing these functions and nothing else. The screens,
+     scoring and rendering never touch storage directly.
+     See BACKEND.md for what that migration involves.
+  */
 
   const defaults = () => ({
     xp: 0,
@@ -50,23 +62,104 @@
     sound: true,
     badges: [],
     topics: {},          // topicId -> { seen, correct }
-    sessions: 0
+    sessions: 0,
+    flashKnown: []       // product ids marked "know it" in flashcards
   });
 
-  let store = load();
-
-  function load() {
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (!raw) return defaults();
-      return Object.assign(defaults(), JSON.parse(raw));
-    } catch (e) {
-      return defaults();
+  const Profiles = {
+    index() {
+      try {
+        const raw = localStorage.getItem(USERS_KEY);
+        if (!raw) return { activeId: null, users: [] };
+        const ix = JSON.parse(raw);
+        return { activeId: ix.activeId || null, users: Array.isArray(ix.users) ? ix.users : [] };
+      } catch (e) {
+        return { activeId: null, users: [] };
+      }
+    },
+    saveIndex(ix) {
+      try { localStorage.setItem(USERS_KEY, JSON.stringify(ix)); } catch (e) { /* private mode */ }
+    },
+    list() { return this.index().users; },
+    activeId() { return this.index().activeId; },
+    active() {
+      const ix = this.index();
+      return ix.users.find(u => u.id === ix.activeId) || null;
+    },
+    create(name, emoji) {
+      const ix = this.index();
+      const user = {
+        id: 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        name: String(name).trim().slice(0, 40),
+        emoji: emoji || AVATARS[Math.floor(Math.random() * AVATARS.length)],
+        createdAt: new Date().toISOString()
+      };
+      ix.users.push(user);
+      ix.activeId = user.id;
+      this.saveIndex(ix);
+      this.saveProgress(user.id, defaults());
+      return user;
+    },
+    select(id) {
+      const ix = this.index();
+      if (!ix.users.some(u => u.id === id)) return false;
+      ix.activeId = id;
+      this.saveIndex(ix);
+      return true;
+    },
+    remove(id) {
+      const ix = this.index();
+      ix.users = ix.users.filter(u => u.id !== id);
+      if (ix.activeId === id) ix.activeId = null;
+      this.saveIndex(ix);
+      try { localStorage.removeItem(userKey(id)); } catch (e) { /* private mode */ }
+    },
+    loadProgress(id) {
+      try {
+        const raw = localStorage.getItem(userKey(id));
+        if (!raw) return defaults();
+        return Object.assign(defaults(), JSON.parse(raw));
+      } catch (e) {
+        return defaults();
+      }
+    },
+    saveProgress(id, data) {
+      try { localStorage.setItem(userKey(id), JSON.stringify(data)); } catch (e) { /* private mode */ }
     }
+  };
+
+  /*
+    Anyone who used the app before profiles existed keeps their progress:
+    the old single-player record becomes the first profile rather than
+    being silently dropped.
+  */
+  function migrateLegacy() {
+    if (Profiles.list().length) return;
+    let legacy = null;
+    try {
+      const raw = localStorage.getItem(LEGACY_KEY);
+      if (raw) legacy = JSON.parse(raw);
+    } catch (e) { /* nothing to migrate */ }
+    if (!legacy) return;
+
+    let flashKnown = [];
+    try { flashKnown = JSON.parse(localStorage.getItem(LEGACY_FLASH_KEY) || '[]'); } catch (e) { /* ignore */ }
+
+    const user = Profiles.create('My progress', '⭐');
+    Profiles.saveProgress(user.id, Object.assign(defaults(), legacy, {
+      flashKnown: Array.isArray(flashKnown) ? flashKnown : []
+    }));
+    try {
+      localStorage.removeItem(LEGACY_KEY);
+      localStorage.removeItem(LEGACY_FLASH_KEY);
+    } catch (e) { /* ignore */ }
   }
 
+  let store = defaults();
+
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) { /* private mode */ }
+    const id = Profiles.activeId();
+    if (id) Profiles.saveProgress(id, store);
   }
 
   function todayKey() {
@@ -180,6 +273,100 @@
     window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
+  /* ---------------- profile screen ---------------- */
+
+  let pendingAvatar = AVATARS[0];
+
+  function renderProfiles() {
+    const grid = $('[data-profile-grid]');
+    grid.innerHTML = '';
+
+    Profiles.list().forEach(u => {
+      const prog = Profiles.loadProgress(u.id);
+      const lv = levelOf(prog.xp);
+
+      const card = el('div', 'profile-card');
+      const pick = el('button', 'profile-pick');
+      pick.appendChild(el('span', 'profile-emoji', u.emoji));
+      pick.appendChild(el('span', 'profile-name', u.name));
+      pick.appendChild(el('span', 'profile-meta',
+        'Level ' + lv + '  ·  ' + prog.xp.toLocaleString() + ' XP' +
+        (prog.streak ? '  ·  🔥 ' + prog.streak : '')));
+      pick.addEventListener('click', () => {
+        sfx.tap();
+        Profiles.select(u.id);
+        enterApp();
+      });
+
+      const del = el('button', 'profile-del', '✕');
+      del.title = 'Remove ' + u.name;
+      del.setAttribute('aria-label', 'Remove ' + u.name);
+      del.addEventListener('click', e => {
+        e.stopPropagation();
+        if (!window.confirm('Remove ' + u.name + '? Their progress on this device is deleted and cannot be recovered.')) return;
+        Profiles.remove(u.id);
+        renderProfiles();
+      });
+
+      card.appendChild(pick);
+      card.appendChild(del);
+      grid.appendChild(card);
+    });
+
+    const add = el('button', 'profile-card profile-add');
+    add.appendChild(el('span', 'profile-emoji', '＋'));
+    add.appendChild(el('span', 'profile-name', 'Add someone'));
+    add.addEventListener('click', () => {
+      sfx.tap();
+      openNewProfile();
+    });
+    grid.appendChild(add);
+  }
+
+  function openNewProfile() {
+    pendingAvatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+    const row = $('[data-avatar-row]');
+    row.innerHTML = '';
+    AVATARS.forEach(a => {
+      const b = el('button', 'avatar-opt' + (a === pendingAvatar ? ' active' : ''), a);
+      b.addEventListener('click', () => {
+        pendingAvatar = a;
+        $$('.avatar-opt', row).forEach(x => x.classList.toggle('active', x.textContent === a));
+      });
+      row.appendChild(b);
+    });
+    $('[data-profile-new]').hidden = false;
+    const input = $('[data-profile-name]');
+    input.value = '';
+    input.focus();
+  }
+
+  function createProfile() {
+    const input = $('[data-profile-name]');
+    const name = input.value.trim();
+    if (!name) { input.focus(); return; }
+    sfx.tap();
+    Profiles.create(name, pendingAvatar);
+    $('[data-profile-new]').hidden = true;
+    enterApp();
+  }
+
+  /* Load the active profile's progress and hand over to the app proper. */
+  function enterApp() {
+    const id = Profiles.activeId();
+    store = Profiles.loadProgress(id);
+    knownSet = new Set(store.flashKnown || []);
+    syncSoundButton();
+    renderHome();
+    show('home');
+  }
+
+  function renderUserChip() {
+    const u = Profiles.active();
+    $('[data-user-emoji]').textContent = u ? u.emoji : '👤';
+    $('#userBtn').title = u ? 'Signed in as ' + u.name + ' — tap to switch' : 'Pick a profile';
+  }
+
   /* ---------------- home screen rendering ---------------- */
 
   function renderHome() {
@@ -195,6 +382,7 @@
 
     renderMastery();
     renderBadges();
+    renderUserChip();
   }
 
   function renderMastery() {
@@ -323,11 +511,47 @@
 
   /* ---------------- product gallery ---------------- */
 
+  let activeGroup = 'all';
+
+  function renderGroupChips() {
+    const wrap = $('[data-group-chips]');
+    wrap.innerHTML = '';
+
+    const groups = [{ id: 'all', label: 'Everything', emoji: '✨', count: PRODUCTS.length }]
+      .concat(activeGroups());
+
+    groups.forEach(g => {
+      const chip = el('button', 'group-chip' + (g.id === activeGroup ? ' active' : ''));
+      chip.appendChild(el('span', 'group-chip-emoji', g.emoji));
+      chip.appendChild(el('span', null, g.label));
+      chip.appendChild(el('span', 'group-chip-count', String(g.count)));
+      chip.addEventListener('click', () => {
+        sfx.tap();
+        activeGroup = g.id;
+        renderGroupChips();
+        renderGallery();
+      });
+      wrap.appendChild(chip);
+    });
+  }
+
+  function galleryProducts() {
+    const list = activeGroup === 'all'
+      ? PRODUCTS.slice()
+      : PRODUCTS.filter(p => groupIdOf(p) === activeGroup);
+    return list.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   function renderGallery() {
     const wrap = $('[data-gallery]');
     wrap.innerHTML = '';
-    PRODUCTS.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(p => {
-      const card = el('div', 'gallery-card');
+    const list = galleryProducts();
+
+    $('[data-group-count]').textContent =
+      list.length + (list.length === 1 ? ' piece' : ' pieces');
+
+    list.forEach(p => {
+      const card = el('button', 'gallery-card');
       if (p.photo) {
         const img = document.createElement('img');
         img.src = p.photo;
@@ -342,23 +566,59 @@
       info.appendChild(el('b', null, p.name));
       info.appendChild(el('span', null, p.designer + ' · ' + p.manufacturer));
       card.appendChild(info);
+      card.addEventListener('click', () => {
+        sfx.tap();
+        renderProduct(p);
+        show('product');
+      });
       wrap.appendChild(card);
     });
   }
 
+  function renderProduct(p) {
+    const wrap = $('[data-product-detail]');
+    wrap.innerHTML = '';
+
+    if (p.photo) {
+      const shot = el('div', 'detail-photo');
+      const img = document.createElement('img');
+      img.src = p.photo;
+      img.alt = p.name;
+      shot.appendChild(img);
+      wrap.appendChild(shot);
+    }
+
+    wrap.appendChild(el('h1', 'detail-title', p.name));
+    wrap.appendChild(el('p', 'detail-sub',
+      p.designer + '  ·  ' + p.manufacturer + (p.year == null ? '' : '  ·  ' + p.year)));
+
+    const chips = el('div', 'chips');
+    [p.category, p.style, p.origin].forEach(c => chips.appendChild(el('span', 'chip', c)));
+    wrap.appendChild(chips);
+
+    wrap.appendChild(el('p', 'detail-known', 'Known for ' + p.knownFor + '.'));
+    wrap.appendChild(el('p', 'detail-body', p.history));
+
+    wrap.appendChild(el('h2', 'detail-label', 'Worth remembering'));
+    const ul = el('ul', 'about-list');
+    p.facts.forEach(f => ul.appendChild(el('li', null, f)));
+    wrap.appendChild(ul);
+
+    wrap.appendChild(el('h2', 'detail-label', 'Materials'));
+    const mats = el('div', 'chips');
+    p.materials.forEach(m => mats.appendChild(el('span', 'chip', m)));
+    wrap.appendChild(mats);
+  }
+
   /* ---------------- flashcards ---------------- */
 
-  const FLASH_KEY = 'shannon.flashKnown.v1';
+  /* Mirrors store.flashKnown for fast lookup; written back through save(). */
+  let knownSet = new Set();
 
-  function loadKnown() {
-    try { return new Set(JSON.parse(localStorage.getItem(FLASH_KEY) || '[]')); }
-    catch (e) { return new Set(); }
+  function saveKnown() {
+    store.flashKnown = Array.from(knownSet);
+    save();
   }
-  function saveKnown(set) {
-    try { localStorage.setItem(FLASH_KEY, JSON.stringify(Array.from(set))); }
-    catch (e) { /* private mode */ }
-  }
-  let knownSet = loadKnown();
 
   let flash = null;
 
@@ -392,7 +652,8 @@
 
     const back = el('div', 'flash-face flash-back');
     back.appendChild(el('h3', null, p.name));
-    back.appendChild(el('p', 'flash-sub', p.designer + ' · ' + p.manufacturer + ' · est. ' + p.year));
+    back.appendChild(el('p', 'flash-sub',
+      p.designer + ' · ' + p.manufacturer + (p.year == null ? '' : ' · est. ' + p.year)));
     back.appendChild(el('p', 'flash-body', p.history));
     const chips = el('div', 'chips');
     [p.category, p.style].forEach(c => chips.appendChild(el('span', 'chip', c)));
@@ -436,7 +697,7 @@
   function markFlash(known) {
     const p = flash.order[flash.i];
     if (known) knownSet.add(p.id); else knownSet.delete(p.id);
-    saveKnown(knownSet);
+    saveKnown();
     flashNext();
   }
 
@@ -844,7 +1105,30 @@
   $('#aboutBtn').addEventListener('click', () => show('about'));
   $$('[data-show-about]').forEach(b => b.addEventListener('click', () => show('about')));
 
-  $('#galleryBtn').addEventListener('click', () => { renderGallery(); show('gallery'); });
+  $('#galleryBtn').addEventListener('click', () => { openGallery(); });
+
+  function openGallery() {
+    renderGroupChips();
+    renderGallery();
+    show('gallery');
+  }
+
+  $('[data-back-gallery]').addEventListener('click', () => show('gallery'));
+
+  $('#userBtn').addEventListener('click', () => {
+    sfx.tap();
+    renderProfiles();
+    $('[data-profile-new]').hidden = true;
+    show('profiles');
+  });
+
+  $('[data-profile-create]').addEventListener('click', createProfile);
+  $('[data-profile-cancel]').addEventListener('click', () => {
+    $('[data-profile-new]').hidden = true;
+  });
+  $('[data-profile-name]').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); createProfile(); }
+  });
 
   $$('[data-start]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -899,12 +1183,14 @@
   soundBtn.addEventListener('click', () => {
     store.sound = !store.sound;
     save();
-    $('[data-sound-icon]').textContent = store.sound ? '🔊' : '🔇';
-    soundBtn.setAttribute('aria-pressed', String(store.sound));
+    syncSoundButton();
     if (store.sound) sfx.tap();
   });
-  $('[data-sound-icon]').textContent = store.sound ? '🔊' : '🔇';
-  soundBtn.setAttribute('aria-pressed', String(store.sound));
+
+  function syncSoundButton() {
+    $('[data-sound-icon]').textContent = store.sound ? '🔊' : '🔇';
+    soundBtn.setAttribute('aria-pressed', String(store.sound));
+  }
 
   /* keyboard: 1-4 to answer, enter to advance */
   document.addEventListener('keydown', e => {
@@ -923,7 +1209,16 @@
 
   /* ---------------- boot ---------------- */
 
-  renderHome();
-  show('home');
+  migrateLegacy();
+
+  if (Profiles.activeId()) {
+    enterApp();
+  } else {
+    /* No one picked yet: the profile screen is the front door. */
+    syncSoundButton();
+    renderProfiles();
+    if (!Profiles.list().length) openNewProfile();
+    show('profiles');
+  }
 
 })();

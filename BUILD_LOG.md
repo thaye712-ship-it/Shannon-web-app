@@ -10,6 +10,56 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-12 — Catalog nearly doubled, browse by type, and user profiles
+
+- **56 new products, 65 → 121.** Gathered by four parallel research agents
+  working *forward* from dwr.com's own category listings (sofas, sectionals,
+  benches, ottomans, dining/coffee/side tables, desks, shelving, bookcases,
+  credenzas, beds, dressers, outdoor, lighting) rather than backwards from
+  design history. That inversion is deliberate: the earlier approach is what
+  produced a dozen products DWR does not sell. Each agent also captured DWR's
+  own product copy, which grounds the write-ups. New manufacturers include
+  Artek, ClassiCon, Kartell, Magis, Heller, Artemide, Anglepoise, Oluce,
+  Ligne Roset, Muuto, String Furniture, dk3, House of Finn Juhl, Tom Dixon,
+  Woodard and Serge Mouille.
+- The catalog is no longer chair-heavy: it was 34 chairs out of 65, and now
+  covers 50 seating, 18 lighting, 17 tables/desks, 13 storage, 9 sofas,
+  9 outdoor, 4 bedroom and 1 decor.
+- **Browse by type.** The Products screen now has group filter chips
+  (Chairs & Seating, Sofas & Sectionals, Tables & Desks, Lighting, Storage,
+  Bedroom, Outdoor, Decor) and every piece opens a full detail view with
+  photo, designer, year, history, facts and materials. Groups are derived
+  from `category` via a `GROUPS` table in `js/data.js`, so `category` can
+  stay granular for the quiz while browsing gets coarse, useful buckets.
+  An unmapped category falls into "Other" rather than vanishing.
+- **User profiles.** Anyone can create a profile (name + avatar, no
+  password) from a new front screen. Each keeps its own XP, streak, badges,
+  topic mastery and flashcard marks, so a shared showroom device serves a
+  team. The avatar button in the top bar switches people. All storage goes
+  through a single `Profiles` object so a backend can replace it without
+  touching the UI — `BACKEND.md` documents that migration, including the
+  security posture a public repo forces.
+- Existing single-player progress is migrated into a first profile rather
+  than dropped, and the legacy keys are cleaned up afterward.
+- **Null-year handling.** Two products state no year on DWR's page. Rather
+  than invent dates, `year` is null and the year-slider and older-of-two
+  generators skip those products; learn cards and detail views omit the date.
+  Without the guard, `null < number` would have silently produced wrong
+  answers in the older-of-two question.
+- Verified end to end in a browser: first visit lands on the profile screen
+  with the create form open; creating a profile enters the app; group chips
+  filter correctly (Sofas → 9 pieces); product detail opens and returns;
+  a full sprint completes and banks XP; a second profile starts at 0 XP
+  while the first retains 40, confirming progress is genuinely separated;
+  and a reload restores the active profile. Zero console errors.
+
+Branch: `claude/site-changes-build-log-m4xymb`
+
+Still open: the site is still called Shannon — a rename was offered and the
+options were declined, so nothing was renamed.
+
+---
+
 ## 2026-09-12 — Product photos, Photo ID quiz, quiz topic picker, Flashcards mode
 
 - **Product photos.** Every product record in `js/data.js` can now carry a
