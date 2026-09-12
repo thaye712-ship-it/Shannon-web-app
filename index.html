@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Shannon — product training that does not feel like training</title>
-<meta name="description" content="Fast, playful product knowledge training on the Design Within Reach catalog — designers, styles and materials.">
+<title>Provenance — product training that does not feel like training</title>
+<meta name="description" content="Provenance — fast, playful product knowledge training on the Design Within Reach catalog. Designers, styles, materials and the story behind every piece.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,8 +21,8 @@
 
 <header class="topbar">
   <button class="brandmark" id="homeBtn" aria-label="Back to home">
-    <span class="mark">S</span>
-    <span class="wordmark">Shannon</span>
+    <span class="mark">P</span>
+    <span class="wordmark">Provenance</span>
   </button>
   <div class="topbar-right">
     <button class="navlink" id="galleryBtn">Products</button>
@@ -37,11 +37,114 @@
       <button class="stat tappable" id="soundBtn" title="Sound on or off" aria-pressed="true">
         <span class="stat-icon" data-sound-icon>🔊</span>
       </button>
+      <div class="usermenu">
+        <button class="stat tappable" id="userBtn" title="Switch profile"
+                aria-haspopup="true" aria-expanded="false">
+          <span class="stat-icon" data-user-emoji>🦊</span>
+          <span class="stat-caret">▾</span>
+        </button>
+        <div class="usermenu-pop" data-usermenu hidden>
+          <p class="usermenu-label">Signed in as</p>
+          <p class="usermenu-current" data-usermenu-current>—</p>
+          <div class="usermenu-list" data-usermenu-list></div>
+          <div class="usermenu-sep"></div>
+          <button class="usermenu-item" data-usermenu-add>
+            <span class="usermenu-item-icon">＋</span> Add someone
+          </button>
+          <button class="usermenu-item" data-usermenu-manager>
+            <span class="usermenu-item-icon">🔑</span> <span data-manager-label>Manager sign-in</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
 
 <main id="stage">
+
+  <!-- ============ PROFILES ============ -->
+  <section class="screen" id="screen-profiles">
+    <p class="eyebrow">Pick up where you left off</p>
+    <h1 class="screen-title">Who's training?</h1>
+    <p class="screen-sub">
+      Everyone keeps their own XP, streak, badges and flashcard progress. Saved on
+      this device, so pick your name each time you come back to it.
+    </p>
+
+    <div class="profile-grid" data-profile-grid></div>
+
+    <div class="profile-new" data-profile-new hidden>
+      <h2 class="section-label">Add someone</h2>
+      <input class="profile-input" data-profile-name type="text"
+             placeholder="First name" maxlength="40" autocomplete="off" spellcheck="false">
+      <p class="profile-label">Pick an avatar</p>
+      <div class="avatar-row" data-avatar-row></div>
+      <div class="profile-actions">
+        <button class="btn ghost" data-profile-cancel>Cancel</button>
+        <button class="btn primary" data-profile-create>Create profile</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MANAGER SIGN-IN ============ -->
+  <section class="screen" id="screen-manager-auth">
+    <button class="back" data-back>← Back</button>
+    <p class="eyebrow">Manager access</p>
+    <h1 class="screen-title" data-auth-title>Manager sign-in</h1>
+    <p class="screen-sub" data-auth-sub>
+      Managers can add and remove other managers and see the team roster.
+    </p>
+
+    <div class="profile-new">
+      <input class="profile-input" data-auth-email type="email" hidden
+             placeholder="Manager email" autocomplete="username" spellcheck="false">
+      <input class="profile-input" data-auth-password type="password"
+             placeholder="Manager password" autocomplete="current-password">
+      <p class="auth-error" data-auth-error hidden></p>
+      <div class="profile-actions">
+        <button class="btn ghost" data-back>Cancel</button>
+        <button class="btn primary" data-auth-submit>Sign in</button>
+      </div>
+    </div>
+
+    <div class="auth-note" data-auth-note-local>
+      <b>About this password</b>
+      It is stored as a salted hash on this device only, so it keeps the
+      manager view off the showroom floor but is not real security — anyone
+      with browser dev tools can get around it, and it does not follow you to
+      another device. Proper accounts arrive when Firebase Auth is connected.
+    </div>
+
+    <div class="auth-note" data-auth-note-firebase hidden>
+      <b>Signing in against Firebase</b>
+      Managers sign in with the email and password set in the Firebase
+      console. Manager powers come from a custom claim on the account, not
+      from anything this page can change, so the check is real rather than
+      cosmetic.
+    </div>
+  </section>
+
+  <!-- ============ MANAGER AREA ============ -->
+  <section class="screen" id="screen-manager">
+    <button class="back" data-back>← Back</button>
+    <p class="eyebrow">Manager access</p>
+    <h1 class="screen-title">Team &amp; managers</h1>
+    <p class="screen-sub">
+      Everyone training on this device. Managers can promote or remove other
+      managers; the root manager cannot be removed.
+    </p>
+
+    <h2 class="section-label">Managers</h2>
+    <div class="roster" data-manager-roster></div>
+
+    <h2 class="section-label">Associates</h2>
+    <div class="roster" data-associate-roster></div>
+
+    <div class="profile-actions" style="margin-top:24px">
+      <button class="btn ghost" data-manager-change-pw>Change password</button>
+      <button class="btn ghost" data-manager-signout>Sign out of manager</button>
+    </div>
+  </section>
 
   <!-- ============ HOME ============ -->
   <section class="screen is-active" id="screen-home">
@@ -110,9 +213,9 @@
     <div class="badges" data-badges></div>
 
     <p class="disclaimer">
-      Covers 65 pieces of the Design Within Reach catalog, just over half of the eventual
-      full assortment — the core design classics the floor gets asked about most. More
-      products will be added the same way, with no other changes needed.
+      Covers 121 pieces of the Design Within Reach catalog across seating, sofas, tables,
+      lighting, storage, bedroom and outdoor. Variants of the same design are collapsed
+      into one entry — there's one piece to learn, not twelve fabric options.
     </p>
   </section>
 
@@ -120,14 +223,19 @@
   <section class="screen" id="screen-about">
     <button class="back" data-back>← Back</button>
     <p class="eyebrow">For associates and management</p>
-    <h1 class="screen-title">About Shannon</h1>
+    <h1 class="screen-title">About Provenance</h1>
     <p class="screen-sub">
-      Shannon is an internal training tool built for Design Within Reach retail
+      Provenance is an internal training tool built for Design Within Reach retail
       teams. It exists to close one specific gap: associates are expected to
       speak knowledgeably about the designers, history, materials and
       construction behind DWR's assortment — knowledge that normally builds
-      slowly, on the floor, over months. Shannon compresses it into short,
+      slowly, on the floor, over months. Provenance compresses it into short,
       repeatable sessions instead.
+    </p>
+    <p class="screen-sub">
+      The name is the point. A piece's provenance is where it came from — who
+      drew it, who builds it, what year, what it's made of. That's exactly what
+      an associate needs on hand when a customer asks why it costs what it costs.
     </p>
 
     <div class="about-section">
@@ -170,20 +278,22 @@
     <div class="about-section">
       <h2>Current status</h2>
       <div class="status-card">
-        <b>65 products, 20 construction &amp; materials terms</b>
-        Just over half of the eventual catalog, covering the design classics
-        associates are asked about most. Each product is cross-checked
-        against dwr.com's own brand, designer and search listings before
-        being added, so the training set matches what DWR actually sells.
+        <b>121 products, 20 construction &amp; materials terms</b>
+        Spanning seating, sofas, tables, desks, lighting, storage, bedroom
+        and outdoor. Every product is sourced from DWR's own listings, so
+        the training set matches what DWR actually sells. Variants of one
+        design are deliberately collapsed into a single entry.
       </div>
     </div>
 
     <div class="about-section">
       <h2>Data &amp; access</h2>
       <ul class="about-list">
-        <li>No login or account — anyone with the link can train.</li>
-        <li>Progress (XP, level, streak, badges) is stored on-device only, in
-          the browser. It does not sync across devices.</li>
+        <li>Profiles need only a name — no password, no email. Anyone can
+          make one, and each person keeps their own progress, so a shared
+          showroom device works for a whole team.</li>
+        <li>Progress (XP, level, streak, badges) is stored on that device
+          only. It does not follow someone to their phone.</li>
         <li>There is no manager dashboard yet, so completion cannot currently
           be tracked across a team.</li>
         <li>Product photos are hotlinked directly from DWR's own image
@@ -227,9 +337,20 @@
   <!-- ============ PRODUCT GALLERY ============ -->
   <section class="screen" id="screen-gallery">
     <button class="back" data-back>← Back</button>
-    <h1 class="screen-title">The catalog</h1>
-    <p class="screen-sub">Every piece currently in training, with a photo where DWR has one listed.</p>
+    <h1 class="screen-title">Browse the catalog</h1>
+    <p class="screen-sub">
+      Pick a type to study just those pieces, or scroll the whole floor. Tap any
+      piece to read its full story.
+    </p>
+    <div class="group-chips" data-group-chips></div>
+    <p class="group-count" data-group-count></p>
     <div class="gallery-grid" data-gallery></div>
+  </section>
+
+  <!-- ============ PRODUCT DETAIL ============ -->
+  <section class="screen" id="screen-product">
+    <button class="back" data-back-gallery>← Back to browsing</button>
+    <div class="product-detail" data-product-detail></div>
   </section>
 
   <!-- ============ FLASHCARDS ============ -->
@@ -330,8 +451,11 @@
 
 </main>
 
+<script src="js/firebase-config.js"></script>
 <script src="js/data.js"></script>
 <script src="js/questions.js"></script>
 <script src="js/app.js"></script>
+<!-- Loads after the app and stays inert unless firebase-config.js opts in. -->
+<script type="module" src="js/firebase-store.js"></script>
 </body>
 </html>

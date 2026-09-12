@@ -10,6 +10,159 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-12 — Catalog nearly doubled, browse by type, and user profiles
+
+- **56 new products, 65 → 121.** Gathered by four parallel research agents
+  working *forward* from dwr.com's own category listings (sofas, sectionals,
+  benches, ottomans, dining/coffee/side tables, desks, shelving, bookcases,
+  credenzas, beds, dressers, outdoor, lighting) rather than backwards from
+  design history. That inversion is deliberate: the earlier approach is what
+  produced a dozen products DWR does not sell. Each agent also captured DWR's
+  own product copy, which grounds the write-ups. New manufacturers include
+  Artek, ClassiCon, Kartell, Magis, Heller, Artemide, Anglepoise, Oluce,
+  Ligne Roset, Muuto, String Furniture, dk3, House of Finn Juhl, Tom Dixon,
+  Woodard and Serge Mouille.
+- The catalog is no longer chair-heavy: it was 34 chairs out of 65, and now
+  covers 50 seating, 18 lighting, 17 tables/desks, 13 storage, 9 sofas,
+  9 outdoor, 4 bedroom and 1 decor.
+- **Browse by type.** The Products screen now has group filter chips
+  (Chairs & Seating, Sofas & Sectionals, Tables & Desks, Lighting, Storage,
+  Bedroom, Outdoor, Decor) and every piece opens a full detail view with
+  photo, designer, year, history, facts and materials. Groups are derived
+  from `category` via a `GROUPS` table in `js/data.js`, so `category` can
+  stay granular for the quiz while browsing gets coarse, useful buckets.
+  An unmapped category falls into "Other" rather than vanishing.
+- **User profiles.** Anyone can create a profile (name + avatar, no
+  password) from a new front screen. Each keeps its own XP, streak, badges,
+  topic mastery and flashcard marks, so a shared showroom device serves a
+  team. The avatar button in the top bar switches people. All storage goes
+  through a single `Profiles` object so a backend can replace it without
+  touching the UI — `BACKEND.md` documents that migration, including the
+  security posture a public repo forces.
+- Existing single-player progress is migrated into a first profile rather
+  than dropped, and the legacy keys are cleaned up afterward.
+- **Null-year handling.** Two products state no year on DWR's page. Rather
+  than invent dates, `year` is null and the year-slider and older-of-two
+  generators skip those products; learn cards and detail views omit the date.
+  Without the guard, `null < number` would have silently produced wrong
+  answers in the older-of-two question.
+- Verified end to end in a browser: first visit lands on the profile screen
+  with the create form open; creating a profile enters the app; group chips
+  filter correctly (Sofas → 9 pieces); product detail opens and returns;
+  a full sprint completes and banks XP; a second profile starts at 0 XP
+  while the first retains 40, confirming progress is genuinely separated;
+  and a reload restores the active profile. Zero console errors.
+
+Branch: `claude/site-changes-build-log-m4xymb`
+
+---
+
+## 2026-09-12 — Firebase adapter written and wired, shipped switched off
+
+- Added the real backend, behind a flag that is **off** by default:
+  `js/firebase-config.js` (project config + `mode` switch),
+  `js/firebase-store.js` (Firestore + Auth adapter, loads the SDK from
+  Google's CDN so there is still no build step), and `firestore.rules`.
+- Shipped as `mode: 'local'` on purpose. Pointing the app at Firestore
+  before the rules are published and Shannon's account exists would either
+  fail against locked default rules or run wide open against test-mode
+  rules. Turning it on is a one-line change once the console work is done;
+  `BACKEND.md` has the five steps and a first-run checklist.
+- **Write-through cache rather than an async refactor.** Making every
+  profile read async would have been a wide, regression-prone change across
+  a dozen call sites for no user-visible gain. Instead localStorage stays
+  what the UI reads and the adapter keeps it in step — hydrate on boot,
+  push in the background on write. Losing wifi now degrades to the old
+  local behaviour instead of breaking the app, which is the right failure
+  mode for a showroom floor. Conflicts are last-write-wins, documented.
+- `activeId` is deliberately not synced: who is using *this* iPad right now
+  is a property of the device, not of the team.
+- Manager sign-in switches to real Firebase Auth when the backend is live —
+  email plus password, with manager powers read from a **custom claim** on
+  the token rather than a Firestore field. A field can be edited by whoever
+  can write the document; a claim can only be set server-side, so the rules
+  can actually trust it. An account that signs in successfully but lacks
+  the claim is signed straight back out and told why.
+- The rules file carries an explicit warning where it is loose: associates
+  train without accounts, so anyone can write anyone's progress. Fine for
+  practice scores, not fine if this ever informs a review, with the tighter
+  rule written out ready to swap in.
+- Analytics is off by default. This is an internal tool used by named staff,
+  so tracking them is a decision to make deliberately rather than inherit.
+- Verified: local mode is completely unaffected — adapter stays inert, boot,
+  profile creation, dropdown and the local manager gate all behave exactly
+  as before, zero errors. **Not verified: the live Firestore round-trip or
+  Auth.** This sandbox's browser proxy resets connections to Google's CDN,
+  so the SDK cannot load here. What that did confirm is the failure path:
+  the app logged its warning, stayed on local storage and remained fully
+  usable. The real round-trip needs testing in a browser on a normal
+  network, which is why BACKEND.md ends with a first-run checklist.
+
+Branch: `claude/site-changes-build-log-m4xymb`
+
+---
+
+## 2026-09-12 — User dropdown, manager role, Shannon seeded as root manager
+
+- **User dropdown.** The avatar in the top bar now opens a menu: who you're
+  signed in as, every other profile on the device, "Add someone", and
+  manager access. Switching people from here drops any manager session.
+- **Roles.** Profiles carry `role` (`associate` | `manager`) and a `root`
+  flag. **Shannon is seeded as the root manager** on first run — she cannot
+  be removed or demoted, and managers can promote or remove other managers
+  from a new Team & managers screen.
+- **Managers require a password; associates don't**, as asked. Associates
+  still just pick a name from the dropdown.
+- **The password is not in this repository, and must never be.** This is a
+  static site in a public repo, so a hardcoded password would be readable by
+  every associate and by the internet — worse than no password, because it
+  looks protective. Instead `ManagerAuth` stores a salted SHA-256 hash in
+  the device's own local storage, set by a manager on first use. That is a
+  device-level gate, not real security: anyone with dev tools can bypass it
+  and it doesn't travel between devices. The manager sign-in screen says so
+  in plain language rather than implying protection it doesn't have.
+- Real authentication is a Firebase Auth job, where the password is set in
+  the console and never touches this repo. `BACKEND.md` was rewritten for
+  Firebase (the account that already exists) rather than Supabase, including
+  a rules sketch, the custom-claim approach for manager role, and an honest
+  note about which rule is loose while associates stay passwordless.
+- Verified in a browser: Shannon seeds correctly as root manager; the
+  dropdown lists and switches profiles; first manager access prompts to set
+  a password rather than assuming one; a too-short password is refused; the
+  stored record contains only `salt`/`hash`/`setAt` with no plaintext and a
+  64-character digest; promoting an associate works; a wrong password is
+  refused and the correct one accepted. Zero console errors.
+
+Branch: `claude/site-changes-build-log-m4xymb`
+
+---
+
+## 2026-09-12 — Renamed from Shannon to Provenance
+
+- The app is now **Provenance**. A piece's provenance is where it came
+  from — who drew it, who builds it, what year, what it's made of — which
+  is precisely what the app teaches, so the name states the subject rather
+  than decorating it.
+- Updated the page title, meta description, wordmark, brand mark letter,
+  About screen, and the header comments in every source file. The About
+  screen now explains the name, since it earns a sentence.
+- **Storage keys moved** from `shannon.*` to `provenance.*`, with a
+  migration that carries existing profiles and their progress across
+  rather than stranding them under the old names. `migrateLegacy()` now
+  handles two older shapes in order: profiles saved under the previous
+  app name, then the pre-profiles single-player record. Anyone who has
+  used the live site keeps their XP, streak, badges and flashcard marks.
+- Historical entries below deliberately still say "Shannon" — they are a
+  record of what happened at the time, not a place to retrofit the name.
+- **Not renamed:** the GitHub repository and therefore the live URL, which
+  is still `.../Shannon-web-app/`. Renaming the repo changes that URL and
+  breaks any existing link or bookmark, so that is the owner's call to
+  make rather than something to do unprompted.
+
+Branch: `claude/site-changes-build-log-m4xymb`
+
+---
+
 ## 2026-09-12 — Product photos, Photo ID quiz, quiz topic picker, Flashcards mode
 
 - **Product photos.** Every product record in `js/data.js` can now carry a

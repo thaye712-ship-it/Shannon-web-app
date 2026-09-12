@@ -1,5 +1,5 @@
 /* ============================================================
-   Shannon — Design Within Reach product catalog
+   Provenance — Design Within Reach product catalog
    ------------------------------------------------------------
    Real products sold by Design Within Reach (dwr.com), cross-checked
    against dwr.com's own brand, designer and search listings, plus
@@ -1490,6 +1490,1263 @@ const CATALOG = {
         'Its legs are chrome-plated steel rather than the LCW\'s wood legs.',
         'Both versions were developed from the same molded-plywood research at the same time.'
       ]
+    },
+    {
+      id: 'platner-dining-table',
+      photo: "https://images.hermanmiller.group/asset/f310ce6b-0ee6-4b13-a524-002bab787307/W/DWR_5955_10002097_gold_glass_vendor_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Platner Dining Table',
+      designer: 'Warren Platner',
+      manufacturer: 'Knoll',
+      year: 1966,
+      origin: 'United States',
+      category: 'Dining table',
+      style: 'Mid-Century Modern',
+      materials: ['Nickel- or gold-plated steel wire rod base', 'Tempered glass top', 'Clear lacquer finish'],
+      knownFor: 'a base of hundreds of curved steel rods taking as many as a thousand welds to build',
+      history:
+        'Platner worked with I.M. Pei and Eero Saarinen before developing his own collection, which he ' +
+        'built around the belief that modernism had room for decorative, graceful design in the spirit of ' +
+        'a period style like Louis XV. The dining table uses the same welded wire-rod language as his ' +
+        'lounge chair, and a single piece can take as many as a thousand welds. Made in Italy.',
+      facts: [
+        'A single piece can require as many as a thousand individual welds.',
+        'Platner worked with both I.M. Pei and Eero Saarinen before designing this collection.',
+        'He wanted modernism to allow for decoration, citing Louis XV as a reference point.'
+      ]
+    },
+    {
+      id: 'nelson-x-leg-table',
+      photo: "https://images.hermanmiller.group/m/2c344a885b3e1848/W-LI_NXL_P_20110130_074.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Nelson X-Leg Table',
+      designer: 'George Nelson',
+      manufacturer: 'Herman Miller',
+      year: 1950,
+      origin: 'United States',
+      category: 'Dining table',
+      style: 'Mid-Century Modern',
+      materials: ['Walnut or santos palisander veneer top', 'Tubular steel legs', 'Chrome or powder-coated finish'],
+      knownFor: 'a table deliberately designed to work as a desk, a dining table or a work surface',
+      history:
+        'Nelson worked at home and in the office with little distinction between the two, and the X-Leg ' +
+        'Table reflects that: it was designed to be universal rather than assigned to one room. It pairs ' +
+        'equally well with dining chairs or a task chair, which is exactly the point of its plain crossed ' +
+        'steel base.',
+      facts: [
+        'It was designed to work as a desk and a dining table interchangeably.',
+        'Its crossed tubular steel legs give the design its name.',
+        'Nelson\'s lack of separation between home and office life shaped the brief.'
+      ]
+    },
+    {
+      id: 'eames-table-round',
+      photo: "https://images.hermanmiller.group/asset/9f585459-7832-4947-b5e3-a909a158f5b1/W/HM_104_100115229_white_black_aluminum_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Eames Table, Round',
+      designer: 'Charles and Ray Eames',
+      manufacturer: 'Herman Miller',
+      year: 1964,
+      origin: 'United States',
+      category: 'Dining table',
+      style: 'Mid-Century Modern',
+      materials: ['Walnut, ash or laminate top', 'Powder-coated steel column', 'Aluminum base'],
+      knownFor: 'a single central column that keeps legroom clear in both homes and offices',
+      history:
+        'The Eameses designed the table as a durable, unfussy solution that would work in a home or a ' +
+        'commercial space without modification. A single streamlined column carries the top, leaving ' +
+        'legroom uninterrupted, and leveling glides handle uneven floors. Depending on options it is ' +
+        'built from varying percentages of recycled and recyclable material.',
+      facts: [
+        'It was designed to work equally in residential and commercial settings.',
+        'Leveling floor glides let it sit flat on uneven floors.',
+        'Depending on the options chosen it uses varying amounts of recycled material.'
+      ]
+    },
+    {
+      id: 'lc6-table',
+      photo: "https://images.hermanmiller.group/m/1fda89b7eca2dd62/W-DWR_5014_221122_black_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'LC6 Table',
+      designer: 'Le Corbusier, Pierre Jeanneret, and Charlotte Perriand',
+      manufacturer: 'Cassina',
+      year: 1928,
+      origin: 'France',
+      category: 'Dining table',
+      style: 'Modernism',
+      materials: ['Glass top', 'Elliptical tubular steel base', 'Polyester-epoxy powder-coated finish'],
+      knownFor: 'an aircraft-wing-profile steel base carrying a plain sheet of glass',
+      history:
+        'Part of the same 1928 furniture program as the LC2 and LC4, the LC6 pares a dining table down to ' +
+        'a welded steel base and a glass top, with the base built from elliptical tube closer to an ' +
+        'aircraft wing section than a furniture leg. Each piece is signed and numbered, produced by ' +
+        'Cassina under exclusive license from the Le Corbusier Foundation.',
+      facts: [
+        'Its base is built from elliptical tube rather than round tube.',
+        'Each one is signed and numbered by Cassina.',
+        'It comes from the same 1928 collection as the LC2 armchair and LC4 chaise.'
+      ]
+    },
+    {
+      id: 'florence-knoll-table',
+      photo: "https://images.hermanmiller.group/m/4c338b325df63bb5/W-DWR_2527589_100203700_satin_carrara_chrome_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Florence Knoll Table, Rectangular',
+      designer: 'Florence Knoll',
+      manufacturer: 'Knoll',
+      year: 1954,
+      origin: 'United States',
+      category: 'Dining table',
+      style: 'Mid-Century Modern',
+      materials: ['Solid marble top', 'Polished chrome base'],
+      knownFor: 'pairing a solid stone slab with a minimal chrome frame',
+      history:
+        'Florence Knoll ran the Knoll Planning Unit and approached interiors as total design, furniture ' +
+        'included. The table shows the same architectural restraint as the rest of her work: a solid ' +
+        'marble top, a polished chrome base, and no decoration anywhere. Made in Italy.',
+      facts: [
+        'Its top is solid marble rather than a stone veneer.',
+        'Florence Knoll ran the Knoll Planning Unit, which planned whole interiors.',
+        'She approached furniture as part of a total interior rather than as standalone objects.'
+      ]
+    },
+    {
+      id: 'aalto-l-leg-table',
+      photo: "https://images.hermanmiller.group/asset/d58acd07-c61e-4037-96f3-06d8b667a6c8/W/DWR_2603528_100716449_white_laminate_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'L-Leg Round Table',
+      designer: 'Alvar Aalto',
+      manufacturer: 'Artek',
+      year: 1933,
+      origin: 'Finland',
+      category: 'Dining table',
+      style: 'Scandinavian Modern',
+      materials: ['Solid birch legs', 'Birch, laminate or linoleum top'],
+      knownFor: 'a bent birch leg that turns ninety degrees into the tabletop with no bracket',
+      history:
+        'Aalto developed the L-Leg with manufacturer Otto Korhonen in the late 1920s: precise saw cuts ' +
+        'are made into solid birch and veneer strips glued in, letting the wood bend a right angle and ' +
+        'attach straight to the underside of the top. Patented in 1933, Aalto called the result the ' +
+        'little sister of the architectural column. Made in Finland.',
+      facts: [
+        'The leg bends by sawing the solid birch and gluing veneer strips into the cuts.',
+        'Aalto called the L-Leg \'the little sister of the architectural column\'.',
+        'The bending technique was patented in 1933.'
+      ]
+    },
+    {
+      id: 'barcelona-table',
+      photo: "https://images.hermanmiller.group/m/8a7a55fd209d18f5/W-DWR_27_215589_glass_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Barcelona Table',
+      designer: 'Ludwig Mies van der Rohe',
+      manufacturer: 'Knoll',
+      year: 1930,
+      origin: 'Germany',
+      category: 'Coffee table',
+      style: 'Bauhaus',
+      materials: ['Bar stock steel with hand-ground, hand-buffed chrome', 'Polished glass top with beveled edge'],
+      knownFor: 'a single-piece steel base hand-ground and hand-buffed to a mirror',
+      history:
+        'Designed as the companion to the Barcelona Chair, the table uses the same hand-finished ' +
+        'approach: the base is formed as a single piece of bar stock steel, then hand-ground and ' +
+        'hand-buffed rather than machine-polished. The glass carries a slight green tint and a beveled ' +
+        'edge, and the table is still built to Mies\'s original specifications.',
+      facts: [
+        'Its base is made as a single piece rather than joined sections.',
+        'The chrome is hand-ground and hand-buffed rather than machine finished.',
+        'It was designed as the companion piece to the Barcelona Chair.'
+      ]
+    },
+    {
+      id: 'eames-plywood-coffee-table',
+      photo: "https://images.hermanmiller.group/m/1616bd40e4dc136e/W-HM_5328_294782_walnut_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Eames Molded Plywood Coffee Table',
+      designer: 'Charles and Ray Eames',
+      manufacturer: 'Herman Miller',
+      year: 1946,
+      origin: 'United States',
+      category: 'Coffee table',
+      style: 'Mid-Century Modern',
+      materials: ['Molded five-ply top', 'Molded eight-ply legs', 'Walnut, ash or ebonized ash veneer'],
+      knownFor: 'applying the Eameses\' Kazam! plywood machine to a table instead of a chair',
+      history:
+        'The Eameses spent the early 1940s pressing thin veneer against a heated membrane in a homemade ' +
+        'rig they nicknamed the Kazam! Machine, and this table came straight out of that work. The top is ' +
+        'five plies, the legs eight, all fused and bent rather than cut and joined.',
+      facts: [
+        'It came out of the same Kazam! Machine plywood experiments as the Eames chairs.',
+        'The top is five plies thick while the legs are eight.',
+        'It was released the same year as the LCW plywood lounge chair.'
+      ]
+    },
+    {
+      id: 'noguchi-rudder-table',
+      photo: "https://images.hermanmiller.group/m/34e14dfb0d9649c4/W-HM_6109_9052884_white_ash_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Noguchi Rudder Table',
+      designer: 'Isamu Noguchi',
+      manufacturer: 'Herman Miller',
+      year: 1949,
+      origin: 'United States',
+      category: 'Coffee table',
+      style: 'Organic Modernism',
+      materials: ['Ebonized maple, walnut or ash veneer over plywood', 'Chromed steel hairpin legs'],
+      knownFor: 'a rudder-shaped wood leg paired with two hairpin legs that nearly disappear',
+      history:
+        'Noguchi balanced the top on one broad, rudder-shaped wooden leg and two thin chromed steel ' +
+        'hairpins. At a glance the metal legs vanish and the top looks like it rests on the wood alone, ' +
+        'which is the sleight of hand the design is built around.',
+      facts: [
+        'Its wooden leg is shaped like a boat rudder, which gives the table its name.',
+        'The two thin steel hairpin legs are meant to visually disappear.',
+        'It arrived a year after Noguchi\'s better-known glass-topped coffee table.'
+      ]
+    },
+    {
+      id: 'laccio-table',
+      photo: "https://images.hermanmiller.group/m/05871145720c0a06/W-DWR_1420_297455_white_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Laccio Table',
+      designer: 'Marcel Breuer',
+      manufacturer: 'Knoll',
+      year: 1924,
+      origin: 'Germany',
+      category: 'Side table',
+      style: 'Bauhaus',
+      materials: ['Seamless tubular steel frame', 'Marble or plastic laminate top'],
+      knownFor: 'the low table Breuer designed to sit alongside the Wassily Chair',
+      history:
+        'Breuer designed the Laccio as a companion to the Wassily, using the same bent tubular steel ' +
+        'logic at table scale. The frame is seamless, the top simply rests within it, and the two sizes ' +
+        'nest. Each table carries an individual number for identification.',
+      facts: [
+        'It was designed to accompany Breuer\'s Wassily Chair.',
+        'Its tubular steel frame is seamless rather than joined.',
+        'Each table is individually numbered.'
+      ]
+    },
+    {
+      id: 'girard-flower-table',
+      photo: "https://images.hermanmiller.group/asset/314f5c3f-7024-4547-9162-34549f07888b/W/HM_GFT_61827.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Girard Flower Table',
+      designer: 'Alexander Girard',
+      manufacturer: 'Herman Miller',
+      year: 1977,
+      origin: 'United States',
+      category: 'Coffee table',
+      style: 'Mid-Century Modern',
+      materials: ['Powder-coated steel'],
+      knownFor: 'a petal-shaped base under a scalloped top, usable indoors or out',
+      history:
+        'Girard spent decades running Herman Miller\'s textile division, and the Flower Table carries the ' +
+        'same decorative instinct into steel: a petal-shaped base beneath a scalloped top. It comes in ' +
+        'two sizes and works indoors or outdoors.',
+      facts: [
+        'Its base is shaped like flower petals and its top is scalloped to match.',
+        'Girard led Herman Miller\'s textile division for over two decades.',
+        'It is built for both indoor and outdoor use.'
+      ]
+    },
+    {
+      id: 'e1027-table',
+      photo: "https://images.hermanmiller.group/m/3ad53a8989553c0/W-DWR_436_510790_COLOR_chrome-jpg.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Adjustable Table E1027',
+      designer: 'Eileen Gray',
+      manufacturer: 'ClassiCon',
+      year: 1927,
+      origin: 'Ireland',
+      category: 'Side table',
+      style: 'Modernism',
+      materials: ['Chromed tubular steel', 'Clear glass top'],
+      knownFor: 'a cantilevered side table that slides over a bed or sofa and adjusts in height',
+      history:
+        'Gray designed it for E1027, the seaside house she built for herself, reportedly so her sister ' +
+        'could take breakfast in bed. The C-shaped base is cantilevered so the top can hover over a bed ' +
+        'or chair rather than bumping into it, and the height adjusts by sliding the column.',
+      facts: [
+        'It is named after E1027, the house Gray designed and built for herself.',
+        'Its cantilevered base lets the top extend over a bed or sofa.',
+        'The height adjusts by sliding the central column.'
+      ]
+    },
+    {
+      id: 'nelson-swag-leg-desk',
+      photo: "https://images.hermanmiller.group/m/c763e9fa6eccb32d/W-HM_6255_276658_walnut_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Nelson Swag Leg Desk',
+      designer: 'George Nelson',
+      manufacturer: 'Herman Miller',
+      year: 1958,
+      origin: 'United States',
+      category: 'Desk',
+      style: 'Mid-Century Modern',
+      materials: ['Swaged steel legs', 'Solid walnut stretcher', 'Walnut veneer top', 'Formed plastic organizer trays'],
+      knownFor: 'legs shaped by a metal-swaging process that curves and tapers steel tube',
+      history:
+        'The collection takes its name from swaging, a manufacturing process that uses pressure to curve ' +
+        'and taper metal tubing, which is what gives the legs their profile. The desk adds brightly ' +
+        'colored plastic cubbies across the back and a solid walnut stretcher for stability.',
+      facts: [
+        'Swaging, the tube-forming process, is where the collection\'s name comes from.',
+        'Brightly colored plastic dividers form the storage cubbies.',
+        'A solid walnut stretcher ties the legs together for rigidity.'
+      ]
+    },
+    {
+      id: 'eames-desk-unit',
+      photo: "https://images.hermanmiller.group/m/cb42b581199dd55b/W-HM_1366_192460_multi_zinc_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Eames Desk Unit',
+      designer: 'Charles and Ray Eames',
+      manufacturer: 'Herman Miller',
+      year: 1952,
+      origin: 'United States',
+      category: 'Desk',
+      style: 'Mid-Century Modern',
+      materials: ['Plywood top', 'Painted hardboard panels', 'Zinc-coated steel frame'],
+      knownFor: 'the desk built on the same exposed steel frame system as the Eames storage units',
+      history:
+        'The desk is the writing-surface member of the same modular family as the Eames Storage Unit, ' +
+        'using the identical zinc-coated steel frame with colored panels dropped into it. A file drawer ' +
+        'hangs on the right and nylon glides keep it easy on floors.',
+      facts: [
+        'It uses the same exposed steel frame system as the Eames Storage Unit.',
+        'A file drawer is built into the right-hand side.',
+        'Its colored panels are painted hardboard set into the frame.'
+      ]
+    },
+    {
+      id: 'risom-desk',
+      photo: "https://images.hermanmiller.group/m/107bd6e3f9670aa/W-DWR_2213_643115_black_walnut_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Risom Desk',
+      designer: 'Jens Risom',
+      manufacturer: 'Design Within Reach',
+      year: 1968,
+      origin: 'United States',
+      category: 'Desk',
+      style: 'Mid-Century Modern',
+      materials: ['Solid walnut, oak or ebonized oak', 'Leather top with protective finish'],
+      knownFor: 'a small-space desk Risom first designed for his own home',
+      history:
+        'Risom designed it for his own house as a compact answer to not having room for a real office. He ' +
+        'described it plainly as a writing surface rather than a desk. A leather top with a ' +
+        'stain-resistant finish sits in the solid wood frame, and a single drawer holds a removable tray.',
+      facts: [
+        'Risom originally designed it for his own home.',
+        'He described it as \'really a writing surface\' rather than a desk.',
+        'Its leather top carries a stain-resistant protective finish.'
+      ]
+    },
+    {
+      id: 'magis-spun-chair',
+      photo: "https://images.hermanmiller.group/m/6769ebcdc8a72120/W-DWR_9540_100566464_blue_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Magis Spun Chair',
+      designer: 'Thomas Heatherwick',
+      manufacturer: 'Magis',
+      year: 2010,
+      origin: 'United Kingdom',
+      category: 'Outdoor lounge chair',
+      style: 'Contemporary',
+      materials: ['Rotational-molded polyethylene'],
+      knownFor: 'a chair that stands up like a sculpture and spins a full circle on its side',
+      history:
+        'Heatherwick\'s studio works across design, architecture and urban planning, and the Spun reflects ' +
+        'that blurring: upright it reads as a sculptural object, tipped onto its side it becomes a seat ' +
+        'that rotates a full 360 degrees while you sit in it. It is rotationally molded in one piece and ' +
+        'works indoors or out.',
+      facts: [
+        'Standing upright it functions as sculpture; on its side it becomes a seat.',
+        'It spins a full 360 degrees while someone is sitting in it.',
+        'It is rotationally molded as a single piece of polyethylene.'
+      ]
+    },
+    {
+      id: 'risom-outdoor-lounge',
+      photo: "https://images.hermanmiller.group/m/79736146ba81abb4/W-DWR_2547800_100342231_fern_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Risom Outdoor Lounge Chair',
+      designer: 'Jens Risom',
+      manufacturer: 'Knoll',
+      year: 1942,
+      origin: 'United States',
+      category: 'Outdoor lounge chair',
+      style: 'Outdoor Modernism',
+      materials: ['Oiled teak frame', 'Sunbrella acrylic webbing'],
+      knownFor: 'the wartime webbed chair rebuilt in teak and Sunbrella for outdoor use',
+      history:
+        'Knoll took Risom\'s 1942 webbed lounge chair, the company\'s first commissioned design, and ' +
+        'rebuilt it for outside three-quarters of a century later. The parachute-surplus webbing becomes ' +
+        'water-repellent Sunbrella and the wood frame becomes oiled teak, which weathers to a silver ' +
+        'patina. Each piece carries the KnollStudio logo and the designer\'s signature.',
+      facts: [
+        'The original 1942 version was one of the first pieces Knoll ever commissioned.',
+        'Its outdoor webbing is Sunbrella acrylic rather than the original parachute surplus.',
+        'The teak frame is left to weather to a silver patina.'
+      ]
+    },
+    {
+      id: 'sculptura-lounge',
+      photo: "https://images.hermanmiller.group/asset/f52f3d11-3c21-4e02-8d37-fe8ff01f7661/W/DWR_2601505_100708010_black_f1.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Sculptura Lounge Chair',
+      designer: 'Russell Woodard',
+      manufacturer: 'Woodard Furniture Company',
+      year: 1956,
+      origin: 'United States',
+      category: 'Outdoor lounge chair',
+      style: 'Outdoor Modernism',
+      materials: ['Powder-coated iron mesh frame', 'Outdoor foam cushions', 'Sunbrella fabric'],
+      knownFor: 'hand-formed iron mesh, still shaped by hand decades later',
+      history:
+        'Woodard Furniture has been building outdoor furniture in Michigan since 1866, and Russell ' +
+        'Woodard\'s 1956 Sculptura brought modernism into that line with a commanding hand-formed iron ' +
+        'mesh shell. The chair is still formed entirely by hand, now with weatherproof finishes.',
+      facts: [
+        'The shell is hand-formed iron mesh rather than machine-pressed.',
+        'Woodard Furniture Company was founded in Michigan in 1866.',
+        'It is lightweight despite the iron construction.'
+      ]
+    },
+    {
+      id: 'pacha-outdoor',
+      photo: "https://images.hermanmiller.group/asset/bf7ad2bd-7734-44b5-b840-dab7ccb34ab0/W/DWR_2536187_100265338_white_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Pacha Outdoor Lounge Chair',
+      designer: 'Pierre Paulin',
+      manufacturer: 'Gubi',
+      year: 1975,
+      origin: 'France',
+      category: 'Outdoor lounge chair',
+      style: 'Space Age',
+      materials: ['Metal swivel base', 'Wood frame', 'Cut foam cushions', 'Outdoor polypropylene fabric'],
+      knownFor: 'a legless, ground-hugging lounge shape from the era of low-level living',
+      history:
+        'Paulin was central to the 1960s idea of low-level living, which did away with chair legs and put ' +
+        'people closer to the floor. Pacha is that idea in an enveloping organic form, lifted only a few ' +
+        'inches on a slim swivel base. The outdoor version wraps two layers of fabric, the inner one ' +
+        'water-repellent.',
+      facts: [
+        'It sits only a few inches off the ground on a swiveling base.',
+        'Paulin helped popularize \'low-level living\' seating in the 1960s.',
+        'The outdoor version uses two fabric layers, the inner one water-repellent.'
+      ]
+    },
+    {
+      id: 'masters-chair',
+      photo: "https://images.hermanmiller.group/m/64bb62e9187d8014/W-DWR_1017_9197336_gray_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Masters Chair',
+      designer: 'Philippe Starck and Eugeni Quitllet',
+      manufacturer: 'Kartell',
+      year: 2010,
+      origin: 'Italy',
+      category: 'Indoor/outdoor dining chair',
+      style: 'Contemporary',
+      materials: ['Batch-dyed polypropylene'],
+      knownFor: 'weaving the back silhouettes of three famous chairs into one',
+      history:
+        'Starck and Quitllet built the back from the outlines of three mid-century icons at once: ' +
+        'Jacobsen\'s Series 7, the Eames molded shell, and Saarinen\'s Tulip armchair, interlaced into a ' +
+        'single form. It is fully recyclable polypropylene and works indoors or out. Made in Italy.',
+      facts: [
+        'Its back interlaces the silhouettes of three different famous chairs.',
+        'The three referenced designs are the Series 7, the Eames shell and the Tulip armchair.',
+        'It is made from fully recyclable batch-dyed polypropylene.'
+      ]
+    },
+    {
+      id: 'louis-ghost-chair',
+      photo: "https://images.hermanmiller.group/m/13d17cffb95a3a7/W-DWR_1872_433143_black_f-tif.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Louis Ghost Chair',
+      designer: 'Philippe Starck',
+      manufacturer: 'Kartell',
+      year: 2002,
+      origin: 'Italy',
+      category: 'Indoor/outdoor dining chair',
+      style: 'Postmodern',
+      materials: ['Single-piece injection-molded polycarbonate'],
+      knownFor: 'a Louis XVI armchair reissued as one piece of transparent polycarbonate',
+      history:
+        'Starck took the classic Louis XVI armchair, medallion back and all, and reproduced it in a ' +
+        'single injection-molded piece of transparent polycarbonate. The result is a historical ' +
+        'silhouette that visually disappears in a room. A small red Kartell logo on the back marks it as ' +
+        'authentic, and it stacks six high.',
+      facts: [
+        'It reinterprets the Louis XVI armchair in transparent polycarbonate.',
+        'The whole chair is molded as one single piece.',
+        'It stacks up to six high despite the armchair form.'
+      ]
+    },
+    {
+      id: 'bellini-chair',
+      photo: "https://images.hermanmiller.group/asset/8592a09e-ebe5-4fbc-945e-8e6e0c22197c/W/DWR_2135_100697512_reed_green_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Bellini Chair',
+      designer: 'Mario Bellini',
+      manufacturer: 'Heller',
+      year: 1998,
+      origin: 'Italy',
+      category: 'Indoor/outdoor dining chair',
+      style: 'Contemporary',
+      materials: ['Fiberglass-reinforced polypropylene'],
+      knownFor: 'winning its designer his eighth Compasso d\'Oro and a place in MoMA\'s collection',
+      history:
+        'Bellini\'s stacking chair earned him his eighth Compasso d\'Oro in 2001 and entered MoMA\'s ' +
+        'permanent collection. Heller now builds it with a plastic engineered to biodegrade in soil ' +
+        'within three to five years without shedding microplastics, with no compromise to durability in ' +
+        'use. Made in the USA.',
+      facts: [
+        'It won Mario Bellini his eighth Compasso d\'Oro award in 2001.',
+        'It is in the permanent collection at MoMA.',
+        'Its plastic is engineered to biodegrade underground within three to five years.'
+      ]
+    },
+    {
+      id: 'serge-mouille-floor-lamp',
+      photo: "https://images.hermanmiller.group/m/43d2f7425c64d705/W-DWR_2302_100200256_white_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Serge Mouille Three Arm Floor Lamp',
+      designer: 'Serge Mouille',
+      manufacturer: 'Serge Mouille',
+      year: 1952,
+      origin: 'France',
+      category: 'Floor lamp',
+      style: 'Mid-Century Modern',
+      materials: ['Lacquered aluminum shades', 'Steel tubing', 'Brass ball joints'],
+      knownFor: 'breast-shaped reflectors on thin steel arms that pivot on brass ball joints',
+      history:
+        'Mouille was a trained silversmith, and it shows in the metalwork: hand-shaped aluminum ' +
+        'reflectors, thin steel arms, and visible washer-and-hex-screw hardware. Each arm swivels on a ' +
+        'brass ball joint, so the lamp reads as a kinetic object rather than a fixture. Each one is ' +
+        'stamped and numbered.',
+      facts: [
+        'Mouille trained as a silversmith before designing lighting.',
+        'Each arm pivots on a brass ball joint.',
+        'Every lamp is stamped and numbered.'
+      ]
+    },
+    {
+      id: 'grasshopper-floor-lamp',
+      photo: "https://images.hermanmiller.group/m/1710cb9a47529da2/W-DWR_567_580984_black_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Grasshopper Floor Lamp',
+      designer: 'Greta Magnusson Grossman',
+      manufacturer: 'Gubi',
+      year: 1948,
+      origin: 'Sweden',
+      category: 'Floor lamp',
+      style: 'Mid-Century Modern',
+      materials: ['Powder-coated steel frame and shade', 'Solid brass hardware', 'Fabric-covered cord'],
+      knownFor: 'a tripod stance and long conical shade that reads like the insect it is named for',
+      history:
+        'Grossman trained in Sweden and moved to California in 1940, blending European modernism with a ' +
+        'looser West Coast sensibility. The Grasshopper leans on a lithe tripod frame with an elongated ' +
+        'conical shade on a ball joint, so light can be aimed anywhere without glare.',
+      facts: [
+        'Grossman trained in Sweden before moving to California in 1940.',
+        'Its shade is mounted on a ball joint so it aims in any direction.',
+        'The angled tripod stance is what earned it the grasshopper name.'
+      ]
+    },
+    {
+      id: 'ic-floor-lamp',
+      photo: "https://images.hermanmiller.group/m/a6d8c9647023b587/W-DWR_4520_100109791_brass_p.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'IC Floor Lamp',
+      designer: 'Michael Anastassiades',
+      manufacturer: 'Flos',
+      year: 2013,
+      origin: 'United Kingdom',
+      category: 'Floor lamp',
+      style: 'Contemporary',
+      materials: ['Brass or powder-coated steel frame', 'Frosted blown glass diffuser'],
+      knownFor: 'a glass sphere balanced on a thin rod as if about to roll off',
+      history:
+        'Anastassiades trained in engineering before design, and the IC is an exercise in apparent ' +
+        'instability: a blown glass sphere perches on an ultra-thin frame looking like it might drop at ' +
+        'any moment. The tension is the whole point of the design. Made in Italy.',
+      facts: [
+        'Its glass sphere is deliberately positioned to look precarious.',
+        'Anastassiades studied engineering before turning to design.',
+        'The frame is intentionally ultra-thin to heighten the effect.'
+      ]
+    },
+    {
+      id: 'panthella-lamp',
+      photo: "https://images.hermanmiller.group/asset/b2ababcf-0494-447c-9561-afcbf3e6c410/W/DWR_2517941_100705300_opal_white_f1.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Panthella Table Lamp',
+      designer: 'Verner Panton',
+      manufacturer: 'Louis Poulsen',
+      year: 1971,
+      origin: 'Denmark',
+      category: 'Table lamp',
+      style: 'Space Age',
+      materials: ['Powder-coated aluminum or acrylic shade and base'],
+      knownFor: 'a half-sphere shade over a trumpet base, both acting as reflectors',
+      history:
+        'Panton designed the Panthella so that both the dome shade and the flared base diffuse light ' +
+        'rather than just the shade, throwing a soft glow in every direction. It is one of the most ' +
+        'enduring designs from a career built on organic shapes and saturated color.',
+      facts: [
+        'Both the shade and the base work as light diffusers.',
+        'It comes from the same designer as the one-piece Panton Chair.',
+        'Its half-sphere-over-trumpet profile has stayed unchanged since 1971.'
+      ]
+    },
+    {
+      id: 'atollo-lamp',
+      photo: "https://images.hermanmiller.group/asset/9c64f7e1-85c2-4bc5-938a-2937b9bbb40c/W/DWR_2195605_100155306_black_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Atollo Table Lamp',
+      designer: 'Vico Magistretti',
+      manufacturer: 'Oluce',
+      year: 1977,
+      origin: 'Italy',
+      category: 'Table lamp',
+      style: 'Italian Modernism',
+      materials: ['Opaline glass or lacquered aluminum diffuser', 'Glass or metal base'],
+      knownFor: 'reducing a lamp to a cone, a cylinder and a hemisphere',
+      history:
+        'Magistretti stripped the table lamp down to three pure geometric solids stacked on each other: ' +
+        'cylinder, cone and dome. It is often described as the archetypal table lamp for exactly that ' +
+        'reason, and it sits in the permanent collections of major design museums.',
+      facts: [
+        'Its form is built from three basic geometric solids.',
+        'It sits in the permanent collections of major design museums.',
+        'Larger sizes include an on-cord dimmer switch.'
+      ]
+    },
+    {
+      id: 'tizio-lamp',
+      photo: "https://images.hermanmiller.group/asset/b43a3a0b-67a6-4049-a39c-ba457cd5d925/W/DWR_2460_100203490_micro_black_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Tizio Desk Lamp',
+      designer: 'Richard Sapper',
+      manufacturer: 'Artemide',
+      year: 1972,
+      origin: 'Italy',
+      category: 'Desk lamp',
+      style: 'Italian Modernism',
+      materials: ['Anticorrosion-treated aluminum body', 'Zinc alloy counterweights'],
+      knownFor: 'running its electricity through the arms so it needs no wires along them',
+      history:
+        'Sapper balanced the lamp on counterweights so it moves with a push and stays put with no knob to ' +
+        'tighten. The current runs through the metal arms themselves, which removes any visible wiring ' +
+        'and is the detail the design is best known for. It won the Compasso d\'Oro in 1979 and is in ' +
+        'MoMA\'s collection.',
+      facts: [
+        'Electricity runs through the arms themselves instead of through cables.',
+        'It stays in position by counterweight, with no knobs to tighten.',
+        'It won the Compasso d\'Oro in 1979.'
+      ]
+    },
+    {
+      id: 'anglepoise-1227',
+      photo: "https://images.hermanmiller.group/m/a09295fe143e9634/W-DWR_9155_100106239_linen_white_p2.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Original 1227 Task Lamp',
+      designer: 'George Carwardine',
+      manufacturer: 'Anglepoise',
+      year: 1935,
+      origin: 'United Kingdom',
+      category: 'Desk lamp',
+      style: 'Industrial',
+      materials: ['Spun aluminum shade', 'Aluminum arms', 'Cast-iron base'],
+      knownFor: 'borrowing car suspension spring theory to hold a lamp in any position',
+      history:
+        'Carwardine spent years engineering vehicle suspension systems before his employer went bankrupt ' +
+        'in 1929. Working from a home workshop in Bath, he applied spring-and-lever thinking to lighting, ' +
+        'and a new kind of spring let him build an arm that moves freely yet holds position. It carries a ' +
+        'lifetime warranty.',
+      facts: [
+        'Carwardine was a vehicle suspension engineer before designing lamps.',
+        'Its constant-tension spring mechanism holds any position without locking.',
+        'It is backed by a lifetime warranty.'
+      ]
+    },
+    {
+      id: 'flowerpot-vp3',
+      photo: "https://images.hermanmiller.group/asset/d10cbaae-3332-4b99-ba5b-77741da7e00a/W/DWR_2517168_100608619_grey_beige_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'VP3 Flowerpot Table Lamp',
+      designer: 'Verner Panton',
+      manufacturer: '&Tradition',
+      year: 1968,
+      origin: 'Denmark',
+      category: 'Table lamp',
+      style: 'Space Age',
+      materials: ['Spun brass or steel shades'],
+      knownFor: 'two facing hemispheres that hide the bulb entirely',
+      history:
+        'Panton built the Flowerpot from two half-spheres facing each other, the smaller one hiding the ' +
+        'bulb so only reflected light escapes. It became a signature of 1960s Danish pop design, and its ' +
+        'colors were as much the point as its shape.',
+      facts: [
+        'It is built from two hemispheres facing one another.',
+        'The upper hemisphere conceals the bulb so light is indirect.',
+        'It was designed in the same era as Panton\'s molded plastic chair.'
+      ]
+    },
+    {
+      id: 'semi-pendant',
+      photo: "https://images.hermanmiller.group/m/f304deb688b7ade2/W-DWR_2297_739238_matte_black_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Semi Pendant Lamp',
+      designer: 'Claus Bonderup and Torsten Thorup',
+      manufacturer: 'Gubi',
+      year: 1968,
+      origin: 'Denmark',
+      category: 'Pendant lamp',
+      style: 'Scandinavian Modern',
+      materials: ['Powder-coated aluminum', 'Brass or chrome diffuser', 'Fabric-covered cord'],
+      knownFor: 'a shade whose profile comes from the gap between two overlapping circles',
+      history:
+        'Bonderup and Thorup were architecture students who wanted crisp geometry in a design world then ' +
+        'dominated by soft organic shapes. They placed two circles back to back and took the shape from ' +
+        'the negative space between them, giving a shade whose diameter equals each circle\'s. It won ' +
+        'first prize in their school\'s 1968 design competition.',
+      facts: [
+        'Its profile is derived from the negative space between two circles.',
+        'Its designers were still architecture students when they made it.',
+        'It won first prize in a 1968 school design competition.'
+      ]
+    },
+    {
+      id: 'eames-sofa',
+      photo: "https://images.hermanmiller.group/m/bf8434696b534af7/W-HM_226_100426530_balsa_oiled_walnut_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Eames Sofa',
+      designer: 'Charles and Ray Eames',
+      manufacturer: 'Herman Miller',
+      year: 1967,
+      origin: 'United States',
+      category: 'Sofa',
+      style: 'Mid-Century Modern',
+      materials: ['Solid walnut or teak frame', 'Die-cast polished aluminum legs', 'Leather upholstery', 'Rubber webbing suspension'],
+      knownFor: 'pairing solid wood, leather and polished aluminum in one frame',
+      history:
+        'The Eameses designed the sofa to sit alongside their Soft Pad Collection, which is why the ' +
+        'polished aluminum detailing matches. Wood, leather and aluminum each stay visible rather than ' +
+        'being wrapped in upholstery, and the seat is suspended on fabric-reinforced rubber webbing.',
+      facts: [
+        'It was designed to complement the Eames Soft Pad Collection.',
+        'Its seat is suspended on fabric-reinforced rubber webbing.',
+        'Wood, leather and polished aluminum are all left visible in the design.'
+      ]
+    },
+    {
+      id: 'togo-sofa',
+      photo: "https://images.hermanmiller.group/m/20404a623095e6c5/W-DWR_2544356_100574434_nightfall_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'TOGO Sofa',
+      designer: 'Michel Ducaroy',
+      manufacturer: 'Ligne Roset',
+      year: 1973,
+      origin: 'France',
+      category: 'Sofa',
+      style: 'Space Age',
+      materials: ['Multiple-density polyurethane foam', 'Channeled quilted upholstery'],
+      knownFor: 'having no frame or base at all, just folded layers of foam',
+      history:
+        'Ducaroy eliminated the frame entirely: Togo is built from multiple densities of polyurethane ' +
+        'foam folded back on itself like a tube of toothpaste, wrapped in channeled quilting. Nothing ' +
+        'rigid runs through it, which is why it slouches the way it does. It has stayed in production for ' +
+        'over fifty years.',
+      facts: [
+        'It contains no frame or base whatsoever, only foam.',
+        'Ducaroy compared its folded form to a tube of toothpaste.',
+        'It has been in continuous production since 1973.'
+      ]
+    },
+    {
+      id: 'quilton-sectional',
+      photo: "https://images.hermanmiller.group/asset/aa8d5fb5-3ffd-4172-97de-69b8c75a4862/W/HAY_2530332_100821671_turf_blue_grey_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Quilton Sectional',
+      designer: 'Doshi Levien',
+      manufacturer: 'HAY',
+      year: null,
+      origin: 'United Kingdom',
+      category: 'Sectional',
+      style: 'Contemporary',
+      materials: ['Plywood, pine and beech internal frame', 'Spring suspension', 'Polyurethane foam', 'Vegan leather platform'],
+      knownFor: 'a sofa system its designers describe as a quilted landscape',
+      history:
+        'Nipa Doshi and Jonathan Levien designed Quilton as a quilted landscape sofa system rather than a ' +
+        'single sofa, with sculpted sections that sit on a platform bound in vegan leather. It is built ' +
+        'to be a central surface for working, socializing and lounging rather than one fixed seating ' +
+        'arrangement.',
+      facts: [
+        'Its designers describe it as a \'quilted landscape sofa system\'.',
+        'The sections rest on a platform bound in vegan leather.',
+        'Doshi Levien is the studio of Nipa Doshi and Jonathan Levien.'
+      ]
+    },
+    {
+      id: 'luva-sectional',
+      photo: "https://images.hermanmiller.group/asset/3959298c-fc55-4bcf-b762-3ecc74d34ef6/W/HM_2560903_100406776_fir_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Luva Modular Sectional',
+      designer: 'Gabriel Tan',
+      manufacturer: 'Herman Miller',
+      year: 2022,
+      origin: 'Singapore',
+      category: 'Sectional',
+      style: 'Contemporary',
+      materials: ['Steel frame', 'Webbed suspension', 'Layered foam of varied densities', 'Fabric or leather upholstery'],
+      knownFor: 'a back that folds down or opens up to change how upright you sit',
+      history:
+        'Tan built an adjustable back into the sectional itself: opened up it drops you into a reclined ' +
+        'lounge position, folded down it holds you upright. One piece of furniture covers both postures ' +
+        'without a mechanism or a separate recliner.',
+      facts: [
+        'Its back can be opened out or folded down to change seating posture.',
+        'Opened up it supports a reclined lounge position; closed it sits you upright.',
+        'It uses layered foam of several different densities.'
+      ]
+    },
+    {
+      id: 'fat-sectional',
+      photo: "https://images.hermanmiller.group/asset/9f6bec01-586f-4b5a-89e9-ce34ee0eb433/W/DWR_2594197_100669035_royal_velvet_almond_beige_grey_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Fat Modular Sofa',
+      designer: 'Tom Dixon',
+      manufacturer: 'Tom Dixon',
+      year: 2024,
+      origin: 'United Kingdom',
+      category: 'Sectional',
+      style: 'Contemporary',
+      materials: ['Fabric upholstery', 'Foam', 'Plywood and MDF', 'Steel'],
+      knownFor: 'deliberately exaggerated proportions on an otherwise minimal shape',
+      history:
+        'Dixon pushed a minimal silhouette to exaggerated proportions: oversized backrests wrap the ' +
+        'sitter while low, curved seats allow a range of slouched positions. Each piece is hand-finished ' +
+        'and hand-upholstered, and the modules recombine into many configurations.',
+      facts: [
+        'Its proportions are deliberately exaggerated against a minimal outline.',
+        'Each piece is hand-finished and hand-upholstered.',
+        'The modules can be recombined into many different configurations.'
+      ]
+    },
+    {
+      id: 'bertoia-bench',
+      photo: "https://images.hermanmiller.group/m/7190c9100eb9dae7/W-KNO_792_311595_black_chrome_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Bertoia Bench',
+      designer: 'Harry Bertoia',
+      manufacturer: 'Knoll',
+      year: 1952,
+      origin: 'United States',
+      category: 'Bench',
+      style: 'Mid-Century Modern',
+      materials: ['Solid wood slats', 'Welded steel rod base', 'Plastic glides'],
+      knownFor: 'being the first piece Bertoia designed for Knoll',
+      history:
+        'Bertoia designed exactly one furniture collection in his life, and the bench was his first piece ' +
+        'in it. Where the Diamond Chair is all open wire, the bench sets solid wood slats on the same ' +
+        'welded steel rod language, so the two read as a family without repeating each other.',
+      facts: [
+        'It was the first piece Bertoia designed for Knoll.',
+        'Bertoia designed only one furniture collection in his entire career.',
+        'It sets solid wood slats on the same welded rod base as his chairs.'
+      ]
+    },
+    {
+      id: 'florence-knoll-bench',
+      photo: "https://images.hermanmiller.group/asset/db290238-5834-425c-8a50-cb5fe2bd1481/W/DWR_552_337953_volo_leather_black_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Florence Knoll Bench',
+      designer: 'Florence Knoll',
+      manufacturer: 'Knoll',
+      year: 1954,
+      origin: 'United States',
+      category: 'Bench',
+      style: 'Mid-Century Modern',
+      materials: ['Chrome-plated steel frame', 'Full-grain semi-aniline leather'],
+      knownFor: 'a leather top made of individually sewn squares on an exposed chrome frame',
+      history:
+        'Florence Knoll revolutionized interior planning with a total design approach that covered ' +
+        'architecture, graphics and textiles together. The bench distills that discipline: an exposed ' +
+        'chrome-plated steel frame topped with individually sewn leather squares. Frame made in Italy, ' +
+        'upholstery in the United States.',
+      facts: [
+        'Its leather top is built from individually sewn squares.',
+        'Its steel frame is left fully exposed rather than skirted.',
+        'Its frame is made in Italy and its upholstery in the United States.'
+      ]
+    },
+    {
+      id: 'womb-ottoman',
+      photo: "https://images.hermanmiller.group/asset/6ea868fe-f628-4024-b017-1eab5970353e/W/KNO_7882_331623_pearl_chrome_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Womb Ottoman',
+      designer: 'Eero Saarinen',
+      manufacturer: 'Knoll',
+      year: 1946,
+      origin: 'United States',
+      category: 'Ottoman',
+      style: 'Organic Modernism',
+      materials: ['Reinforced fiberglass shell', 'Polyester fiber over foam core', 'Steel rod frame'],
+      knownFor: 'the footrest built for the chair Florence Knoll asked to curl up in',
+      history:
+        'Saarinen designed the ottoman as part of the answer to Florence Knoll\'s request for a chair she ' +
+        'could curl up in. It uses the same reinforced fiberglass shell construction and steel rod frame ' +
+        'as the chair, so the two form one continuous shape when used together.',
+      facts: [
+        'It was designed alongside the Womb Chair as one piece of the same brief.',
+        'It uses the same reinforced fiberglass shell construction as the chair.',
+        'Its steel rod frame comes in black, polished chrome or gold plate.'
+      ]
+    },
+    {
+      id: 'egg-footstool',
+      photo: "https://images.hermanmiller.group/asset/073ccdd8-4581-48ff-9bb1-b70792ee73cf/W/DWR_6633_335478_walnut_f-jpg.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Egg Footstool',
+      designer: 'Arne Jacobsen',
+      manufacturer: 'Fritz Hansen',
+      year: 1958,
+      origin: 'Denmark',
+      category: 'Ottoman',
+      style: 'Scandinavian Modern',
+      materials: ['Foam shell over fiberglass-reinforced polyurethane', 'Satin-chromed steel column', 'Aluminum base', 'Leather upholstery'],
+      knownFor: 'a molded foam top that works with either the Egg or the Swan chair',
+      history:
+        'Built for the same Royal Hotel commission as the Egg and Swan, the footstool shapes molded foam ' +
+        'beneath its upholstery so the top curves to support the legs rather than sitting flat. It pairs ' +
+        'with either chair from the collection.',
+      facts: [
+        'It was designed for the same Royal Hotel commission as the Egg and Swan.',
+        'Molded foam under the upholstery gives its top a curved profile.',
+        'It can be used with either the Egg chair or the Swan chair.'
+      ]
+    },
+    {
+      id: 'girard-color-wheel-ottoman',
+      photo: "https://images.hermanmiller.group/asset/861ab9a5-1d6c-43f8-8978-3a961371ff6e/W/HM_GIR_61800.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Girard Color Wheel Ottoman',
+      designer: 'Alexander Girard',
+      manufacturer: 'Herman Miller',
+      year: 1967,
+      origin: 'United States',
+      category: 'Ottoman',
+      style: 'Mid-Century Modern',
+      materials: ['Polished aluminum legs', 'Wool and nylon upholstery', 'Foam cushion over MDF'],
+      knownFor: 'a pinwheel of colored wool wedges on polished aluminum legs',
+      history:
+        'Girard created more than three hundred textiles during his two decades running Herman Miller\'s ' +
+        'textile division, and the Color Wheel Ottoman puts that work on top of a piece of furniture: ' +
+        'wedges of colored wool arranged as a pinwheel over a foam cushion.',
+      facts: [
+        'Girard designed over three hundred textiles for Herman Miller.',
+        'Its top is arranged as a pinwheel of colored wool wedges.',
+        'He led Herman Miller\'s textile division from 1952 into the 1970s.'
+      ]
+    },
+    {
+      id: 'string-shelving',
+      photo: "https://images.hermanmiller.group/m/5efcd5dc3044d955/W-DWR_2198146_100146692_white_oak_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'String Wall Shelving',
+      designer: 'Nils and Kajsa Strinning',
+      manufacturer: 'String Furniture',
+      year: 1949,
+      origin: 'Sweden',
+      category: 'Shelving',
+      style: 'Scandinavian Modern',
+      materials: ['Powder-coated steel wire side panels', 'Lacquered or veneered MDF shelves'],
+      knownFor: 'ladder-like bent wire side panels that shelves simply hook onto',
+      history:
+        'The Strinnings won a 1949 competition to design a bookshelf for a Swedish publisher, answering ' +
+        'with bent steel wire side panels that shelves hook straight into. It ships flat, mounts to the ' +
+        'wall, and expands by adding more panels and shelves, which is why it has stayed in production ' +
+        'for seven decades.',
+      facts: [
+        'It began as the winning entry in a 1949 bookshelf design competition.',
+        'Its side panels are bent steel wire that shelves hook directly onto.',
+        'The system expands by adding more panels rather than replacing the unit.'
+      ]
+    },
+    {
+      id: 'royal-system-shelving',
+      photo: "https://images.hermanmiller.group/m/fa4a052d30c9f1ac/W-DWR_7153_100118633_walnut_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Royal System Shelving',
+      designer: 'Poul Cadovius',
+      manufacturer: 'dk3',
+      year: 1948,
+      origin: 'Denmark',
+      category: 'Shelving',
+      style: 'Danish Modern',
+      materials: ['Solid walnut or oak', 'Veneer over MDF', 'Brass or stainless steel brackets'],
+      knownFor: 'being one of the first wall-mounted storage systems, lifting furniture off the floor',
+      history:
+        'Cadovius thought heavy case furniture wasted floor space, so he moved storage onto the wall ' +
+        'entirely. The Royal System was among the first wall-hung shelving systems anywhere, and the idea ' +
+        'of freeing up the floor for light and space became a defining move of Danish mid-century ' +
+        'interiors.',
+      facts: [
+        'It was one of the first wall-mounted storage systems ever produced.',
+        'Cadovius designed it specifically to free up floor space.',
+        'Shelves and cabinets hang from wall-mounted uprights rather than standing on legs.'
+      ]
+    },
+    {
+      id: 'elysee-bookshelf',
+      photo: "https://images.hermanmiller.group/m/4659b57a1d503af1/W-DWR_2560598_100428817_walnut_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Elysée Bookshelf',
+      designer: 'Pierre Paulin',
+      manufacturer: 'Magis',
+      year: 1971,
+      origin: 'France',
+      category: 'Bookcase',
+      style: 'Space Age',
+      materials: ['American walnut or lacquered oak plywood', 'Galvanized steel wall hook', 'ABS joints and feet'],
+      knownFor: 'curved bentwood brackets designed for a French president\'s private apartment',
+      history:
+        'Paulin designed the original shelves in 1971 for President Georges Pompidou\'s private apartments ' +
+        'at the Élysée Palace, part of a wholesale modernization of the state rooms. The curved bentwood ' +
+        'brackets turn a bookshelf into a sculptural object, and it can stand against a wall or divide a ' +
+        'room. Made in Italy.',
+      facts: [
+        'It was originally designed for the Élysée Palace under President Pompidou.',
+        'Its curved brackets are bentwood rather than straight brackets.',
+        'It can be used against a wall or freestanding as a room divider.'
+      ]
+    },
+    {
+      id: 'bm0253-bookcase',
+      photo: "https://images.hermanmiller.group/m/f6811fa177ac9847/W-DWR_2525375_100196942_walnut_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'BM0253 Bookcase',
+      designer: 'Børge Mogensen',
+      manufacturer: 'Carl Hansen & Søn',
+      year: 1958,
+      origin: 'Denmark',
+      category: 'Bookcase',
+      style: 'Danish Modern',
+      materials: ['FSC-certified oak or walnut veneer', 'Powder-coated tubular steel frame'],
+      knownFor: 'a 1958 Mogensen design that waited decades to reach production',
+      history:
+        'Mogensen drew the bookcase in 1958, but Carl Hansen & Søn only put it into production recently, ' +
+        'making it new to the market despite its age. It pairs FSC-certified wood shelving with a slim ' +
+        'tubular steel frame in the plain, durable idiom Mogensen was known for.',
+      facts: [
+        'It was designed in 1958 but only recently entered production for the first time.',
+        'Its wood is FSC-certified.',
+        'Mogensen was known for plain, hard-wearing furniture for ordinary homes.'
+      ]
+    },
+    {
+      id: 'stacked-bookcase',
+      photo: "https://images.hermanmiller.group/m/7e6debc2f45b6cf6/W-MTO_2588186_100631457_oak_f-tif.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Stacked Storage Bookcase',
+      designer: 'JDS Architects',
+      manufacturer: 'Muuto',
+      year: null,
+      origin: 'Denmark',
+      category: 'Bookcase',
+      style: 'Contemporary Scandinavian',
+      materials: ['PU-lacquered MDF', 'Oak-veneered fiberboard', 'Powder-coated steel clips and podium'],
+      knownFor: 'open modules that clip together into any shape you like',
+      history:
+        'Designed by JDS Architects for Muuto, the system is a set of boxes that clip together with bent ' +
+        'steel clips rather than screws, so shelves, cabinets and surfaces can be combined and ' +
+        'recombined. It comes as pre-configured combinations or as individual modules.',
+      facts: [
+        'Its modules join with bent steel clips rather than fasteners.',
+        'It can be bought pre-configured or assembled module by module.',
+        'It is designed to suit both home and office settings.'
+      ]
+    },
+    {
+      id: 'nelson-thin-edge-buffet',
+      photo: "https://images.hermanmiller.group/asset/92653ff8-d4b1-492f-8b07-2e3e09f43a06/W/HM_6212_9046537-ash_aluminum_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Nelson Thin Edge Buffet',
+      designer: 'George Nelson',
+      manufacturer: 'Herman Miller',
+      year: 1952,
+      origin: 'United States',
+      category: 'Credenza',
+      style: 'Mid-Century Modern',
+      materials: ['Walnut, ash, oak or santos palisander veneer', 'Solid birch drawers', 'Polished aluminum legs and pulls'],
+      knownFor: 'cabinet walls thinned down until the case looks like it is floating',
+      history:
+        'Originally sold as the Rosewood Case Series, Thin Edge got its name from the deliberately thin ' +
+        'cabinet walls, which make the case look lighter than a storage piece has any right to. Slim ' +
+        'polished aluminum legs continue the effect. It is still built to the original proportions with ' +
+        'modern sustainable veneers.',
+      facts: [
+        'It was first sold under the name Rosewood Case Series.',
+        'Its name comes from the deliberately thinned cabinet walls.',
+        'Its drawers are solid birch rather than veneered panels.'
+      ]
+    },
+    {
+      id: 'nelson-basic-credenza',
+      photo: "https://images.hermanmiller.group/asset/78d67d88-33a3-4fa2-b415-c920f8242518/W/HM_2583474_100582075_walnut_cupcake_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Nelson Basic Cabinet Series Credenza',
+      designer: 'George Nelson',
+      manufacturer: 'Herman Miller',
+      year: 1946,
+      origin: 'United States',
+      category: 'Credenza',
+      style: 'Mid-Century Modern',
+      materials: ['Walnut or oak veneer over MDF', 'Aluminum alloy or solid wood pulls', 'Solid wood legs'],
+      knownFor: 'the earliest Nelson storage group, six pieces meant to be combined',
+      history:
+        'The Basic Cabinet Series was among the first things Nelson designed after taking over as Herman ' +
+        'Miller\'s design director, and it set the pattern for everything after: six plain pieces meant to ' +
+        'be used alone or grouped into a wall of storage. It was reintroduced for contemporary homes.',
+      facts: [
+        'It was part of Nelson\'s earliest work as Herman Miller\'s design director.',
+        'The collection comprises six pieces intended to be combined.',
+        'It was reintroduced in recent years after decades out of production.'
+      ]
+    },
+    {
+      id: 'florence-knoll-credenza',
+      photo: "https://images.hermanmiller.group/asset/4b30b35f-1395-413e-b9a1-784fa49929e7/W/KNO_1070_100810766_two_position_oak_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Florence Knoll Credenza',
+      designer: 'Florence Knoll',
+      manufacturer: 'Knoll',
+      year: 1961,
+      origin: 'United States',
+      category: 'Credenza',
+      style: 'Mid-Century Modern',
+      materials: ['Polished chrome steel base', 'Marble, veneer or lacquer top', 'Veneer or lacquer doors'],
+      knownFor: 'a piece Florence Knoll designed because nothing on the market fit the job',
+      history:
+        'Florence Knoll designed furniture to fill the gaps her interiors left, and the credenza is a ' +
+        'clear case: a restrained storage piece for linens, tableware or office files, raised on a ' +
+        'polished chrome base. It comes in several sizes and materials. Made in Italy.',
+      facts: [
+        'She designed it because no existing piece met the need in her interiors.',
+        'It is offered in several sizes, colors and top materials.',
+        'Its base is polished chrome steel with adjustable floor glides.'
+      ]
+    },
+    {
+      id: 'finn-juhl-credenza',
+      photo: "https://images.hermanmiller.group/m/45a6b84ce4a35b91/W-DWR_598_100059048_walnut_blue_f1.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Finn Juhl Credenza',
+      designer: 'Finn Juhl',
+      manufacturer: 'House of Finn Juhl',
+      year: 1955,
+      origin: 'Denmark',
+      category: 'Credenza',
+      style: 'Danish Modern',
+      materials: ['Walnut veneer', 'Lacquered sliding doors and trays', 'Hand-burnished steel frame'],
+      knownFor: 'sliding door panels colored from Goethe\'s colour wheel',
+      history:
+        'Juhl drew on cubism and on Goethe\'s colour theory for the credenza, using interlocking geometric ' +
+        'planes and sliding doors and trays finished in either the warm or the cool half of the wheel. ' +
+        'Inside, one side holds adjustable shelves and the other an open compartment beside the trays. ' +
+        'Made in Denmark.',
+      facts: [
+        'Its colored panels draw on Goethe\'s colour wheel.',
+        'Its form takes cues from the cubist movement.',
+        'One interior side has adjustable shelves, the other an open tray compartment.'
+      ]
+    },
+    {
+      id: 'nelson-thin-edge-bed',
+      photo: "https://images.hermanmiller.group/asset/c111dcfa-a771-4776-b76b-09aeadef6a64/W/HM_3419_100763995_oak_cane_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Nelson Thin Edge Bed',
+      designer: 'George Nelson',
+      manufacturer: 'Herman Miller',
+      year: 1954,
+      origin: 'United States',
+      category: 'Bed',
+      style: 'Mid-Century Modern',
+      materials: ['Solid walnut or ash frame', 'Veneer headboard', 'Natural woven cane', 'Chrome headboard supports'],
+      knownFor: 'a caned headboard revived from the Herman Miller archives',
+      history:
+        'Bringing the bed back into production started in the Herman Miller Archives, where engineers ' +
+        'studied surviving examples and Nelson\'s original drawings. In keeping with his intent that the ' +
+        'collection adapt over time, it is now made in mattress sizes that were not common in the 1950s.',
+      facts: [
+        'Its reissue began with study of archive pieces and original drawings.',
+        'It is now offered in larger sizes than were common in the 1950s.',
+        'Its headboard uses natural woven cane.'
+      ]
+    },
+    {
+      id: 'ruche-bed',
+      photo: "https://images.hermanmiller.group/asset/5bb151fe-cdad-4b53-a27b-58040b1500d4/W/DWR_2554727_100375323_snowman_natural_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Ruché Bed',
+      designer: 'Inga Sempé',
+      manufacturer: 'Ligne Roset',
+      year: 2011,
+      origin: 'France',
+      category: 'Bed',
+      style: 'Contemporary',
+      materials: ['Wood frame', 'Quilted velvet or fabric upholstery'],
+      knownFor: 'taking its name and its look from a garment-quilting technique',
+      history:
+        'Sempé named the bed after ruching, a dressmaking technique that gathers fabric to add texture ' +
+        'and dimension. The quilted upholstery is draped over the wood frame rather than stretched tight, ' +
+        'so the bed reads more like bedding than like joinery.',
+      facts: [
+        'Ruching is a garment technique that gathers fabric for texture.',
+        'Its upholstery is draped over the frame rather than pulled taut.',
+        'Inga Sempé is a French designer known for soft, textile-led work.'
+      ]
+    },
+    {
+      id: 'matera-bed',
+      photo: "https://images.hermanmiller.group/asset/a0d7564c-597e-4739-922d-78e1052d639f/W/DWR_5114_309493_walnut_a.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Matera Bed',
+      designer: 'Sean Yoo',
+      manufacturer: 'Design Within Reach',
+      year: 2007,
+      origin: 'United States',
+      category: 'Bed',
+      style: 'Contemporary',
+      materials: ['Solid walnut or oak frame', 'Veneer headboard', 'Solid ash slats'],
+      knownFor: 'slotted mortise-and-tenon corner joints left visible on the frame',
+      history:
+        'A visit to the Noguchi Museum pushed Sean Yoo out of city planning and into furniture design, ' +
+        'and the Matera shows that sculptural bias: clean lines, beveled edges and slotted ' +
+        'mortise-and-tenon corners left on show. An optional version adds six soft-closing storage ' +
+        'drawers.',
+      facts: [
+        'A visit to the Noguchi Museum prompted Yoo to switch from city planning to design.',
+        'Its corner joints are slotted mortise-and-tenon and left visible.',
+        'An optional storage version adds six soft-closing drawers.'
+      ]
+    },
+    {
+      id: 'nest-storage-bed',
+      photo: "https://images.hermanmiller.group/m/77db01a48938a4a2/W-DWR_1727_100252591_lute_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Nest Storage Bed',
+      designer: 'Niels Bendtsen',
+      manufacturer: 'Design Within Reach',
+      year: 2014,
+      origin: 'Canada',
+      category: 'Bed',
+      style: 'Contemporary',
+      materials: ['Plywood frame and headboard', 'Foam and polyester fiber', 'Gas pistons', 'Removable fabric or leather slipcover'],
+      knownFor: 'a mattress platform that lifts on gas pistons to hide storage underneath',
+      history:
+        'Bendtsen designed Nest for small spaces: the whole mattress platform rises on gas pistons to ' +
+        'reveal a storage compartment that stays completely hidden when closed. A leather pull handle ' +
+        'operates it and the slipcover comes off for cleaning.',
+      facts: [
+        'Its mattress platform lifts on gas pistons to reveal storage.',
+        'The storage compartment is invisible when the bed is closed.',
+        'Its slipcover is removable for dry cleaning.'
+      ]
+    },
+    {
+      id: 'componibili',
+      photo: "https://images.hermanmiller.group/m/22249a1620164f3b/W-DWR_2515224_100371136_toffee_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Componibili Storage Unit',
+      designer: 'Anna Castelli Ferrieri',
+      manufacturer: 'Kartell',
+      year: 1969,
+      origin: 'Italy',
+      category: 'Storage unit',
+      style: 'Space Age',
+      materials: ['Injection-molded polycarbonate or ABS'],
+      knownFor: 'round stacking modules whose name is simply Italian for modular',
+      history:
+        'Componibili means modular in Italian, and that is exactly what it is: cylindrical modules with ' +
+        'sliding doors and a tongue-and-groove edge so they stack into a column. Castelli Ferrieri was ' +
+        'one of the first women to graduate in architecture from the Politecnico di Milano and later ' +
+        'became Kartell\'s art director.',
+      facts: [
+        'Its name is simply the Italian word for \'modular\'.',
+        'Modules stack using a tongue-and-groove edge detail.',
+        'Castelli Ferrieri was among the first women to earn an architecture degree from the Politecnico di Milano.'
+      ]
+    },
+    {
+      id: 'line-dresser',
+      photo: "https://images.hermanmiller.group/m/3eb08d2d6dab4574/W-DWR_2514768_100120313_walnut_f.png?trim=auto&trim-sd=1&blend-mode=darken&blend=f8f8f8&bg=f8f8f8&auto=format&w=1000&q=70&h=1000&viewtype=hero",
+      name: 'Line Five Drawer Dresser',
+      designer: 'Nathan Yong',
+      manufacturer: 'Design Within Reach',
+      year: 2019,
+      origin: 'Singapore',
+      category: 'Dresser',
+      style: 'Contemporary',
+      materials: ['Solid walnut or oak frame', 'Veneer over MDF', 'Leveling floor glides'],
+      knownFor: 'strong horizontal lines meant to echo a landscape horizon',
+      history:
+        'Yong built the Line collection around a precisely made solid wood frame whose strong horizontal ' +
+        'lines are meant to recall natural landscapes and bring a sense of calm to a bedroom. The dresser ' +
+        'joined the collection in 2019 with soft-closing drawers.',
+      facts: [
+        'Its horizontal lines are intended to evoke natural landscapes.',
+        'The Line collection debuted in 2010; the dresser followed in 2019.',
+        'Its drawers are soft-closing.'
+      ]
     }
   ],
 
@@ -1850,3 +3107,43 @@ const CATALOG = {
 const PRODUCTS = CATALOG.products;
 const KNOWHOW = CATALOG.knowHow;
 const PRODUCT_BY_ID = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
+
+/*
+  Browsing groups. `category` stays granular because the quiz asks about it
+  ("what type of piece is this?"); these coarser buckets are what someone
+  picks when they want to study all the sofas or all the lighting at once.
+  A category missing from this map falls into "Other" rather than vanishing.
+*/
+const GROUPS = [
+  { id: 'seating',  label: 'Chairs & Seating', emoji: '🪑', categories: [
+      'Lounge chair', 'Side chair', 'Armchair', 'Dining chair', 'Stacking chair',
+      'Rocking chair', 'Executive chair', 'Office chair', 'Chaise lounge',
+      'Stool', 'Barstool', 'Bench', 'Ottoman'] },
+  { id: 'sofas',    label: 'Sofas & Sectionals', emoji: '🛋️', categories: ['Sofa', 'Sectional'] },
+  { id: 'tables',   label: 'Tables & Desks', emoji: '🪵', categories: [
+      'Dining table', 'Coffee table', 'Side table', 'Desk'] },
+  { id: 'lighting', label: 'Lighting', emoji: '💡', categories: [
+      'Table lamp', 'Floor lamp', 'Pendant lamp', 'Desk lamp', 'Ceiling lamp'] },
+  { id: 'storage',  label: 'Storage', emoji: '🗄️', categories: [
+      'Credenza', 'Bookcase', 'Shelving', 'Modular shelving', 'Storage unit', 'Dresser'] },
+  { id: 'bedroom',  label: 'Bedroom', emoji: '🛏️', categories: ['Bed', 'Nightstand'] },
+  { id: 'outdoor',  label: 'Outdoor', emoji: '🌤️', categories: [
+      'Outdoor lounge chair', 'Outdoor dining chair', 'Indoor/outdoor dining chair'] },
+  { id: 'decor',    label: 'Decor', emoji: '🕰️', categories: ['Wall clock'] }
+];
+
+const GROUP_BY_CATEGORY = {};
+GROUPS.forEach(g => g.categories.forEach(c => { GROUP_BY_CATEGORY[c] = g.id; }));
+
+function groupIdOf(product) { return GROUP_BY_CATEGORY[product.category] || 'other'; }
+
+/* Only groups that actually have products, plus an Other catch-all if needed. */
+function activeGroups() {
+  const counts = {};
+  PRODUCTS.forEach(p => { const g = groupIdOf(p); counts[g] = (counts[g] || 0) + 1; });
+  const list = GROUPS.filter(g => counts[g.id]).map(g => Object.assign({ count: counts[g.id] }, g));
+  if (counts.other) {
+    list.push({ id: 'other', label: 'Other', emoji: '📦', categories: [], count: counts.other });
+  }
+  return list;
+}

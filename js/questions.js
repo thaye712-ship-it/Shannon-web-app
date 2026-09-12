@@ -1,5 +1,5 @@
 /* ============================================================
-   Shannon — question engine
+   Provenance — question engine
    ------------------------------------------------------------
    Questions are generated from the catalog rather than written
    one at a time. Add a product to data.js and it starts appearing
@@ -132,8 +132,9 @@ const GENERATORS = [
     );
   },
 
-  /* Year introduced, answered on a slider. */
+  /* Year introduced, answered on a slider. Skipped where no year is documented. */
   function yearIntroduced(product) {
+    if (product.year == null) return null;
     return {
       type: 'year',
       topic: 'history',
@@ -228,7 +229,9 @@ const GENERATORS = [
 
   /* Older of two products. */
   function whichOlder(product) {
-    const other = pick(PRODUCTS.filter(p => p.id !== product.id && p.year !== product.year));
+    if (product.year == null) return null;
+    const other = pick(PRODUCTS.filter(
+      p => p.id !== product.id && p.year != null && p.year !== product.year));
     if (!other) return null;
     const older = product.year < other.year ? product : other;
     const younger = older === product ? other : product;
@@ -318,7 +321,8 @@ function productCard(product) {
   return {
     kind: 'product',
     title: product.name,
-    subtitle: product.designer + '  ·  ' + product.manufacturer + '  ·  est. ' + product.year,
+    subtitle: product.designer + '  ·  ' + product.manufacturer +
+              (product.year == null ? '' : '  ·  est. ' + product.year),
     body: product.history,
     bullets: product.facts,
     chips: [product.category, product.style].concat(product.materials.slice(0, 2))

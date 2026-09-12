@@ -1,5 +1,5 @@
 /* ============================================================
-   Shannon — app engine
+   Provenance — app engine
    Screen routing, session running, scoring, progress, effects.
    ============================================================ */
 
@@ -28,7 +28,19 @@
     { id: 'xp1000',  emoji: '👑', name: 'Four Figures',  req: 'Bank 1,000 XP' }
   ];
 
-  const KEY = 'shannon.progress.v1';
+  const USERS_KEY = 'provenance.users.v1';
+  const userKey = id => 'provenance.user.' + id + '.v1';
+
+  /* Key names from before the app was renamed, read once and migrated forward. */
+  const LEGACY_USERS_KEY = 'shannon.users.v1';
+  const legacyUserKey = id => 'shannon.user.' + id + '.v1';
+  const LEGACY_SOLO_KEY = 'shannon.progress.v1';
+  const LEGACY_FLASH_KEY = 'shannon.flashKnown.v1';
+
+  const AVATARS = ['🦊', '🐙', '🦉', '🐝', '🦜', '🐢', '🦩', '🐳', '🦁', '🐼', '🦒', '🐨'];
+
+  const MANAGER_AUTH_KEY = 'provenance.managerAuth.v1';
+  const ROOT_MANAGER = 'Shannon';
 
   /* ---------------- tiny DOM helpers ---------------- */
 
@@ -41,7 +53,14 @@
     return n;
   };
 
-  /* ---------------- saved progress ---------------- */
+  /* ---------------- profiles + saved progress ----------------
+
+     Every read and write of a person's progress goes through Profiles.
+     That is the point: swapping localStorage for a real backend later
+     means reimplementing these functions and nothing else. The screens,
+     scoring and rendering never touch storage directly.
+     See BACKEND.md for what that migration involves.
+  */
 
   const defaults = () => ({
     xp: 0,
@@ -50,23 +69,242 @@
     sound: true,
     badges: [],
     topics: {},          // topicId -> { seen, correct }
-    sessions: 0
+    sessions: 0,
+    flashKnown: []       // product ids marked "know it" in flashcards
   });
 
-  let store = load();
-
-  function load() {
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (!raw) return defaults();
-      return Object.assign(defaults(), JSON.parse(raw));
-    } catch (e) {
-      return defaults();
+  const Profiles = {
+    index() {
+      try {
+        const raw = localStorage.getItem(USERS_KEY);
+        if (!raw) return { activeId: null, users: [] };
+        const ix = JSON.parse(raw);
+        return { activeId: ix.activeId || null, users: Array.isArray(ix.users) ? ix.users : [] };
+      } catch (e) {
+        return { activeId: null, users: [] };
+      }
+    },
+    saveIndex(ix) {
+      try { localStorage.setItem(USERS_KEY, JSON.stringify(ix)); } catch (e) { /* private mode */ }
+      /* activeId is deliberately NOT synced — it means "who is using this
+         device right now", which is per-device, not per-team. */
+      if (backend) ix.users.forEach(u => backend.pushProfile(u));
+    },
+    list() { return this.index().users; },
+    activeId() { return this.index().activeId; },
+    active() {
+      const ix = this.index();
+      return ix.users.find(u => u.id === ix.activeId) || null;
+    },
+    create(name, emoji, opts) {
+      const o = opts || {};
+      const ix = this.index();
+      const user = {
+        id: 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        name: String(name).trim().slice(0, 40),
+        emoji: emoji || AVATARS[Math.floor(Math.random() * AVATARS.length)],
+        role: o.role === 'manager' ? 'manager' : 'associate',
+        root: !!o.root,          // the root manager cannot be removed or demoted
+        createdAt: new Date().toISOString()
+      };
+      ix.users.push(user);
+      if (o.activate !== false) ix.activeId = user.id;
+      this.saveIndex(ix);
+      this.saveProgress(user.id, defaults());
+      return user;
+    },
+    update(id, changes) {
+      const ix = this.index();
+      const u = ix.users.find(x => x.id === id);
+      if (!u) return null;
+      Object.assign(u, changes);
+      this.saveIndex(ix);
+      return u;
+    },
+    select(id) {
+      const ix = this.index();
+      if (!ix.users.some(u => u.id === id)) return false;
+      ix.activeId = id;
+      this.saveIndex(ix);
+      return true;
+    },
+    remove(id) {
+      const ix = this.index();
+      const target = ix.users.find(u => u.id === id);
+      if (target && target.root) return false;   // root manager is not deletable
+      ix.users = ix.users.filter(u => u.id !== id);
+      if (ix.activeId === id) ix.activeId = null;
+      this.saveIndex(ix);
+      try { localStorage.removeItem(userKey(id)); } catch (e) { /* private mode */ }
+      if (backend) backend.removeProfile(id);
+      return true;
+    },
+    managers() { return this.list().filter(u => u.role === 'manager'); },
+    loadProgress(id) {
+      try {
+        const raw = localStorage.getItem(userKey(id));
+        if (!raw) return defaults();
+        return Object.assign(defaults(), JSON.parse(raw));
+      } catch (e) {
+        return defaults();
+      }
+    },
+    saveProgress(id, data) {
+      try { localStorage.setItem(userKey(id), JSON.stringify(data)); } catch (e) { /* private mode */ }
+      if (backend) backend.pushProgress(id, data);
     }
+  };
+
+  /*
+    Set once the Firestore adapter reports in. Null means local-only, which
+    is the normal state until firebase-config.js is switched over.
+  */
+  let backend = null;
+
+  /* Remote is treated as the source of truth for the roster on boot, then
+     cached locally so the rest of the app can keep reading synchronously. */
+  async function hydrateFromBackend() {
+    if (!backend) return false;
+    const remote = await backend.hydrate();
+    if (!remote || !remote.users.length) return false;
+
+    const localActive = Profiles.activeId();
+    try {
+      localStorage.setItem(USERS_KEY, JSON.stringify({
+        /* Keep this device's current user if that person still exists. */
+        activeId: remote.users.some(u => u.id === localActive) ? localActive : null,
+        users: remote.users
+      }));
+      Object.keys(remote.progress).forEach(id => {
+        localStorage.setItem(userKey(id), JSON.stringify(
+          Object.assign(defaults(), remote.progress[id])));
+      });
+    } catch (e) { /* private mode: stay with whatever is in memory */ }
+    return true;
   }
 
+  /* ---------------- manager sign-in ----------------
+
+     IMPORTANT, and worth reading before changing any of this:
+
+     This is a static site served from a public repository. Any password
+     written into this file would be visible to every associate and to the
+     internet, so no password is stored here and none ever should be. What
+     this module does is hold a salted SHA-256 hash in the device's own
+     local storage, set by a manager on first use.
+
+     That makes it a device-level gate — it keeps an associate from casually
+     opening the manager view on the showroom iPad. It is NOT real security:
+     anyone with dev tools can bypass it, and it does not travel between
+     devices. Real authentication arrives when Firebase Auth is wired up
+     (see BACKEND.md), at which point the password lives in Firebase, is set
+     in its console, and never touches this repository.
+  */
+
+  const ManagerAuth = {
+    record() {
+      try { return JSON.parse(localStorage.getItem(MANAGER_AUTH_KEY) || 'null'); }
+      catch (e) { return null; }
+    },
+    isConfigured() { return !!(this.record() || {}).hash; },
+
+    async hash(password, salt) {
+      const bytes = new TextEncoder().encode(salt + '::' + password);
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest))
+        .map(b => b.toString(16).padStart(2, '0')).join('');
+    },
+
+    async setPassword(password) {
+      const salt = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+        .map(b => b.toString(16).padStart(2, '0')).join('');
+      const hash = await this.hash(password, salt);
+      try {
+        localStorage.setItem(MANAGER_AUTH_KEY, JSON.stringify({ salt, hash, setAt: new Date().toISOString() }));
+      } catch (e) { /* private mode */ }
+    },
+
+    async verify(password) {
+      const rec = this.record();
+      if (!rec || !rec.hash) return false;
+      return (await this.hash(password, rec.salt)) === rec.hash;
+    }
+  };
+
+  /* Signed-in-as-manager state lives for the session only, never persisted. */
+  let managerUnlocked = false;
+
+  /*
+    Shannon is the root manager: seeded once, cannot be removed or demoted,
+    and is the only account that starts with authority to add and remove
+    other managers. Her password is not set here — see ManagerAuth above.
+  */
+  function seedRootManager() {
+    if (Profiles.list().some(u => u.root)) return;
+    Profiles.create(ROOT_MANAGER, '🦉', { role: 'manager', root: true, activate: false });
+  }
+
+  /*
+    Nobody loses progress to a rename or to the arrival of profiles. Two
+    older shapes get pulled forward, in order:
+      1. profiles saved under the previous app name
+      2. the single-player record from before profiles existed at all
+  */
+  function migrateLegacy() {
+    if (Profiles.list().length) return;
+    if (migrateRenamedProfiles()) return;
+    migrateSoloRecord();
+  }
+
+  function migrateRenamedProfiles() {
+    let old = null;
+    try {
+      const raw = localStorage.getItem(LEGACY_USERS_KEY);
+      if (raw) old = JSON.parse(raw);
+    } catch (e) { /* nothing to migrate */ }
+    if (!old || !Array.isArray(old.users) || !old.users.length) return false;
+
+    old.users.forEach(u => {
+      let progress = defaults();
+      try {
+        const raw = localStorage.getItem(legacyUserKey(u.id));
+        if (raw) progress = Object.assign(defaults(), JSON.parse(raw));
+      } catch (e) { /* keep defaults */ }
+      Profiles.saveProgress(u.id, progress);
+      try { localStorage.removeItem(legacyUserKey(u.id)); } catch (e) { /* ignore */ }
+    });
+
+    Profiles.saveIndex({ activeId: old.activeId || null, users: old.users });
+    try { localStorage.removeItem(LEGACY_USERS_KEY); } catch (e) { /* ignore */ }
+    return true;
+  }
+
+  function migrateSoloRecord() {
+    let legacy = null;
+    try {
+      const raw = localStorage.getItem(LEGACY_SOLO_KEY);
+      if (raw) legacy = JSON.parse(raw);
+    } catch (e) { /* nothing to migrate */ }
+    if (!legacy) return;
+
+    let flashKnown = [];
+    try { flashKnown = JSON.parse(localStorage.getItem(LEGACY_FLASH_KEY) || '[]'); } catch (e) { /* ignore */ }
+
+    const user = Profiles.create('My progress', '⭐');
+    Profiles.saveProgress(user.id, Object.assign(defaults(), legacy, {
+      flashKnown: Array.isArray(flashKnown) ? flashKnown : []
+    }));
+    try {
+      localStorage.removeItem(LEGACY_SOLO_KEY);
+      localStorage.removeItem(LEGACY_FLASH_KEY);
+    } catch (e) { /* ignore */ }
+  }
+
+  let store = defaults();
+
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) { /* private mode */ }
+    const id = Profiles.activeId();
+    if (id) Profiles.saveProgress(id, store);
   }
 
   function todayKey() {
@@ -180,6 +418,294 @@
     window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
+  /* ---------------- profile screen ---------------- */
+
+  let pendingAvatar = AVATARS[0];
+
+  function renderProfiles() {
+    const grid = $('[data-profile-grid]');
+    grid.innerHTML = '';
+
+    Profiles.list().forEach(u => {
+      const prog = Profiles.loadProgress(u.id);
+      const lv = levelOf(prog.xp);
+
+      const card = el('div', 'profile-card');
+      const pick = el('button', 'profile-pick');
+      pick.appendChild(el('span', 'profile-emoji', u.emoji));
+      pick.appendChild(el('span', 'profile-name', u.name));
+      pick.appendChild(el('span', 'profile-meta',
+        'Level ' + lv + '  ·  ' + prog.xp.toLocaleString() + ' XP' +
+        (prog.streak ? '  ·  🔥 ' + prog.streak : '')));
+      pick.addEventListener('click', () => {
+        sfx.tap();
+        Profiles.select(u.id);
+        enterApp();
+      });
+
+      const del = el('button', 'profile-del', '✕');
+      del.title = 'Remove ' + u.name;
+      del.setAttribute('aria-label', 'Remove ' + u.name);
+      del.addEventListener('click', e => {
+        e.stopPropagation();
+        if (!window.confirm('Remove ' + u.name + '? Their progress on this device is deleted and cannot be recovered.')) return;
+        Profiles.remove(u.id);
+        renderProfiles();
+      });
+
+      card.appendChild(pick);
+      card.appendChild(del);
+      grid.appendChild(card);
+    });
+
+    const add = el('button', 'profile-card profile-add');
+    add.appendChild(el('span', 'profile-emoji', '＋'));
+    add.appendChild(el('span', 'profile-name', 'Add someone'));
+    add.addEventListener('click', () => {
+      sfx.tap();
+      openNewProfile();
+    });
+    grid.appendChild(add);
+  }
+
+  function openNewProfile() {
+    pendingAvatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+    const row = $('[data-avatar-row]');
+    row.innerHTML = '';
+    AVATARS.forEach(a => {
+      const b = el('button', 'avatar-opt' + (a === pendingAvatar ? ' active' : ''), a);
+      b.addEventListener('click', () => {
+        pendingAvatar = a;
+        $$('.avatar-opt', row).forEach(x => x.classList.toggle('active', x.textContent === a));
+      });
+      row.appendChild(b);
+    });
+    $('[data-profile-new]').hidden = false;
+    const input = $('[data-profile-name]');
+    input.value = '';
+    input.focus();
+  }
+
+  function createProfile() {
+    const input = $('[data-profile-name]');
+    const name = input.value.trim();
+    if (!name) { input.focus(); return; }
+    sfx.tap();
+    Profiles.create(name, pendingAvatar);
+    $('[data-profile-new]').hidden = true;
+    enterApp();
+  }
+
+  /* Load the active profile's progress and hand over to the app proper. */
+  function enterApp() {
+    const id = Profiles.activeId();
+    store = Profiles.loadProgress(id);
+    knownSet = new Set(store.flashKnown || []);
+    syncSoundButton();
+    renderHome();
+    show('home');
+  }
+
+  function renderUserChip() {
+    const u = Profiles.active();
+    $('[data-user-emoji]').textContent = u ? u.emoji : '👤';
+    $('#userBtn').title = u ? 'Signed in as ' + u.name + ' — tap to switch' : 'Pick a profile';
+  }
+
+  /* ---------------- user dropdown ---------------- */
+
+  function closeUserMenu() {
+    $('[data-usermenu]').hidden = true;
+    $('#userBtn').setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleUserMenu() {
+    const pop = $('[data-usermenu]');
+    if (pop.hidden) { renderUserMenu(); pop.hidden = false; $('#userBtn').setAttribute('aria-expanded', 'true'); }
+    else closeUserMenu();
+  }
+
+  function renderUserMenu() {
+    const active = Profiles.active();
+    $('[data-usermenu-current]').textContent = active
+      ? active.emoji + '  ' + active.name + (active.role === 'manager' ? '  · manager' : '')
+      : 'Nobody yet';
+
+    const list = $('[data-usermenu-list]');
+    list.innerHTML = '';
+    Profiles.list()
+      .filter(u => !active || u.id !== active.id)
+      .forEach(u => {
+        const item = el('button', 'usermenu-item');
+        item.appendChild(el('span', 'usermenu-item-icon', u.emoji));
+        item.appendChild(el('span', null, u.name));
+        if (u.role === 'manager') item.appendChild(el('span', 'usermenu-tag', 'manager'));
+        item.addEventListener('click', () => {
+          sfx.tap();
+          Profiles.select(u.id);
+          managerUnlocked = false;      // switching people drops manager access
+          closeUserMenu();
+          enterApp();
+        });
+        list.appendChild(item);
+      });
+
+    $('[data-manager-label]').textContent = managerUnlocked ? 'Team & managers' : 'Manager sign-in';
+  }
+
+  /* ---------------- manager area ---------------- */
+
+  function openManager() {
+    if (managerUnlocked) { renderManager(); show('manager'); return; }
+
+    const remote = !!backend;
+    const configured = ManagerAuth.isConfigured();
+
+    $('[data-auth-email]').hidden = !remote;
+    $('[data-auth-note-local]').hidden = remote;
+    $('[data-auth-note-firebase]').hidden = !remote;
+
+    if (remote) {
+      $('[data-auth-title]').textContent = 'Manager sign-in';
+      $('[data-auth-sub]').textContent =
+        'Sign in with the manager account from your Firebase project.';
+      $('[data-auth-submit]').textContent = 'Sign in';
+    } else {
+      $('[data-auth-title]').textContent = configured ? 'Manager sign-in' : 'Set a manager password';
+      $('[data-auth-sub]').textContent = configured
+        ? 'Managers can add and remove other managers and see the team roster.'
+        : 'No manager password has been set on this device yet. Choose one now — it unlocks the manager view here.';
+      $('[data-auth-submit]').textContent = configured ? 'Sign in' : 'Set password';
+      $('[data-auth-password]').setAttribute('autocomplete', configured ? 'current-password' : 'new-password');
+    }
+
+    $('[data-auth-email]').value = '';
+    $('[data-auth-password]').value = '';
+    $('[data-auth-error]').hidden = true;
+    show('manager-auth');
+    setTimeout(() => (remote ? $('[data-auth-email]') : $('[data-auth-password]')).focus(), 80);
+  }
+
+  function unlockManager() {
+    managerUnlocked = true;
+    sfx.right();
+    renderManager();
+    show('manager');
+  }
+
+  function authFail(message) {
+    const err = $('[data-auth-error]');
+    err.textContent = message;
+    err.hidden = false;
+    $('[data-auth-password]').value = '';
+    $('[data-auth-password]').focus();
+    sfx.wrong();
+  }
+
+  async function submitManagerAuth() {
+    const pwInput = $('[data-auth-password]');
+    const err = $('[data-auth-error]');
+    const password = pwInput.value;
+
+    /* Firebase mode: a real account check, not a local gate. */
+    if (backend) {
+      const email = $('[data-auth-email]').value.trim();
+      if (!email || !password) { (email ? pwInput : $('[data-auth-email]')).focus(); return; }
+      $('[data-auth-submit]').disabled = true;
+      const res = await backend.signInManager(email, password);
+      $('[data-auth-submit]').disabled = false;
+      if (!res.ok) { authFail(res.error); return; }
+      if (!res.manager) {
+        await backend.signOutManager();
+        authFail('That account signed in, but it does not have manager access.');
+        return;
+      }
+      unlockManager();
+      return;
+    }
+
+    if (!password) { pwInput.focus(); return; }
+
+    if (!ManagerAuth.isConfigured()) {
+      if (password.length < 4) {
+        err.textContent = 'Use at least four characters.';
+        err.hidden = false;
+        return;
+      }
+      await ManagerAuth.setPassword(password);
+      unlockManager();
+      return;
+    }
+
+    if (await ManagerAuth.verify(password)) unlockManager();
+    else authFail('That password does not match.');
+  }
+
+  function rosterCard(u) {
+    const card = el('div', 'roster-row');
+
+    const who = el('div', 'roster-who');
+    who.appendChild(el('span', 'roster-emoji', u.emoji));
+    const text = el('div', 'roster-text');
+    text.appendChild(el('b', null, u.name));
+    const prog = Profiles.loadProgress(u.id);
+    text.appendChild(el('span', null,
+      'Level ' + levelOf(prog.xp) + '  ·  ' + prog.xp.toLocaleString() + ' XP' +
+      (u.root ? '  ·  root manager' : '')));
+    who.appendChild(text);
+    card.appendChild(who);
+
+    const actions = el('div', 'roster-actions');
+
+    if (!u.root) {
+      const toggle = el('button', 'btn ghost roster-btn',
+        u.role === 'manager' ? 'Make associate' : 'Make manager');
+      toggle.addEventListener('click', () => {
+        sfx.tap();
+        Profiles.update(u.id, { role: u.role === 'manager' ? 'associate' : 'manager' });
+        renderManager();
+        renderUserChip();
+      });
+      actions.appendChild(toggle);
+
+      const del = el('button', 'btn ghost roster-btn danger', 'Remove');
+      del.addEventListener('click', () => {
+        if (!window.confirm('Remove ' + u.name + '? Their progress on this device is deleted and cannot be recovered.')) return;
+        Profiles.remove(u.id);
+        if (!Profiles.activeId()) {
+          /* Removed whoever was signed in — fall back to the profile picker. */
+          renderProfiles();
+          show('profiles');
+          return;
+        }
+        renderManager();
+      });
+      actions.appendChild(del);
+    } else {
+      actions.appendChild(el('span', 'roster-locked', 'Cannot be removed'));
+    }
+
+    card.appendChild(actions);
+    return card;
+  }
+
+  function renderManager() {
+    const mgr = $('[data-manager-roster]');
+    const assoc = $('[data-associate-roster]');
+    mgr.innerHTML = '';
+    assoc.innerHTML = '';
+
+    const managers = Profiles.list().filter(u => u.role === 'manager');
+    const associates = Profiles.list().filter(u => u.role !== 'manager');
+
+    managers.forEach(u => mgr.appendChild(rosterCard(u)));
+    if (!associates.length) {
+      assoc.appendChild(el('p', 'roster-empty', 'No associates on this device yet.'));
+    } else {
+      associates.forEach(u => assoc.appendChild(rosterCard(u)));
+    }
+  }
+
   /* ---------------- home screen rendering ---------------- */
 
   function renderHome() {
@@ -195,6 +721,7 @@
 
     renderMastery();
     renderBadges();
+    renderUserChip();
   }
 
   function renderMastery() {
@@ -323,11 +850,47 @@
 
   /* ---------------- product gallery ---------------- */
 
+  let activeGroup = 'all';
+
+  function renderGroupChips() {
+    const wrap = $('[data-group-chips]');
+    wrap.innerHTML = '';
+
+    const groups = [{ id: 'all', label: 'Everything', emoji: '✨', count: PRODUCTS.length }]
+      .concat(activeGroups());
+
+    groups.forEach(g => {
+      const chip = el('button', 'group-chip' + (g.id === activeGroup ? ' active' : ''));
+      chip.appendChild(el('span', 'group-chip-emoji', g.emoji));
+      chip.appendChild(el('span', null, g.label));
+      chip.appendChild(el('span', 'group-chip-count', String(g.count)));
+      chip.addEventListener('click', () => {
+        sfx.tap();
+        activeGroup = g.id;
+        renderGroupChips();
+        renderGallery();
+      });
+      wrap.appendChild(chip);
+    });
+  }
+
+  function galleryProducts() {
+    const list = activeGroup === 'all'
+      ? PRODUCTS.slice()
+      : PRODUCTS.filter(p => groupIdOf(p) === activeGroup);
+    return list.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   function renderGallery() {
     const wrap = $('[data-gallery]');
     wrap.innerHTML = '';
-    PRODUCTS.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(p => {
-      const card = el('div', 'gallery-card');
+    const list = galleryProducts();
+
+    $('[data-group-count]').textContent =
+      list.length + (list.length === 1 ? ' piece' : ' pieces');
+
+    list.forEach(p => {
+      const card = el('button', 'gallery-card');
       if (p.photo) {
         const img = document.createElement('img');
         img.src = p.photo;
@@ -342,23 +905,59 @@
       info.appendChild(el('b', null, p.name));
       info.appendChild(el('span', null, p.designer + ' · ' + p.manufacturer));
       card.appendChild(info);
+      card.addEventListener('click', () => {
+        sfx.tap();
+        renderProduct(p);
+        show('product');
+      });
       wrap.appendChild(card);
     });
   }
 
+  function renderProduct(p) {
+    const wrap = $('[data-product-detail]');
+    wrap.innerHTML = '';
+
+    if (p.photo) {
+      const shot = el('div', 'detail-photo');
+      const img = document.createElement('img');
+      img.src = p.photo;
+      img.alt = p.name;
+      shot.appendChild(img);
+      wrap.appendChild(shot);
+    }
+
+    wrap.appendChild(el('h1', 'detail-title', p.name));
+    wrap.appendChild(el('p', 'detail-sub',
+      p.designer + '  ·  ' + p.manufacturer + (p.year == null ? '' : '  ·  ' + p.year)));
+
+    const chips = el('div', 'chips');
+    [p.category, p.style, p.origin].forEach(c => chips.appendChild(el('span', 'chip', c)));
+    wrap.appendChild(chips);
+
+    wrap.appendChild(el('p', 'detail-known', 'Known for ' + p.knownFor + '.'));
+    wrap.appendChild(el('p', 'detail-body', p.history));
+
+    wrap.appendChild(el('h2', 'detail-label', 'Worth remembering'));
+    const ul = el('ul', 'about-list');
+    p.facts.forEach(f => ul.appendChild(el('li', null, f)));
+    wrap.appendChild(ul);
+
+    wrap.appendChild(el('h2', 'detail-label', 'Materials'));
+    const mats = el('div', 'chips');
+    p.materials.forEach(m => mats.appendChild(el('span', 'chip', m)));
+    wrap.appendChild(mats);
+  }
+
   /* ---------------- flashcards ---------------- */
 
-  const FLASH_KEY = 'shannon.flashKnown.v1';
+  /* Mirrors store.flashKnown for fast lookup; written back through save(). */
+  let knownSet = new Set();
 
-  function loadKnown() {
-    try { return new Set(JSON.parse(localStorage.getItem(FLASH_KEY) || '[]')); }
-    catch (e) { return new Set(); }
+  function saveKnown() {
+    store.flashKnown = Array.from(knownSet);
+    save();
   }
-  function saveKnown(set) {
-    try { localStorage.setItem(FLASH_KEY, JSON.stringify(Array.from(set))); }
-    catch (e) { /* private mode */ }
-  }
-  let knownSet = loadKnown();
 
   let flash = null;
 
@@ -392,7 +991,8 @@
 
     const back = el('div', 'flash-face flash-back');
     back.appendChild(el('h3', null, p.name));
-    back.appendChild(el('p', 'flash-sub', p.designer + ' · ' + p.manufacturer + ' · est. ' + p.year));
+    back.appendChild(el('p', 'flash-sub',
+      p.designer + ' · ' + p.manufacturer + (p.year == null ? '' : ' · est. ' + p.year)));
     back.appendChild(el('p', 'flash-body', p.history));
     const chips = el('div', 'chips');
     [p.category, p.style].forEach(c => chips.appendChild(el('span', 'chip', c)));
@@ -436,7 +1036,7 @@
   function markFlash(known) {
     const p = flash.order[flash.i];
     if (known) knownSet.add(p.id); else knownSet.delete(p.id);
-    saveKnown(knownSet);
+    saveKnown();
     flashNext();
   }
 
@@ -844,7 +1444,90 @@
   $('#aboutBtn').addEventListener('click', () => show('about'));
   $$('[data-show-about]').forEach(b => b.addEventListener('click', () => show('about')));
 
-  $('#galleryBtn').addEventListener('click', () => { renderGallery(); show('gallery'); });
+  $('#galleryBtn').addEventListener('click', () => { openGallery(); });
+
+  function openGallery() {
+    renderGroupChips();
+    renderGallery();
+    show('gallery');
+  }
+
+  $('[data-back-gallery]').addEventListener('click', () => show('gallery'));
+
+  $('#userBtn').addEventListener('click', e => {
+    e.stopPropagation();
+    sfx.tap();
+    toggleUserMenu();
+  });
+
+  $('[data-usermenu]').addEventListener('click', e => e.stopPropagation());
+  document.addEventListener('click', () => {
+    if (!$('[data-usermenu]').hidden) closeUserMenu();
+  });
+
+  $('[data-usermenu-add]').addEventListener('click', () => {
+    sfx.tap();
+    closeUserMenu();
+    renderProfiles();
+    show('profiles');
+    openNewProfile();
+  });
+
+  $('[data-usermenu-manager]').addEventListener('click', () => {
+    sfx.tap();
+    closeUserMenu();
+    openManager();
+  });
+
+  $('[data-auth-submit]').addEventListener('click', submitManagerAuth);
+  $('[data-auth-password]').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); submitManagerAuth(); }
+  });
+
+  $('[data-manager-signout]').addEventListener('click', async () => {
+    sfx.tap();
+    managerUnlocked = false;
+    if (backend) await backend.signOutManager();
+    show('home');
+  });
+
+  $('[data-manager-change-pw]').addEventListener('click', async () => {
+    if (backend) {
+      window.alert('Manager passwords are managed in the Firebase console now, not here.');
+      return;
+    }
+    const next = window.prompt('New manager password (at least four characters):');
+    if (next == null) return;
+    if (next.trim().length < 4) { window.alert('Password not changed — it needs at least four characters.'); return; }
+    await ManagerAuth.setPassword(next.trim());
+    window.alert('Manager password updated on this device.');
+  });
+
+  /*
+    The Firestore adapter loads as a module, so it reports in after this
+    script has already booted the UI locally. Adopt it when it arrives.
+  */
+  window.addEventListener('provenance:backend-ready', async () => {
+    backend = window.ProvenanceBackend;
+    $('[data-manager-change-pw]').hidden = true;
+    const pulled = await hydrateFromBackend();
+    if (!pulled) {
+      /* Nothing remote yet — seed the roster this device already has. */
+      Profiles.list().forEach(u => backend.pushProfile(u));
+      return;
+    }
+    seedRootManager();
+    if (Profiles.activeId()) enterApp();
+    else { renderProfiles(); show('profiles'); }
+  });
+
+  $('[data-profile-create]').addEventListener('click', createProfile);
+  $('[data-profile-cancel]').addEventListener('click', () => {
+    $('[data-profile-new]').hidden = true;
+  });
+  $('[data-profile-name]').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); createProfile(); }
+  });
 
   $$('[data-start]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -899,12 +1582,14 @@
   soundBtn.addEventListener('click', () => {
     store.sound = !store.sound;
     save();
-    $('[data-sound-icon]').textContent = store.sound ? '🔊' : '🔇';
-    soundBtn.setAttribute('aria-pressed', String(store.sound));
+    syncSoundButton();
     if (store.sound) sfx.tap();
   });
-  $('[data-sound-icon]').textContent = store.sound ? '🔊' : '🔇';
-  soundBtn.setAttribute('aria-pressed', String(store.sound));
+
+  function syncSoundButton() {
+    $('[data-sound-icon]').textContent = store.sound ? '🔊' : '🔇';
+    soundBtn.setAttribute('aria-pressed', String(store.sound));
+  }
 
   /* keyboard: 1-4 to answer, enter to advance */
   document.addEventListener('keydown', e => {
@@ -923,7 +1608,18 @@
 
   /* ---------------- boot ---------------- */
 
-  renderHome();
-  show('home');
+  migrateLegacy();
+  seedRootManager();
+
+  if (Profiles.activeId()) {
+    enterApp();
+  } else {
+    /* No one picked yet: the profile screen is the front door. */
+    syncSoundButton();
+    renderProfiles();
+    /* Only Shannon exists on a brand new device, so open the add form too. */
+    if (Profiles.list().every(u => u.root)) openNewProfile();
+    show('profiles');
+  }
 
 })();

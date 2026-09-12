@@ -1,4 +1,4 @@
-# Shannon — product knowledge training
+# Provenance — product knowledge training
 
 A fast, playful training app for Design Within Reach sales associates. It
 quizzes people on the pieces on the floor: who designed each one, the style
@@ -11,18 +11,23 @@ compliance module.
 
 ## Status
 
-Loaded with **65 real Design Within Reach products and 20 construction and
-materials terms**. Each product was cross-checked against dwr.com's own
-brand, designer and product-search listings before being included, not
-just researched from general design history — an earlier pass added
-several well-documented pieces that turned out not to be part of DWR's
-actual assortment, and those were removed rather than left in. The catalog
-is weighted toward the iconic, licensed design classics DWR is best known
-for selling, since those are the pieces associates get asked about most.
-It covers just over half of the eventual full catalog — more products can
-be added to `js/data.js` in the same shape, and the whole question bank
-regenerates from it automatically with no other changes. Verify any new
-addition against dwr.com's own search before adding it.
+Loaded with **121 real Design Within Reach products and 20 construction and
+materials terms**, spanning seating, sofas, tables, desks, lighting,
+storage, bedroom and outdoor.
+
+Every product is sourced from dwr.com's own listings. The first 65 were
+verified one at a time against DWR's brand, designer and search pages after
+an earlier pass produced a dozen well-documented designs that DWR does not
+actually sell; the rest were gathered by working forward from DWR's own
+category pages, so a product can only enter the catalog if it appears there.
+Write-ups are grounded in DWR's own product copy plus published design
+history.
+
+This is not the entire DWR catalog and is not meant to be — variants of one
+design (same chair, twelve fabrics) are deliberately collapsed into a single
+entry, since there is one thing to learn, not twelve. Adding more is just
+more records in `js/data.js`; the question bank, browse groups and
+flashcards all regenerate from the data with no other changes.
 
 ## Running it
 
@@ -51,7 +56,7 @@ takes several sessions at this pace.
 **Flashcards** — no timer, no score. Flip through the catalog at your own pace:
 a photo on the front, the full profile (designer, manufacturer, year, history)
 on the back. Mark each one "know it" or "still learning"; that's saved locally
-under `shannon.flashKnown.v1` so it persists between sessions.
+with the rest of that profile's progress, so it persists between sessions.
 
 Both Sprint and Deep Dive open on a topic picker first, so a session can be
 narrowed to just one or two question types (e.g. only Photo ID, or only Style
@@ -71,13 +76,39 @@ narrowed to just one or two question types (e.g. only Photo ID, or only Style
 
 Each product can carry a `photo` field: a direct URL to DWR's own hosted
 product image, hotlinked (not downloaded — no image files live in this repo).
-62 of 65 products currently have one; the rest (`bestlite-bl3`, `tolix-a-chair`,
-`min-sofa`) turned up no confident match on dwr.com when researched, so they
-were left photo-less rather than guessed at — they may not be current DWR
-SKUs at all (same category of issue the catalog verification pass caught
-elsewhere; worth checking). A product with no photo simply never generates
-a Photo ID question and shows a 🪑 placeholder in the gallery and flashcards
-instead of erroring.
+118 of 121 products have one. The three without (`bestlite-bl3`,
+`tolix-a-chair`, `min-sofa`) turned up no confident match on dwr.com, which
+is itself a signal they may not be current DWR SKUs and are worth
+re-checking. A product with no photo simply never generates a Photo ID
+question and shows a 🪑 placeholder when browsing, instead of erroring.
+
+Two products (`quilton-sectional`, `stacked-bookcase`) have `year: null`
+because DWR's page states none. Those skip the year-slider and older-of-two
+questions rather than guessing a date.
+
+## Browsing
+
+The Products screen groups the catalog into Chairs & Seating, Sofas &
+Sectionals, Tables & Desks, Lighting, Storage, Bedroom, Outdoor and Decor,
+so someone can study one type at a time. Tapping any piece opens its full
+profile — photo, designer, year, history, facts and materials.
+
+Groups are derived from each product's `category` via the `GROUPS` table at
+the bottom of `js/data.js`. `category` stays granular because the quiz asks
+about it directly; the groups are only for browsing. A category that isn't
+listed in any group falls into an "Other" bucket rather than disappearing.
+
+## Profiles
+
+Anyone can create a profile from the front screen — a name and an avatar, no
+password. Each profile keeps its own XP, streak, badges, per-topic mastery
+and flashcard marks, so a shared showroom device works for a whole team. The
+avatar button in the top bar switches between people.
+
+Progress is stored per profile in `localStorage`, which means it does not
+follow someone to another device. `BACKEND.md` documents exactly what moving
+this to a real backend involves; the storage layer is isolated behind a
+`Profiles` object specifically so that swap doesn't touch the rest of the app.
 
 ## Files
 
