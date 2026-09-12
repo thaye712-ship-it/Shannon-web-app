@@ -11,14 +11,18 @@ compliance module.
 
 ## Status
 
-Loaded with **71 real Design Within Reach products and 20 construction and
-materials terms**, researched from published design history rather than
-scraped from dwr.com. The catalog is weighted toward the iconic, licensed
-design classics DWR is best known for selling, since those are the pieces
-associates get asked about most. It covers well over half of the eventual
-full catalog — more products can be added to `js/data.js` in the same
-shape, and the whole question bank regenerates from it automatically with
-no other changes.
+Loaded with **65 real Design Within Reach products and 20 construction and
+materials terms**. Each product was cross-checked against dwr.com's own
+brand, designer and product-search listings before being included, not
+just researched from general design history — an earlier pass added
+several well-documented pieces that turned out not to be part of DWR's
+actual assortment, and those were removed rather than left in. The catalog
+is weighted toward the iconic, licensed design classics DWR is best known
+for selling, since those are the pieces associates get asked about most.
+It covers just over half of the eventual full catalog — more products can
+be added to `js/data.js` in the same shape, and the whole question bank
+regenerates from it automatically with no other changes. Verify any new
+addition against dwr.com's own search before adding it.
 
 ## Running it
 

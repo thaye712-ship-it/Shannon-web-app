@@ -1,13 +1,13 @@
 /* ============================================================
    Shannon — Design Within Reach product catalog
    ------------------------------------------------------------
-   Real products sold by Design Within Reach (dwr.com), researched
-   from published design history rather than scraped from the live
-   site. 71 products and 20 construction/materials terms, weighted
-   toward the iconic, licensed design classics DWR is best known
-   for selling — the pieces sales associates most need cold. More
-   products can be added later in the same shape with no other
-   code changes required.
+   Real products sold by Design Within Reach (dwr.com), cross-checked
+   against dwr.com's own brand, designer and search listings, plus
+   20 construction/materials terms. Weighted toward the iconic,
+   licensed design classics DWR is best known for selling — the
+   pieces sales associates most need cold. More products can be
+   added later in the same shape with no other code changes
+   required; verify each against dwr.com before adding it.
    ============================================================ */
 
 const CATALOG = {
@@ -691,7 +691,7 @@ const CATALOG = {
     },
     {
       id: 'eames-shell-rocker',
-      name: 'Eames Molded Plastic Rocker (RAR)',
+      name: 'Eames Molded Plastic Armchair, Rocker Base',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',
       year: 1950,
@@ -800,30 +800,31 @@ const CATALOG = {
     },
     {
       id: 'eames-walnut-stool',
-      name: 'Eames Walnut Stool',
+      name: 'Eames Turned Stool',
       designer: 'Charles and Ray Eames',
       manufacturer: 'Herman Miller',
       year: 1960,
       origin: 'United States',
       category: 'Stool',
       style: 'Mid-Century Modern',
-      materials: ['Solid turned walnut'],
+      materials: ['Solid turned wood (walnut and other finishes)'],
       knownFor: 'a sculptural solid-wood stool designed as impromptu seating for a lobby',
       history:
         'The Eameses designed the stool for the lobby of the Time-Life Building in New York, wanting seating ' +
         'that could scatter informally around the space rather than line up in rows. Turned from a single ' +
-        'solid block of walnut, it works equally as a stool, side table, or plant stand.',
+        'solid block of wood, it works equally as a stool, side table, or plant stand, and comes in four ' +
+        'distinct turned shapes.',
       facts: [
         'It was originally designed for the Time-Life Building lobby in New York.',
-        'It is turned from a solid block of walnut, not assembled from separate pieces.',
-        'It comes in three-legged and four-legged versions.'
+        'It is turned from a solid block of wood, not assembled from separate pieces.',
+        'It is offered in four distinct turned shapes.'
       ]
     },
     {
       id: 'nelson-ball-clock',
-      name: 'Ball Clock',
+      name: 'Nelson Ball Clock',
       designer: 'George Nelson (Irving Harper)',
-      manufacturer: 'Howard Miller',
+      manufacturer: 'Vitra',
       year: 1949,
       origin: 'United States',
       category: 'Wall clock',
@@ -832,13 +833,13 @@ const CATALOG = {
       knownFor: 'replacing clock numerals with colored wood balls on the ends of steel spokes',
       history:
         'Accounts differ on exactly who at Nelson\'s studio sketched it first, with Irving Harper, Isamu ' +
-        'Noguchi and Nelson himself all reportedly present the evening the idea emerged, but it shipped under ' +
-        'the Nelson name through the Herman Miller-affiliated Howard Miller Clock Company. Twelve spokes ' +
-        'radiate from a center hub, each tipped with a colored ball standing in for a numeral.',
+        'Noguchi and Nelson himself all reportedly present the evening the idea emerged in 1949, though it ' +
+        'shipped under the Nelson name. Twelve spokes radiate from a center hub, each tipped with a colored ' +
+        'ball standing in for a numeral; Vitra now produces it as part of its Design Museum collection.',
       facts: [
         'Several designers were reportedly present when the concept was first sketched.',
-        'It was produced by Howard Miller, a sister company to Herman Miller, not Herman Miller itself.',
-        'Colored balls on twelve spokes stand in for numerals on the clock face.'
+        'Colored balls on twelve spokes stand in for numerals on the clock face.',
+        'It is now produced by Vitra as part of its Design Museum collection.'
       ]
     },
     {
@@ -971,71 +972,6 @@ const CATALOG = {
       ]
     },
     {
-      id: 'pk22-lounge',
-      name: 'PK22 Lounge Chair',
-      designer: 'Poul Kjærholm',
-      manufacturer: 'Fritz Hansen',
-      year: 1956,
-      origin: 'Denmark',
-      category: 'Lounge chair',
-      style: 'Danish Modern',
-      materials: ['Chrome or matte-chrome steel flat bar', 'Cane, leather or wicker seat'],
-      knownFor: 'a low steel-frame lounge chair with no padding at all',
-      history:
-        'Kjærholm trained as a cabinetmaker but designed almost exclusively in steel, treating flat steel bar ' +
-        'the way a cabinetmaker treats wood, bending and finishing it with the same precision. The PK22 has no ' +
-        'foam or springs anywhere; comfort comes entirely from the frame\'s geometry and the give in its cane ' +
-        'or leather seat.',
-      facts: [
-        'It uses no foam padding or springs anywhere in the design.',
-        'Kjærholm trained as a cabinetmaker before working almost entirely in steel.',
-        'Comfort comes from the frame\'s geometry rather than any cushioning.'
-      ]
-    },
-    {
-      id: 'pk24-chaise',
-      name: 'PK24 Chaise Longue',
-      designer: 'Poul Kjærholm',
-      manufacturer: 'Fritz Hansen',
-      year: 1965,
-      origin: 'Denmark',
-      category: 'Chaise',
-      style: 'Danish Modern',
-      materials: ['Steel frame', 'Woven cane or leather', 'Leather headrest strap'],
-      knownFor: 'a chaise whose headrest hangs from a single leather strap',
-      history:
-        'Kjærholm curved a single steel bar into a chaise frame that pivots slightly at its base, then hung an ' +
-        'optional headrest from nothing more than a wrapped leather strap rather than a rigid bracket, in a ' +
-        'design reportedly influenced by his admiration for reclining forms in ancient Roman furniture.',
-      facts: [
-        'Its optional headrest is suspended from a leather strap, not a rigid mount.',
-        'The steel base allows the chaise to pivot slightly.',
-        'Kjærholm drew some inspiration from ancient Roman reclining furniture forms.'
-      ]
-    },
-    {
-      id: 'grand-prix-chair',
-      name: 'Grand Prix Chair',
-      designer: 'Arne Jacobsen',
-      manufacturer: 'Fritz Hansen',
-      year: 1957,
-      origin: 'Denmark',
-      category: 'Dining chair',
-      style: 'Scandinavian Modern',
-      materials: ['Molded laminated veneer shell', 'Steel or wood legs'],
-      knownFor: 'winning a gold medal at the Milan Triennale the same year it launched',
-      history:
-        'Jacobsen developed the Grand Prix while refining the shell-molding process he would use again on the ' +
-        'Series 7, and it won its nickname after taking a gold medal at the 1957 Milan Triennale. Its tapered, ' +
-        'slightly narrower shell is often described as a transitional step between the Ant chair and the later ' +
-        'Series 7.',
-      facts: [
-        'It won a gold medal at the 1957 Milan Triennale, which gave it its name.',
-        'It is often described as a link between the earlier Ant chair and the later Series 7.',
-        'Its shell uses the same molded veneer process Jacobsen refined across several chairs.'
-      ]
-    },
-    {
       id: 'drop-chair',
       name: 'Drop Chair',
       designer: 'Arne Jacobsen',
@@ -1099,51 +1035,8 @@ const CATALOG = {
       ]
     },
     {
-      id: 'round-chair',
-      name: 'Round Chair (PP501)',
-      designer: 'Hans Wegner',
-      manufacturer: 'PP Møbler',
-      year: 1949,
-      origin: 'Denmark',
-      category: 'Dining chair',
-      style: 'Danish Modern',
-      materials: ['Solid steam-bent wood frame', 'Hand-woven paper cord or upholstered seat'],
-      knownFor: 'being introduced on live American television simply as "The Chair"',
-      history:
-        'Wegner stripped a dining chair down to its most essential curved lines, and the design gained fame in ' +
-        'the United States after it was used as the seating for the televised 1960 presidential debates ' +
-        'between John F. Kennedy and Richard Nixon. American media at the time reportedly just called it "The ' +
-        'Chair."',
-      facts: [
-        'It was used as the seating during the televised 1960 Kennedy-Nixon debates.',
-        'American media reportedly nicknamed it simply "The Chair."',
-        'Wegner treated it as a refinement of ideas from many of his earlier chair designs.'
-      ]
-    },
-    {
-      id: 'peacock-chair',
-      name: 'Peacock Chair (PP550)',
-      designer: 'Hans Wegner',
-      manufacturer: 'PP Møbler',
-      year: 1947,
-      origin: 'Denmark',
-      category: 'Side chair',
-      style: 'Danish Modern',
-      materials: ['Solid wood frame', 'Flattened wood spindle back', 'Paper cord or upholstered seat'],
-      knownFor: 'flattening a Windsor chair\'s spindle back into shapes that fan out like feathers',
-      history:
-        'Wegner based the chair on the traditional English Windsor chair, but flattened and angled each ' +
-        'spindle in the fan-shaped back so it catches light and casts shadow like a peacock\'s tail, which is ' +
-        'how the design earned its nickname.',
-      facts: [
-        'It is based on the traditional English Windsor chair form.',
-        'Its spindles are flattened and angled rather than round, which is where its nickname comes from.',
-        'It reinterprets a centuries-old chair type rather than starting from a blank page.'
-      ]
-    },
-    {
       id: 'lc2-armchair',
-      name: 'LC2 Petit Confort Armchair',
+      name: 'LC2 Petit Modele Armchair',
       designer: 'Le Corbusier, Pierre Jeanneret, and Charlotte Perriand',
       manufacturer: 'Cassina',
       year: 1928,
@@ -1165,7 +1058,7 @@ const CATALOG = {
     },
     {
       id: 'lc3-sofa',
-      name: 'LC3 Grand Confort Sofa',
+      name: 'LC3 Grand Modele Sofa',
       designer: 'Le Corbusier, Pierre Jeanneret, and Charlotte Perriand',
       manufacturer: 'Cassina',
       year: 1928,
@@ -1182,49 +1075,6 @@ const CATALOG = {
         'It scales the same floating-cushion idea used on the LC2 armchair up to a sofa.',
         'Le Corbusier is said to have called it a "machine for sitting."',
         'It shares its cage-like steel frame construction with the LC2 and LC4.'
-      ]
-    },
-    {
-      id: 'superleggera-chair',
-      name: 'Superleggera Chair',
-      designer: 'Gio Ponti',
-      manufacturer: 'Cassina',
-      year: 1957,
-      origin: 'Italy',
-      category: 'Dining chair',
-      style: 'Italian Modernism',
-      materials: ['Solid ash wood', 'Woven cane seat'],
-      knownFor: 'weighing so little it can reportedly be lifted with one finger',
-      history:
-        'Ponti spent years narrowing and hollowing a traditional Chiavari fishing-chair frame down to its ' +
-        'structural minimum, ending up with a chair light enough that Cassina\'s own marketing showed a child ' +
-        'lifting it by one finger. Its triangular tapered legs keep it strong enough for everyday dining use.',
-      facts: [
-        'It is based on a traditional Italian Chiavari fishing-chair design.',
-        'Cassina\'s own marketing showed it being lifted by a single finger.',
-        'Its legs are triangular in cross-section rather than round, for extra strength at minimal weight.'
-      ]
-    },
-    {
-      id: 'ball-chair',
-      name: 'Ball Chair (Globe Chair)',
-      designer: 'Eero Aarnio',
-      manufacturer: 'Adelta',
-      year: 1963,
-      origin: 'Finland',
-      category: 'Lounge chair',
-      style: 'Space Age',
-      materials: ['Fiberglass shell', 'Foam padding', 'Fabric upholstery', 'Swivel metal base'],
-      knownFor: 'a fully enclosed sphere that turns a chair into its own private room',
-      history:
-        'Aarnio built the chair as a hollow sphere on a swivel base, upholstered inside so a sitter is fully ' +
-        'enclosed and semi-hidden from the surrounding room, with early versions even including a built-in ' +
-        'telephone connection. It became a symbol of 1960s futurism, appearing in numerous films and television ' +
-        'sets chasing that exact look.',
-      facts: [
-        'It fully encloses the sitter inside a hollow upholstered sphere.',
-        'Early production versions could include a built-in telephone connection.',
-        'It has appeared frequently in film and television sets aiming for a futuristic look.'
       ]
     },
     {
@@ -1294,27 +1144,6 @@ const CATALOG = {
       ]
     },
     {
-      id: 'parentesi-lamp',
-      name: 'Parentesi Lamp',
-      designer: 'Achille Castiglioni and Pio Manzù',
-      manufacturer: 'Flos',
-      year: 1970,
-      origin: 'Italy',
-      category: 'Ceiling lamp',
-      style: 'Italian Modernism',
-      materials: ['Steel cable', 'Aluminum spotlight housing', 'Weighted floor or ceiling anchor'],
-      knownFor: 'a spotlight that slides freely up and down a tensioned steel cable',
-      history:
-        'Castiglioni finished the design with Pio Manzù after Manzù\'s death, stretching a steel cable floor-' +
-        'to-ceiling and threading a small spotlight housing onto it that can be slid and locked anywhere along ' +
-        'its length. Its Italian name means "parentheses," treating light placement almost like punctuation.',
-      facts: [
-        'A small spotlight slides freely along a tensioned steel cable and locks anywhere on it.',
-        'Its name is Italian for "parentheses."',
-        'It was completed by Castiglioni after his collaborator Pio Manzù had died.'
-      ]
-    },
-    {
       id: 'navy-111-chair',
       name: '111 Navy Chair',
       designer: 'Emeco, developed with Coca-Cola',
@@ -1337,44 +1166,23 @@ const CATALOG = {
       ]
     },
     {
-      id: 'hudson-chair',
-      name: 'Hudson Chair',
-      designer: 'Philippe Starck',
-      manufacturer: 'Emeco',
-      year: 2000,
-      origin: 'United States',
-      category: 'Dining chair',
-      style: 'Industrial',
-      materials: ['Cast and hand-polished recycled aluminum'],
-      knownFor: 'a mirror-polished aluminum finish over a curvier take on Emeco\'s industrial chairs',
-      history:
-        'Starck asked Emeco to cast rather than machine the chair, letting the aluminum take a rounder, more ' +
-        'organic shape than the flat-stamped Navy Chair before it is hand-polished to a mirror shine, carrying ' +
-        'Emeco\'s recycled-aluminum approach into a softer, more residential-feeling silhouette.',
-      facts: [
-        'It is cast rather than stamped, which lets it take a rounder shape than the Navy Chair.',
-        'Its finish is hand-polished to a mirror shine after casting.',
-        'It uses the same recycled-aluminum approach as Emeco\'s other chairs.'
-      ]
-    },
-    {
       id: 'broom-chair',
-      name: 'Broom Chair',
+      name: 'Broom Counter Stool',
       designer: 'Philippe Starck',
       manufacturer: 'Emeco',
       year: 2016,
       origin: 'United States',
-      category: 'Side chair',
+      category: 'Barstool',
       style: 'Industrial',
-      materials: ['Recycled polypropylene', 'Reclaimed wood fiber (factory floor sweepings)'],
+      materials: ['Reclaimed polypropylene', 'Reclaimed wood fiber', 'Glass fiber'],
       knownFor: 'being built largely from literal factory floor sweepings',
       history:
-        'Starck challenged Emeco to build a chair almost entirely from waste already sitting in its own ' +
-        'factory, and the result blends recycled polypropylene with reclaimed wood fiber swept up from the ' +
-        'shop floor, material that would otherwise be discarded.',
+        'Starck challenged Emeco to build a stool almost entirely from waste already sitting in its own ' +
+        'factory, and the result blends reclaimed polypropylene and wood fiber swept up from the shop floor ' +
+        'with a small amount of glass fiber for strength, material that would otherwise be discarded.',
       facts: [
         'Much of its material comes from waste swept up off the factory floor.',
-        'It combines recycled polypropylene with reclaimed wood fiber.',
+        'It combines reclaimed polypropylene and wood fiber with a small amount of glass fiber.',
         'Starck set the waste-material challenge to Emeco directly rather than the other way around.'
       ]
     },
@@ -1422,7 +1230,7 @@ const CATALOG = {
     },
     {
       id: 'tolix-stool',
-      name: 'Tolix Stool (Model H)',
+      name: 'Tolix Marais Stool',
       designer: 'Xavier Pauchard',
       manufacturer: 'Tolix',
       year: 1934,
@@ -1464,28 +1272,6 @@ const CATALOG = {
       ]
     },
     {
-      id: 'cyclone-table',
-      name: 'Cyclone Dining Table',
-      designer: 'DWR Studio',
-      manufacturer: 'Design Within Reach',
-      year: 2010,
-      origin: 'United States',
-      category: 'Dining table',
-      style: 'Contemporary',
-      materials: ['Powder-coated steel rod base', 'Glass, wood or stone top'],
-      knownFor: 'a base built from dozens of steel rods spiraling up like a cyclone',
-      history:
-        'Developed in-house in the spirit of earlier wire-and-rod furniture from the mid-century era, the ' +
-        'table\'s base twists a ring of individual steel rods into a spiraling cone that narrows toward the ' +
-        'floor, supporting a variety of tabletop materials as a contemporary answer to the pedestal and wire-' +
-        'form tables DWR also sells as licensed reissues.',
-      facts: [
-        'Its base is made of a ring of individual steel rods spiraling into a cone.',
-        'It is a Design Within Reach house design rather than a licensed reissue.',
-        'Its top can be swapped between materials like glass, wood or stone.'
-      ]
-    },
-    {
       id: 'eames-plywood-lounge',
       name: 'Eames Molded Plywood Lounge Chair (LCW)',
       designer: 'Charles and Ray Eames',
@@ -1508,47 +1294,136 @@ const CATALOG = {
       ]
     },
     {
-      id: 'papa-bear-chair',
-      name: 'Papa Bear Chair (AP19)',
+      id: 'ch20-elbow-chair',
+      name: 'CH20 Elbow Chair',
       designer: 'Hans Wegner',
-      manufacturer: 'PP Møbler',
-      year: 1951,
+      manufacturer: 'Carl Hansen & Søn',
+      year: 1956,
       origin: 'Denmark',
-      category: 'Lounge chair',
+      category: 'Dining chair',
       style: 'Danish Modern',
-      materials: ['Solid wood frame', 'Foam padding', 'Fabric or leather upholstery'],
-      knownFor: 'rounded arm pads that supposedly resemble a bear\'s paws',
+      materials: ['Solid steam-bent oak', 'Form-pressed veneer seat', 'Optional leather upholstery'],
+      knownFor: 'sitting in Wegner\'s archive for nearly fifty years before anyone put it into production',
       history:
-        'Wegner shaped the chair\'s wide, rounded armrests to suggest paws wrapping around the sitter, which ' +
-        'earned it its popular nickname even though Wegner himself was reportedly more amused than invested in ' +
-        'the bear comparison. Its deep, high-backed proportions were meant for total relaxation, paired ' +
-        'originally with a matching ottoman.',
+        'Wegner designed the chair in 1956, but it sat unused in his archive for close to five decades before ' +
+        'Carl Hansen & Søn finally put it into production in 2005, when it won an ICFF Editors\' Award soon ' +
+        'after release. Its low, steam-bent backrest doubles as an armrest on both sides, which is where its ' +
+        '"elbow" name comes from.',
       facts: [
-        'Its nickname comes from armrests shaped to suggest a bear\'s paws.',
-        'It was designed with a matching ottoman for full reclining comfort.',
-        'Wegner reportedly treated the popular nickname lightly rather than as an intended theme.'
+        'It sat in Wegner\'s archive for nearly fifty years before going into production.',
+        'It won an ICFF Editors\' Award shortly after Carl Hansen & Søn released it in 2005.',
+        'Its low backrest doubles as an armrest, which is where its name comes from.'
       ]
     },
     {
-      id: 'akari-lamp',
-      name: 'Akari Light Sculpture (Model 1A)',
-      designer: 'Isamu Noguchi',
-      manufacturer: 'Vitra',
-      year: 1951,
-      origin: 'Japan',
-      category: 'Floor lamp',
-      style: 'Organic Modernism',
-      materials: ['Washi paper', 'Bamboo ribbing'],
-      knownFor: 'calling itself a "light sculpture" rather than a lamp',
+      id: 'ox-chair',
+      name: 'Ox Chair',
+      designer: 'Hans Wegner',
+      manufacturer: 'Fredericia',
+      year: 1960,
+      origin: 'Denmark',
+      category: 'Lounge chair',
+      style: 'Danish Modern',
+      materials: ['Solid wood frame', 'Molded cold-cured foam', 'Leather or fabric upholstery', 'Stainless steel base'],
+      knownFor: 'a horn-shaped headrest and enveloping wingback form said to be inspired by Picasso',
       history:
-        'Noguchi began the Akari series after visiting Gifu, Japan, a town known for traditional paper ' +
-        'lanterns, and asked local lantern makers to help him produce lightweight sculptural shades from washi ' +
-        'paper over bamboo ribs. He insisted on calling the pieces "light sculptures," arguing the paper shade ' +
-        'glows with a quality of light no other material can match, on or off.',
+        'Wegner departed from his usual restraint with a wingback lounge chair whose flared headrest suggests ' +
+        'a pair of horns, a shape he reportedly developed after being struck by a Picasso bull sketch. Its ' +
+        'upholstery is demanding enough that Fredericia trains upholsterers for roughly eighteen months before ' +
+        'they are qualified to cover one. Wegner summed up his approach to the piece by saying, "we must play, ' +
+        'but play seriously."',
       facts: [
-        'The series began after Noguchi visited Gifu, Japan, a traditional lantern-making town.',
-        'Noguchi insisted on calling the pieces "light sculptures" rather than lamps.',
-        'The shades are made from washi paper stretched over bamboo ribbing.'
+        'Its flared headrest shape is said to have been inspired by a Picasso sketch of a bull.',
+        'Fredericia reportedly trains upholsterers for about eighteen months before they cover this chair.',
+        'Wegner described his approach to it by saying "we must play, but play seriously."'
+      ]
+    },
+    {
+      id: 'palissade-chair',
+      name: 'Palissade Chair',
+      designer: 'Ronan and Erwan Bouroullec',
+      manufacturer: 'HAY',
+      year: 2016,
+      origin: 'Denmark',
+      category: 'Outdoor dining chair',
+      style: 'Contemporary Scandinavian',
+      materials: ['Powder-coated steel', 'Cold-forged steel frame'],
+      knownFor: 'a folded steel-rod outdoor chair with a soft, textile-like texture despite being solid metal',
+      history:
+        'French design duo Ronan and Erwan Bouroullec spent years developing a fine steel-rod construction and ' +
+        'a powder-coat finish soft enough to the touch that the chair reads almost like woven fabric despite ' +
+        'being entirely metal. Named after the French word for a defensive fence, it was designed to work ' +
+        'equally well around a public park bench or a private balcony table.',
+      facts: [
+        'It is designed by French duo Ronan and Erwan Bouroullec.',
+        'Its name comes from the French word for a defensive fence, or "palisade."',
+        'Its powder-coat finish is engineered to feel soft despite the frame being solid steel.'
+      ]
+    },
+    {
+      id: 'cherner-chair',
+      name: 'Cherner Chair',
+      designer: 'Norman Cherner',
+      manufacturer: 'Cherner Chair Company',
+      year: 1958,
+      origin: 'United States',
+      category: 'Armchair',
+      style: 'Mid-Century Modern',
+      materials: ['Molded plywood shell', 'Bent plywood legs'],
+      knownFor: 'a curved plywood armchair that spent decades tied up in a manufacturing dispute',
+      history:
+        'Cherner designed the chair for a small manufacturer called Plycraft, which built and sold it while at ' +
+        'times crediting other designers on its own advertising instead of Cherner. Production stopped after a ' +
+        'few years, and the chair only returned when Cherner\'s sons tracked down the original molds decades ' +
+        'later and founded the Cherner Chair Company to build it properly under their father\'s name.',
+      facts: [
+        'It was originally produced by a manufacturer called Plycraft, not the Cherner Chair Company.',
+        'Plycraft\'s own advertising did not always credit Cherner correctly at the time.',
+        'Cherner\'s sons founded the Cherner Chair Company decades later after recovering the original molds.'
+      ]
+    },
+    {
+      id: 'nelson-swag-leg',
+      name: 'Nelson Swag Leg Armchair',
+      designer: 'George Nelson',
+      manufacturer: 'Herman Miller',
+      year: 1958,
+      origin: 'United States',
+      category: 'Armchair',
+      style: 'Mid-Century Modern',
+      materials: ['Molded fiberglass shell', 'Cast aluminum cross-shaped legs'],
+      knownFor: 'chrome cross-shaped legs that swing out from a single center point',
+      history:
+        'Nelson\'s studio designed the swag-leg group around a distinctive cast aluminum base whose four legs ' +
+        'sweep outward from one central point rather than mounting separately at the shell\'s corners, giving ' +
+        'the whole line, chairs and a matching desk alike, a lighter, more sculptural stance than a typical ' +
+        'four-leg base.',
+      facts: [
+        'Its cross-shaped base legs sweep out from one central point rather than four separate corners.',
+        'The same swag-leg base was used across a small group of matching pieces, including a desk.',
+        'It was designed within George Nelson\'s studio for Herman Miller.'
+      ]
+    },
+    {
+      id: 'eames-plywood-lounge-metal',
+      name: 'Eames Molded Plywood Lounge Chair (LCM)',
+      designer: 'Charles and Ray Eames',
+      manufacturer: 'Herman Miller',
+      year: 1946,
+      origin: 'United States',
+      category: 'Lounge chair',
+      style: 'Mid-Century Modern',
+      materials: ['Molded plywood seat and back', 'Chrome-plated steel legs', 'Rubber shock mounts'],
+      knownFor: 'swapping the wood-leg base of the LCW for slender chrome steel legs',
+      history:
+        'Released alongside the wood-legged LCW from the same molded-plywood research, the LCM trades the ' +
+        'wood base for slim chrome-plated steel legs, giving the identical curved plywood seat and back a ' +
+        'lighter, more industrial stance. Both versions use the same rubber shock-mount joints that let the ' +
+        'shell flex slightly rather than sitting rigid.',
+      facts: [
+        'It uses the same molded plywood seat and back as the wood-legged LCW.',
+        'Its legs are chrome-plated steel rather than the LCW\'s wood legs.',
+        'Both versions were developed from the same molded-plywood research at the same time.'
       ]
     }
   ],
