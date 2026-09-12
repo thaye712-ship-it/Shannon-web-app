@@ -37,9 +37,25 @@
       <button class="stat tappable" id="soundBtn" title="Sound on or off" aria-pressed="true">
         <span class="stat-icon" data-sound-icon>🔊</span>
       </button>
-      <button class="stat tappable" id="userBtn" title="Switch profile">
-        <span class="stat-icon" data-user-emoji>🦊</span>
-      </button>
+      <div class="usermenu">
+        <button class="stat tappable" id="userBtn" title="Switch profile"
+                aria-haspopup="true" aria-expanded="false">
+          <span class="stat-icon" data-user-emoji>🦊</span>
+          <span class="stat-caret">▾</span>
+        </button>
+        <div class="usermenu-pop" data-usermenu hidden>
+          <p class="usermenu-label">Signed in as</p>
+          <p class="usermenu-current" data-usermenu-current>—</p>
+          <div class="usermenu-list" data-usermenu-list></div>
+          <div class="usermenu-sep"></div>
+          <button class="usermenu-item" data-usermenu-add>
+            <span class="usermenu-item-icon">＋</span> Add someone
+          </button>
+          <button class="usermenu-item" data-usermenu-manager>
+            <span class="usermenu-item-icon">🔑</span> <span data-manager-label>Manager sign-in</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -67,6 +83,56 @@
         <button class="btn ghost" data-profile-cancel>Cancel</button>
         <button class="btn primary" data-profile-create>Create profile</button>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ MANAGER SIGN-IN ============ -->
+  <section class="screen" id="screen-manager-auth">
+    <button class="back" data-back>← Back</button>
+    <p class="eyebrow">Manager access</p>
+    <h1 class="screen-title" data-auth-title>Manager sign-in</h1>
+    <p class="screen-sub" data-auth-sub>
+      Managers can add and remove other managers and see the team roster.
+    </p>
+
+    <div class="profile-new">
+      <input class="profile-input" data-auth-password type="password"
+             placeholder="Manager password" autocomplete="current-password">
+      <p class="auth-error" data-auth-error hidden></p>
+      <div class="profile-actions">
+        <button class="btn ghost" data-back>Cancel</button>
+        <button class="btn primary" data-auth-submit>Sign in</button>
+      </div>
+    </div>
+
+    <div class="auth-note">
+      <b>About this password</b>
+      It is stored as a salted hash on this device only, so it keeps the
+      manager view off the showroom floor but is not real security — anyone
+      with browser dev tools can get around it, and it does not follow you to
+      another device. Proper accounts arrive when Firebase Auth is connected.
+    </div>
+  </section>
+
+  <!-- ============ MANAGER AREA ============ -->
+  <section class="screen" id="screen-manager">
+    <button class="back" data-back>← Back</button>
+    <p class="eyebrow">Manager access</p>
+    <h1 class="screen-title">Team &amp; managers</h1>
+    <p class="screen-sub">
+      Everyone training on this device. Managers can promote or remove other
+      managers; the root manager cannot be removed.
+    </p>
+
+    <h2 class="section-label">Managers</h2>
+    <div class="roster" data-manager-roster></div>
+
+    <h2 class="section-label">Associates</h2>
+    <div class="roster" data-associate-roster></div>
+
+    <div class="profile-actions" style="margin-top:24px">
+      <button class="btn ghost" data-manager-change-pw>Change password</button>
+      <button class="btn ghost" data-manager-signout>Sign out of manager</button>
     </div>
   </section>
 

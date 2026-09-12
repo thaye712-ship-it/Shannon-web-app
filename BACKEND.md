@@ -1,121 +1,153 @@
-# Moving profiles to a backend
+# Moving profiles to Firebase
 
-Today profiles live in the browser's `localStorage`. That was a deliberate
-first step, not a shortcut: it works with no server, no signup and no cost,
-and it covers the common case of a shared showroom device where associates
-take turns. What it cannot do is follow someone to a different device, or
-let a manager see who has completed what.
+Right now profiles live in the browser's `localStorage`. That was a
+deliberate first step, not a shortcut: it works with no server, no signup
+and no cost, and it covers the common case of a shared showroom device. What
+it cannot do is follow someone to another device, give managers real
+accounts, or let anyone see completion across a team.
 
-This document is what that migration actually involves, so the decision can
-be made with real detail.
+This is what moving it to Firebase actually involves.
+
+## Why Firebase here
+
+Firestore is a fine fit for this and it's the account that already exists,
+which beats standing up something new. Two things to know going in:
+
+- **Aggregate reporting is more work than in SQL.** "Completion by topic
+  across the team" is one query in Postgres; in Firestore it's either a
+  fan-out read or counters you maintain on write. At one store's worth of
+  people that difference does not matter. At fifty stores it will, and the
+  usual answer is a scheduled Cloud Function that rolls up nightly.
+- **Security rules are the whole defense.** This repo is public, so the
+  Firebase web config is visible to anyone. That is normal and expected —
+  the web config is not a secret — but it means Firestore rules and Auth are
+  the only things standing between a curious associate and everyone's data.
 
 ## What already makes this easy
 
 Every read and write of a person's progress goes through the `Profiles`
-object in `js/app.js`. Nothing else in the app touches storage. The screens,
-scoring, quiz engine and flashcards all call these and only these:
+object in `js/app.js`, and manager access goes through `ManagerAuth`.
+Nothing else in the app touches storage or auth:
 
 | Function | Does |
 | --- | --- |
-| `Profiles.index()` | Returns `{ activeId, users: [...] }` |
-| `Profiles.list()` | All profiles |
+| `Profiles.index()` | `{ activeId, users: [...] }` |
+| `Profiles.list()` / `managers()` | All profiles / just managers |
 | `Profiles.active()` / `activeId()` | Who is signed in |
-| `Profiles.create(name, emoji)` | New profile, becomes active |
+| `Profiles.create(name, emoji, opts)` | New profile; `opts.role`, `opts.root` |
+| `Profiles.update(id, changes)` | Change role, name, avatar |
 | `Profiles.select(id)` | Switch profile |
-| `Profiles.remove(id)` | Delete profile and its progress |
+| `Profiles.remove(id)` | Delete profile and progress (refuses the root manager) |
 | `Profiles.loadProgress(id)` | That person's progress record |
 | `Profiles.saveProgress(id, data)` | Write it back |
+| `ManagerAuth.verify(pw)` / `setPassword(pw)` | Manager gate |
 
-Swapping the backend means reimplementing those eight functions. The rest of
-the app does not change. The one real complication is that the localStorage
-versions are **synchronous** and any network version will be **async**, so
-those call sites need to become `await`ed — roughly a dozen places, all in
-`js/app.js`.
+Migration means reimplementing those and nothing else. The one real
+complication is that the localStorage versions are **synchronous** and
+Firestore is **async**, so those call sites need `await` — roughly a dozen
+places, all in `js/app.js`.
 
-## The progress record
+## The data
 
-One row per person. This is the whole shape:
+One document per person. The progress shape is already flat and
+JSON-serializable, so it maps to a Firestore document with no modelling
+work:
 
 ```js
 {
-  xp: 0,              // number
-  streak: 0,          // consecutive days
-  lastPlayed: null,   // "2026-9-12"
-  sound: true,
-  badges: [],         // badge ids
-  topics: {},         // topicId -> { seen, correct }
-  sessions: 0,
-  flashKnown: []      // product ids marked "know it"
+  xp: 0, streak: 0, lastPlayed: null, sound: true,
+  badges: [], topics: {}, sessions: 0, flashKnown: []
 }
 ```
 
-Small, flat, and JSON-serializable, so it fits a single `jsonb` column or a
-document store without modelling work.
+Suggested collections:
 
-## Suggested shape (Supabase)
-
-Two tables:
-
-```sql
-create table profiles (
-  id uuid primary key default gen_random_uuid(),
-  org_id uuid not null,              -- a store or a team
-  name text not null,
-  emoji text not null default '🦊',
-  created_at timestamptz default now()
-);
-
-create table progress (
-  profile_id uuid primary key references profiles(id) on delete cascade,
-  data jsonb not null default '{}'::jsonb,
-  updated_at timestamptz default now()
-);
+```
+orgs/{orgId}/profiles/{profileId}   → { name, emoji, role, root, createdAt }
+orgs/{orgId}/progress/{profileId}   → the record above
 ```
 
-`org_id` is worth including from day one even if there is only one store.
-Retrofitting a tenant column after data exists is far more annoying than
-carrying it from the start.
+Carry `orgId` from day one even with a single store. Retrofitting a tenant
+boundary after real data exists is far more painful than having it unused
+for a while.
 
-## The security question, which is the real one
+## Auth, and the Shannon question
 
-This repo is public and GitHub Pages serves static files only, so any key
-the page uses is visible to anyone who views source. That is normal for
-Supabase/Firebase — their anon keys are designed to be public — but it means
-**the database rules are the only thing protecting the data**. Get them
-wrong and anyone can read or wipe every profile.
+The app currently seeds **Shannon** as the root manager: she cannot be
+removed or demoted, and managers can add and remove other managers. That
+role model is already in the data and does not change when Firebase lands.
 
-Two viable postures:
+What changes is the password. Today the manager gate is a salted SHA-256
+hash in that device's local storage — it keeps the manager view off the
+showroom floor, but anyone with dev tools can bypass it and it does not
+travel between devices. **No password is stored in this repository and none
+ever should be**, because the repo is public.
 
-1. **No login at all (matches today's behavior).** Anyone with the site URL
-   can pick any profile. Row-level security restricts writes to the
-   `progress` row matching the selected profile, but there is nothing
-   stopping someone selecting a colleague's name. Fine for low-stakes
-   training data; not fine if it ever feeds performance review.
-2. **Real auth (recommended if this goes past pilot).** Supabase magic-link
-   email sign-in, one profile per account, RLS keyed to `auth.uid()`. Adds a
-   real login step but makes the data trustworthy and is a prerequisite for
-   any manager dashboard.
+With Firebase:
 
-Either way the rules must be written explicitly — the default "anon can do
-anything" posture is not acceptable for a public repo.
+1. Enable **Email/Password** auth in the console.
+2. Create Shannon's account there and set her password in the console. It
+   never enters this repo, and nobody needs to send it over chat.
+3. Managers sign in with `signInWithEmailAndPassword`. Associates keep
+   picking a name from the dropdown with no password, exactly as now.
+4. Mark managers with a **custom claim** (`{ manager: true }`, set by a
+   Cloud Function or the Admin SDK) rather than a Firestore field. A claim
+   is on the token itself, so rules can trust it; a field can be edited by
+   anyone who can write that document.
 
-## What a manager dashboard would need on top
+### Rules sketch
 
-- A read policy letting a manager role select rows within their `org_id`
-- A `completed_sessions` table if per-session history (not just totals) is
-  wanted, since the current record only keeps aggregates
-- Names that are actually identifiable, which makes this employee data and
-  brings the usual retention/consent questions with it
+```js
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    match /orgs/{orgId}/profiles/{profileId} {
+      allow read: if true;                                  // picking a name is public
+      allow create: if true;                                // anyone can add themselves
+      allow update, delete: if request.auth.token.manager == true
+                            && resource.data.root != true;  // root is untouchable
+    }
+    match /orgs/{orgId}/progress/{profileId} {
+      allow read: if true;
+      allow write: if true;                                 // see the caveat below
+    }
+  }
+}
+```
 
-## Rough order of work
+That `allow write: if true` on progress is the honest cost of letting
+associates train without logging in: anyone can write anyone's progress. It
+is acceptable for practice scores and unacceptable the moment this data
+informs a review. When you want it tight, give associates accounts too and
+key the rule to `request.auth.uid`.
 
-1. Create the project, tables and RLS policies
-2. Decide posture: anonymous profiles vs. real login
-3. Reimplement the eight `Profiles` functions against the client library
-4. Make the ~12 call sites async
-5. Add a one-time import that pushes any existing localStorage profiles up,
-   so nobody loses the progress they built during the local phase
-6. Keep localStorage as an offline cache if showroom wifi is unreliable
+## What a manager dashboard needs on top
 
-Steps 1 and 2 need a human decision and an account. Steps 3 through 6 are
-mechanical.
+- A read over `orgs/{orgId}/progress` — straightforward once managers have
+  real accounts and a `manager` claim
+- Session history, if you want more than running totals; the current record
+  keeps aggregates only, so that means a `sessions` subcollection written
+  at the end of each run
+- Names that identify real employees, which makes this employee data and
+  brings the usual retention and consent questions with it
+
+## Order of work
+
+1. Enable Email/Password auth; create Shannon's account and set her password
+   in the console
+2. Decide whether associates stay passwordless (they can, for now)
+3. Add the Firebase web config to a `js/firebase-config.js` — safe to commit,
+   it is not a secret
+4. Write the rules above and test them in the console's rules playground
+   **before** pointing the app at them
+5. Reimplement the `Profiles` and `ManagerAuth` functions against Firestore
+   and Auth; make the ~12 call sites async
+6. Add a one-time import that pushes existing localStorage profiles up, so
+   nobody loses progress from the local phase
+7. Optionally keep localStorage as an offline cache if showroom wifi is bad
+
+Steps 1, 2 and 4 need a human. Steps 3 and 5 through 7 are mechanical.
+
+**Never commit** a service account JSON or any Admin SDK credential. Those
+bypass all rules. The web config (`apiKey`, `authDomain`, `projectId`, …) is
+fine and is meant to be public.

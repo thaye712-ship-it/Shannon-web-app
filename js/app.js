@@ -39,6 +39,9 @@
 
   const AVATARS = ['🦊', '🐙', '🦉', '🐝', '🦜', '🐢', '🦩', '🐳', '🦁', '🐼', '🦒', '🐨'];
 
+  const MANAGER_AUTH_KEY = 'provenance.managerAuth.v1';
+  const ROOT_MANAGER = 'Shannon';
+
   /* ---------------- tiny DOM helpers ---------------- */
 
   const $  = (sel, root) => (root || document).querySelector(sel);
@@ -90,19 +93,30 @@
       const ix = this.index();
       return ix.users.find(u => u.id === ix.activeId) || null;
     },
-    create(name, emoji) {
+    create(name, emoji, opts) {
+      const o = opts || {};
       const ix = this.index();
       const user = {
         id: 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         name: String(name).trim().slice(0, 40),
         emoji: emoji || AVATARS[Math.floor(Math.random() * AVATARS.length)],
+        role: o.role === 'manager' ? 'manager' : 'associate',
+        root: !!o.root,          // the root manager cannot be removed or demoted
         createdAt: new Date().toISOString()
       };
       ix.users.push(user);
-      ix.activeId = user.id;
+      if (o.activate !== false) ix.activeId = user.id;
       this.saveIndex(ix);
       this.saveProgress(user.id, defaults());
       return user;
+    },
+    update(id, changes) {
+      const ix = this.index();
+      const u = ix.users.find(x => x.id === id);
+      if (!u) return null;
+      Object.assign(u, changes);
+      this.saveIndex(ix);
+      return u;
     },
     select(id) {
       const ix = this.index();
@@ -113,11 +127,15 @@
     },
     remove(id) {
       const ix = this.index();
+      const target = ix.users.find(u => u.id === id);
+      if (target && target.root) return false;   // root manager is not deletable
       ix.users = ix.users.filter(u => u.id !== id);
       if (ix.activeId === id) ix.activeId = null;
       this.saveIndex(ix);
       try { localStorage.removeItem(userKey(id)); } catch (e) { /* private mode */ }
+      return true;
     },
+    managers() { return this.list().filter(u => u.role === 'manager'); },
     loadProgress(id) {
       try {
         const raw = localStorage.getItem(userKey(id));
@@ -131,6 +149,67 @@
       try { localStorage.setItem(userKey(id), JSON.stringify(data)); } catch (e) { /* private mode */ }
     }
   };
+
+  /* ---------------- manager sign-in ----------------
+
+     IMPORTANT, and worth reading before changing any of this:
+
+     This is a static site served from a public repository. Any password
+     written into this file would be visible to every associate and to the
+     internet, so no password is stored here and none ever should be. What
+     this module does is hold a salted SHA-256 hash in the device's own
+     local storage, set by a manager on first use.
+
+     That makes it a device-level gate — it keeps an associate from casually
+     opening the manager view on the showroom iPad. It is NOT real security:
+     anyone with dev tools can bypass it, and it does not travel between
+     devices. Real authentication arrives when Firebase Auth is wired up
+     (see BACKEND.md), at which point the password lives in Firebase, is set
+     in its console, and never touches this repository.
+  */
+
+  const ManagerAuth = {
+    record() {
+      try { return JSON.parse(localStorage.getItem(MANAGER_AUTH_KEY) || 'null'); }
+      catch (e) { return null; }
+    },
+    isConfigured() { return !!(this.record() || {}).hash; },
+
+    async hash(password, salt) {
+      const bytes = new TextEncoder().encode(salt + '::' + password);
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest))
+        .map(b => b.toString(16).padStart(2, '0')).join('');
+    },
+
+    async setPassword(password) {
+      const salt = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+        .map(b => b.toString(16).padStart(2, '0')).join('');
+      const hash = await this.hash(password, salt);
+      try {
+        localStorage.setItem(MANAGER_AUTH_KEY, JSON.stringify({ salt, hash, setAt: new Date().toISOString() }));
+      } catch (e) { /* private mode */ }
+    },
+
+    async verify(password) {
+      const rec = this.record();
+      if (!rec || !rec.hash) return false;
+      return (await this.hash(password, rec.salt)) === rec.hash;
+    }
+  };
+
+  /* Signed-in-as-manager state lives for the session only, never persisted. */
+  let managerUnlocked = false;
+
+  /*
+    Shannon is the root manager: seeded once, cannot be removed or demoted,
+    and is the only account that starts with authority to add and remove
+    other managers. Her password is not set here — see ManagerAuth above.
+  */
+  function seedRootManager() {
+    if (Profiles.list().some(u => u.root)) return;
+    Profiles.create(ROOT_MANAGER, '🦉', { role: 'manager', root: true, activate: false });
+  }
 
   /*
     Nobody loses progress to a rename or to the arrival of profiles. Two
@@ -398,6 +477,164 @@
     const u = Profiles.active();
     $('[data-user-emoji]').textContent = u ? u.emoji : '👤';
     $('#userBtn').title = u ? 'Signed in as ' + u.name + ' — tap to switch' : 'Pick a profile';
+  }
+
+  /* ---------------- user dropdown ---------------- */
+
+  function closeUserMenu() {
+    $('[data-usermenu]').hidden = true;
+    $('#userBtn').setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleUserMenu() {
+    const pop = $('[data-usermenu]');
+    if (pop.hidden) { renderUserMenu(); pop.hidden = false; $('#userBtn').setAttribute('aria-expanded', 'true'); }
+    else closeUserMenu();
+  }
+
+  function renderUserMenu() {
+    const active = Profiles.active();
+    $('[data-usermenu-current]').textContent = active
+      ? active.emoji + '  ' + active.name + (active.role === 'manager' ? '  · manager' : '')
+      : 'Nobody yet';
+
+    const list = $('[data-usermenu-list]');
+    list.innerHTML = '';
+    Profiles.list()
+      .filter(u => !active || u.id !== active.id)
+      .forEach(u => {
+        const item = el('button', 'usermenu-item');
+        item.appendChild(el('span', 'usermenu-item-icon', u.emoji));
+        item.appendChild(el('span', null, u.name));
+        if (u.role === 'manager') item.appendChild(el('span', 'usermenu-tag', 'manager'));
+        item.addEventListener('click', () => {
+          sfx.tap();
+          Profiles.select(u.id);
+          managerUnlocked = false;      // switching people drops manager access
+          closeUserMenu();
+          enterApp();
+        });
+        list.appendChild(item);
+      });
+
+    $('[data-manager-label]').textContent = managerUnlocked ? 'Team & managers' : 'Manager sign-in';
+  }
+
+  /* ---------------- manager area ---------------- */
+
+  function openManager() {
+    if (managerUnlocked) { renderManager(); show('manager'); return; }
+    const configured = ManagerAuth.isConfigured();
+    $('[data-auth-title]').textContent = configured ? 'Manager sign-in' : 'Set a manager password';
+    $('[data-auth-sub]').textContent = configured
+      ? 'Managers can add and remove other managers and see the team roster.'
+      : 'No manager password has been set on this device yet. Choose one now — it unlocks the manager view here.';
+    $('[data-auth-submit]').textContent = configured ? 'Sign in' : 'Set password';
+    $('[data-auth-password]').value = '';
+    $('[data-auth-password]').setAttribute('autocomplete', configured ? 'current-password' : 'new-password');
+    $('[data-auth-error]').hidden = true;
+    show('manager-auth');
+    setTimeout(() => $('[data-auth-password]').focus(), 80);
+  }
+
+  async function submitManagerAuth() {
+    const input = $('[data-auth-password]');
+    const err = $('[data-auth-error]');
+    const value = input.value;
+
+    if (!value) { input.focus(); return; }
+
+    if (!ManagerAuth.isConfigured()) {
+      if (value.length < 4) {
+        err.textContent = 'Use at least four characters.';
+        err.hidden = false;
+        return;
+      }
+      await ManagerAuth.setPassword(value);
+      managerUnlocked = true;
+      sfx.right();
+      renderManager();
+      show('manager');
+      return;
+    }
+
+    if (await ManagerAuth.verify(value)) {
+      managerUnlocked = true;
+      sfx.right();
+      renderManager();
+      show('manager');
+    } else {
+      err.textContent = 'That password does not match.';
+      err.hidden = false;
+      input.value = '';
+      input.focus();
+      sfx.wrong();
+    }
+  }
+
+  function rosterCard(u) {
+    const card = el('div', 'roster-row');
+
+    const who = el('div', 'roster-who');
+    who.appendChild(el('span', 'roster-emoji', u.emoji));
+    const text = el('div', 'roster-text');
+    text.appendChild(el('b', null, u.name));
+    const prog = Profiles.loadProgress(u.id);
+    text.appendChild(el('span', null,
+      'Level ' + levelOf(prog.xp) + '  ·  ' + prog.xp.toLocaleString() + ' XP' +
+      (u.root ? '  ·  root manager' : '')));
+    who.appendChild(text);
+    card.appendChild(who);
+
+    const actions = el('div', 'roster-actions');
+
+    if (!u.root) {
+      const toggle = el('button', 'btn ghost roster-btn',
+        u.role === 'manager' ? 'Make associate' : 'Make manager');
+      toggle.addEventListener('click', () => {
+        sfx.tap();
+        Profiles.update(u.id, { role: u.role === 'manager' ? 'associate' : 'manager' });
+        renderManager();
+        renderUserChip();
+      });
+      actions.appendChild(toggle);
+
+      const del = el('button', 'btn ghost roster-btn danger', 'Remove');
+      del.addEventListener('click', () => {
+        if (!window.confirm('Remove ' + u.name + '? Their progress on this device is deleted and cannot be recovered.')) return;
+        Profiles.remove(u.id);
+        if (!Profiles.activeId()) {
+          /* Removed whoever was signed in — fall back to the profile picker. */
+          renderProfiles();
+          show('profiles');
+          return;
+        }
+        renderManager();
+      });
+      actions.appendChild(del);
+    } else {
+      actions.appendChild(el('span', 'roster-locked', 'Cannot be removed'));
+    }
+
+    card.appendChild(actions);
+    return card;
+  }
+
+  function renderManager() {
+    const mgr = $('[data-manager-roster]');
+    const assoc = $('[data-associate-roster]');
+    mgr.innerHTML = '';
+    assoc.innerHTML = '';
+
+    const managers = Profiles.list().filter(u => u.role === 'manager');
+    const associates = Profiles.list().filter(u => u.role !== 'manager');
+
+    managers.forEach(u => mgr.appendChild(rosterCard(u)));
+    if (!associates.length) {
+      assoc.appendChild(el('p', 'roster-empty', 'No associates on this device yet.'));
+    } else {
+      associates.forEach(u => assoc.appendChild(rosterCard(u)));
+    }
   }
 
   /* ---------------- home screen rendering ---------------- */
@@ -1148,11 +1385,48 @@
 
   $('[data-back-gallery]').addEventListener('click', () => show('gallery'));
 
-  $('#userBtn').addEventListener('click', () => {
+  $('#userBtn').addEventListener('click', e => {
+    e.stopPropagation();
     sfx.tap();
+    toggleUserMenu();
+  });
+
+  $('[data-usermenu]').addEventListener('click', e => e.stopPropagation());
+  document.addEventListener('click', () => {
+    if (!$('[data-usermenu]').hidden) closeUserMenu();
+  });
+
+  $('[data-usermenu-add]').addEventListener('click', () => {
+    sfx.tap();
+    closeUserMenu();
     renderProfiles();
-    $('[data-profile-new]').hidden = true;
     show('profiles');
+    openNewProfile();
+  });
+
+  $('[data-usermenu-manager]').addEventListener('click', () => {
+    sfx.tap();
+    closeUserMenu();
+    openManager();
+  });
+
+  $('[data-auth-submit]').addEventListener('click', submitManagerAuth);
+  $('[data-auth-password]').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); submitManagerAuth(); }
+  });
+
+  $('[data-manager-signout]').addEventListener('click', () => {
+    sfx.tap();
+    managerUnlocked = false;
+    show('home');
+  });
+
+  $('[data-manager-change-pw]').addEventListener('click', async () => {
+    const next = window.prompt('New manager password (at least four characters):');
+    if (next == null) return;
+    if (next.trim().length < 4) { window.alert('Password not changed — it needs at least four characters.'); return; }
+    await ManagerAuth.setPassword(next.trim());
+    window.alert('Manager password updated on this device.');
   });
 
   $('[data-profile-create]').addEventListener('click', createProfile);
@@ -1243,6 +1517,7 @@
   /* ---------------- boot ---------------- */
 
   migrateLegacy();
+  seedRootManager();
 
   if (Profiles.activeId()) {
     enterApp();
@@ -1250,7 +1525,8 @@
     /* No one picked yet: the profile screen is the front door. */
     syncSoundButton();
     renderProfiles();
-    if (!Profiles.list().length) openNewProfile();
+    /* Only Shannon exists on a brand new device, so open the add form too. */
+    if (Profiles.list().every(u => u.root)) openNewProfile();
     show('profiles');
   }
 

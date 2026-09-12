@@ -57,6 +57,41 @@ Branch: `claude/site-changes-build-log-m4xymb`
 
 ---
 
+## 2026-09-12 — User dropdown, manager role, Shannon seeded as root manager
+
+- **User dropdown.** The avatar in the top bar now opens a menu: who you're
+  signed in as, every other profile on the device, "Add someone", and
+  manager access. Switching people from here drops any manager session.
+- **Roles.** Profiles carry `role` (`associate` | `manager`) and a `root`
+  flag. **Shannon is seeded as the root manager** on first run — she cannot
+  be removed or demoted, and managers can promote or remove other managers
+  from a new Team & managers screen.
+- **Managers require a password; associates don't**, as asked. Associates
+  still just pick a name from the dropdown.
+- **The password is not in this repository, and must never be.** This is a
+  static site in a public repo, so a hardcoded password would be readable by
+  every associate and by the internet — worse than no password, because it
+  looks protective. Instead `ManagerAuth` stores a salted SHA-256 hash in
+  the device's own local storage, set by a manager on first use. That is a
+  device-level gate, not real security: anyone with dev tools can bypass it
+  and it doesn't travel between devices. The manager sign-in screen says so
+  in plain language rather than implying protection it doesn't have.
+- Real authentication is a Firebase Auth job, where the password is set in
+  the console and never touches this repo. `BACKEND.md` was rewritten for
+  Firebase (the account that already exists) rather than Supabase, including
+  a rules sketch, the custom-claim approach for manager role, and an honest
+  note about which rule is loose while associates stay passwordless.
+- Verified in a browser: Shannon seeds correctly as root manager; the
+  dropdown lists and switches profiles; first manager access prompts to set
+  a password rather than assuming one; a too-short password is refused; the
+  stored record contains only `salt`/`hash`/`setAt` with no plaintext and a
+  64-character digest; promoting an associate works; a wrong password is
+  refused and the correct one accepted. Zero console errors.
+
+Branch: `claude/site-changes-build-log-m4xymb`
+
+---
+
 ## 2026-09-12 — Renamed from Shannon to Provenance
 
 - The app is now **Provenance**. A piece's provenance is where it came

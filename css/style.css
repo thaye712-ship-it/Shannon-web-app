@@ -576,6 +576,60 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 .profile-actions{display:flex;gap:11px;margin-top:20px}
 .profile-actions .btn{flex:1}
 
+/* ---------- user dropdown ---------- */
+.usermenu{position:relative}
+.stat-caret{font-size:9px;color:var(--ink-soft);line-height:1}
+.usermenu-pop{
+  position:absolute;top:calc(100% + 9px);right:0;z-index:40;width:246px;
+  padding:14px;border-radius:var(--r-md);background:var(--card);
+  border:1px solid var(--line);box-shadow:var(--shadow-lg);
+  animation:pop-in .18s cubic-bezier(.34,1.56,.64,1) both
+}
+.usermenu-label{margin:0;font-size:10.5px;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink-soft)}
+.usermenu-current{margin:3px 0 10px;font-family:var(--display);font-weight:800;font-size:15px}
+.usermenu-list{display:grid;gap:2px}
+.usermenu-item{
+  display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;
+  border-radius:var(--r-sm);font-weight:600;font-size:14px;text-align:left;
+  transition:background .15s
+}
+.usermenu-item:hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.usermenu-item-icon{font-size:16px;width:20px;text-align:center;flex:none}
+.usermenu-tag{
+  margin-left:auto;font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;
+  background:color-mix(in srgb,var(--grape) 16%,transparent);color:var(--grape)
+}
+@media (prefers-color-scheme:dark){.usermenu-tag{color:#C9B4FF}}
+.usermenu-sep{height:1px;background:var(--line);margin:10px 0}
+
+/* ---------- manager area ---------- */
+.auth-error{margin:12px 0 0;font-size:13.5px;font-weight:700;color:var(--bubble)}
+.auth-note{
+  margin-top:22px;padding:16px 18px;border-radius:var(--r-md);font-size:13.5px;
+  line-height:1.6;color:var(--ink-soft);
+  background:color-mix(in srgb,var(--sun) 13%,transparent);
+  border:1px solid color-mix(in srgb,var(--sun) 42%,transparent)
+}
+.auth-note b{display:block;font-family:var(--display);font-size:14.5px;color:var(--ink);margin-bottom:5px}
+.roster{display:grid;gap:11px}
+.roster-row{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:14px 16px;border-radius:var(--r-md);background:var(--card);
+  border:1px solid var(--line);box-shadow:var(--shadow)
+}
+.roster-who{display:flex;align-items:center;gap:12px;min-width:0}
+.roster-emoji{font-size:26px;line-height:1}
+.roster-text{display:grid;gap:1px;min-width:0}
+.roster-text b{font-size:14.5px}
+.roster-text span{font-size:11.5px;color:var(--ink-soft)}
+.roster-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.roster-btn{padding:8px 14px;font-size:12.5px}
+.roster-btn.danger{color:var(--bubble)}
+.roster-locked{font-size:11.5px;color:var(--ink-soft);font-weight:600}
+.roster-empty{margin:0;padding:16px;border-radius:var(--r-md);font-size:13.5px;
+  color:var(--ink-soft);background:color-mix(in srgb,var(--ink) 4%,transparent)}
+
 /* ---------- browse: group chips + product detail ---------- */
 .group-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 .group-chip{
