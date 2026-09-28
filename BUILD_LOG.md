@@ -10,6 +10,49 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-28 — Photo ID now offers comparable pieces
+
+Photo ID was drawing its three wrong answers from the whole catalog, so a
+photo of an armchair could be offered against a floor lamp, a dining table
+and a bookcase. The silhouette answered the question before the associate
+had to recognise anything.
+
+Measured across every photo question the catalog can generate, **49% of
+them had only one piece of that kind among the four options** — half the
+deck was free marks.
+
+`nearestNames` in `js/questions.js` now ranks candidate distractors by how
+close they are to the piece in the photo: same category first
+("Lounge chair"), then the same browse group ("Chairs & Seating"), then the
+rest of the catalog. `choiceQuestion` takes a `keepOrder` flag so that
+ranking survives instead of being shuffled away.
+
+Ranked rather than filtered on purpose: 21 of the 34 categories hold fewer
+than four pieces with photos, so a strict same-category rule would have
+dropped most Photo ID questions instead of improving them. Each tier is
+shuffled internally, so the nearest distractors are used first while which
+ones appear still varies between runs.
+
+Result, over the same 2,360 generated questions:
+
+| | Before | After |
+| --- | --- | --- |
+| Distractor in the same category | 4.5% | **81.1%** |
+| Distractor in the same group | 19.2% | 18.1% |
+| Unrelated distractor | 76.3% | **0.8%** |
+| Questions where the answer is the only piece of its kind | 49.2% | **0.8%** |
+
+The 0.8% that remains is entirely the Nelson Ball Clock, the only piece in
+the Decor group — it has nothing comparable to sit beside until more decor
+products are added. Every other product now draws comparable options.
+
+Verified in the browser: a Photo-ID-only sprint returned four floor lamps,
+then four armchairs, then four table lamps, then four storage pieces. A
+full mixed sprint, Deep Dive, browsing and flashcards all still run with no
+JavaScript errors.
+
+---
+
 ## 2026-09-28 — Taken offline, then restored
 
 The site was pulled down on 12 September and brought back on the 28th.

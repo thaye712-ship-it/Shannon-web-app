@@ -52,9 +52,17 @@ function softLower(text) {
   return text.charAt(0).toLowerCase() + text.slice(1);
 }
 
-/* Build a multiple choice question from a correct value plus wrong ones. */
-function choiceQuestion(topic, prompt, correct, wrongPool, why, tag) {
-  const wrongs = shuffle(wrongPool.filter(v => v && v !== correct));
+/*
+  Build a multiple choice question from a correct value plus wrong ones.
+
+  wrongPool is normally shuffled here, since most generators hand over the
+  whole catalog and any three wrong values will do. Pass keepOrder when the
+  caller has already ranked the pool by preference — see nearestNames —
+  and the first three usable entries should win.
+*/
+function choiceQuestion(topic, prompt, correct, wrongPool, why, tag, keepOrder) {
+  const candidates = wrongPool.filter(v => v && v !== correct);
+  const wrongs = keepOrder ? candidates : shuffle(candidates);
   const unique = [];
   for (const w of wrongs) {
     if (!unique.includes(w)) unique.push(w);
@@ -73,6 +81,36 @@ function choiceQuestion(topic, prompt, correct, wrongPool, why, tag) {
   };
 }
 
+/*
+  Names to use as wrong answers on a Photo ID question, ranked by how
+  close each piece is to the one in the photo: same category first
+  ("Lounge chair"), then anything in the same browse group ("Chairs &
+  Seating"), then the rest of the catalog.
+
+  This matters because a photo answers itself when the options are not
+  comparable. Show an armchair beside a floor lamp, a dining table and a
+  bookcase and there is nothing to know: the silhouette gives it away.
+  Show it beside three other lounge chairs and the associate has to
+  actually recognise the piece, which is the point of the drill.
+
+  Ranked rather than filtered because 21 of the 34 categories hold fewer
+  than four pieces with photos, so a strict same-category rule would drop
+  most Photo ID questions entirely. Each tier is shuffled internally, so
+  the nearest distractors are always used first while which ones appear
+  still varies between runs.
+*/
+function nearestNames(product) {
+  const others = PRODUCTS.filter(p => p.id !== product.id);
+  const group = groupIdOf(product);
+  const sameCategory = others.filter(p => p.category === product.category);
+  const sameGroup = others.filter(p => p.category !== product.category &&
+                                       groupIdOf(p) === group);
+  const rest = others.filter(p => groupIdOf(p) !== group);
+  return shuffle(sameCategory)
+    .concat(shuffle(sameGroup), shuffle(rest))
+    .map(p => p.name);
+}
+
 /* ---------- generators, one per question flavor ---------- */
 
 const GENERATORS = [
@@ -80,14 +118,14 @@ const GENERATORS = [
   /* Photo ID: show the piece, name it. */
   function photoToName(product) {
     if (!product.photo) return null;
-    const pool = PRODUCTS.map(p => p.name);
     const q = choiceQuestion(
       'photo',
       'What is this piece called?',
       product.name,
-      pool,
+      nearestNames(product),
       'That\'s the ' + product.name + '.',
-      product.id
+      product.id,
+      true
     );
     if (q) q.image = product.photo;
     return q;

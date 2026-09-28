@@ -70,7 +70,13 @@ narrowed to just one or two question types (e.g. only Photo ID, or only Style
 | True or false | Two large tap targets |
 | Introduced year | A slider; within five years still counts |
 | Style / material match | The design movement or material behind a piece |
-| Photo ID | A real DWR product photo; pick the matching name from four options |
+| Photo ID | A real DWR product photo; pick the matching name from four options, all of comparable pieces |
+
+Photo ID draws its three wrong answers from the closest pieces in the
+catalog — same category first, then the same browse group — so a chair is
+offered against other chairs rather than against a lamp and two tables.
+Without that the silhouette alone gives the answer away; see `nearestNames`
+in `js/questions.js`.
 
 ## Product photos
 
