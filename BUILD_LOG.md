@@ -10,6 +10,45 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-28 — Taken offline, then restored
+
+The site was pulled down on 12 September and brought back on the 28th.
+Recorded here because the history should show the gap rather than leave
+two weeks unexplained.
+
+- **Offline.** GitHub Pages serves this repository's `main` root directly,
+  and there is no Pages API available from the build environment, so the
+  site was taken down by removing what Pages serves — `index.html`, `css/`
+  and `js/` — and adding `.nojekyll` so the remaining Markdown was not
+  rendered as a page in its place. Nothing was deleted: the full tree
+  stayed on `claude/site-changes-build-log-m4xymb` and in `main`'s history
+  at `72d95f4`.
+- **Restored** at `686f3a5`, byte-identical to `72d95f4`, verified by diff.
+
+Worth knowing for next time: taking the served files away stops the app
+running but does not make the source private, and the two are separate
+switches. Repository visibility and whether Pages is provisioned are both
+console settings, neither reachable from here.
+
+### Photo coverage audit
+
+All 118 photo URLs were re-checked on 28 September. Every one returns 200
+— no link rot since they were added. Coverage stands at 118 of 121
+products.
+
+The three without a photo (`bestlite-bl3`, `tolix-a-chair`, `min-sofa`)
+are unchanged and are not a sourcing failure: no confident match exists on
+dwr.com, which is itself a signal they may not be current DWR SKUs. The
+rule stands that a photo URL is never guessed at, since a wrong image in a
+Photo ID question teaches the wrong thing. Whether those three belong in
+the catalog at all is the open question, not whether they can have photos.
+
+Because the photos are hotlinked rather than stored, they depend on
+Herman Miller's CDN keeping those URLs alive. All green today; it is a
+dependency, not a guarantee.
+
+---
+
 ## 2026-09-12 — Manager sign-in removed; everyone is just a user
 
 Progress is stored per device. A password guarding a device-local roster
