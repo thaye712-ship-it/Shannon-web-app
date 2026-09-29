@@ -60,7 +60,9 @@ with the rest of that profile's progress, so it persists between sessions.
 
 Both Sprint and Deep Dive open on a topic picker first, so a session can be
 narrowed to just one or two question types (e.g. only Photo ID, or only Style
-& Type) instead of the full mix.
+& Type) instead of the full mix. **Select all** and **Select none** pills sit
+above the list; "none" is a starting point for picking one or two, not a dead
+end, since Continue treats an empty selection as everything.
 
 ## Question formats
 
@@ -71,6 +73,13 @@ narrowed to just one or two question types (e.g. only Photo ID, or only Style
 | Introduced year | A slider; within five years still counts |
 | Style / material match | The design movement or material behind a piece |
 | Photo ID | A real DWR product photo; pick the matching name from four options, all of comparable pieces |
+
+Every question about a product shows that product's photo, not just Photo
+ID — seeing the piece while answering about its designer, year or materials
+is how the name and the object get wired together. The "which came first"
+question shows both pieces, in the same order as the options. Product
+know-how questions are vocabulary rather than objects, so they have no
+photo to show.
 
 Photo ID draws its three wrong answers from the closest pieces in the
 catalog — same category first, then the same browse group — so a chair is
@@ -103,6 +112,15 @@ Groups are derived from each product's `category` via the `GROUPS` table at
 the bottom of `js/data.js`. `category` stays granular because the quiz asks
 about it directly; the groups are only for browsing. A category that isn't
 listed in any group falls into an "Other" bucket rather than disappearing.
+
+## Text size
+
+The **A** control in the top bar cycles Normal / Large / Larger. It sets
+`--tscale`, which every `font-size` in the stylesheet is multiplied by, so
+one number resizes the whole app; padding is deliberately left alone, so
+buttons grow with their text rather than ballooning. The choice is stored
+per device rather than per profile — someone who needs larger type needs it
+on the profile picker too, before anyone has signed in.
 
 ## Profiles
 

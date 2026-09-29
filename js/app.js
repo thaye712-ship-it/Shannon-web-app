@@ -631,6 +631,13 @@
     });
   }
 
+  /* Select all / none. Continue treats an empty selection as everything,
+     so "none" is a starting point for picking one or two, not a dead end. */
+  function setAllTopics(on) {
+    $$('[data-topic-picks] input').forEach(cb => { cb.checked = on; });
+    sfx.tap();
+  }
+
   function selectedTopics() {
     const ids = $$('[data-topic-picks] input:checked').map(b => b.value);
     return ids.length ? ids : Object.keys(TOPICS);
@@ -945,13 +952,30 @@
     $('[data-q-prompt]').textContent = q.prompt;
     $('[data-feedback]').hidden = true;
 
+    /*
+      Photos are shown on every question that has one, not just Photo ID,
+      so the piece is on screen while the associate answers about its
+      designer, year or materials. The comparison question carries two.
+
+      Photos are hotlinked from the manufacturer's CDN, so a URL can die
+      without warning. A failed image hides itself rather than leaving a
+      broken-image icon in the middle of the question.
+    */
     const photoBox = $('[data-q-photo]');
-    if (q.image) {
-      photoBox.hidden = false;
-      $('[data-q-photo-img]').src = q.image;
-    } else {
-      photoBox.hidden = true;
-    }
+    const shots = q.images || (q.image ? [q.image] : []);
+    photoBox.innerHTML = '';
+    photoBox.hidden = shots.length === 0;
+    photoBox.className = 'q-photo' + (shots.length > 1 ? ' pair' : '');
+    shots.forEach(src => {
+      const img = document.createElement('img');
+      img.alt = '';
+      img.addEventListener('error', () => {
+        img.remove();
+        if (!photoBox.querySelector('img')) photoBox.hidden = true;
+      });
+      img.src = src;
+      photoBox.appendChild(img);
+    });
 
     const combo = $('[data-combo]');
     if (session.combo >= 2) {
@@ -1347,6 +1371,55 @@
     soundBtn.setAttribute('aria-pressed', String(store.sound));
   }
 
+  /* ---------------- text size ---------------- */
+
+  /*
+    Kept on the device rather than in a profile. Someone who needs larger
+    type needs it on the profile picker too, before anyone is signed in,
+    and a shared showroom iPad in a bright room is a display setting more
+    than a personal one.
+
+    The scale drives --tscale, which every font-size in the stylesheet is
+    multiplied by, so one number resizes the whole app. Padding is left
+    alone on purpose: buttons grow with their text instead of ballooning.
+  */
+  const TEXT_KEY = 'provenance.textsize.v1';
+  const TEXT_STEPS = [
+    { id: 'normal', scale: 1,    glyph: 'A',  label: 'Normal text' },
+    { id: 'large',  scale: 1.15, glyph: 'A+', label: 'Large text' },
+    { id: 'larger', scale: 1.3,  glyph: 'A++', label: 'Larger text' }
+  ];
+
+  function readTextStep() {
+    let id;
+    try { id = localStorage.getItem(TEXT_KEY); } catch (e) { id = null; }
+    const found = TEXT_STEPS.findIndex(t => t.id === id);
+    return found === -1 ? 0 : found;
+  }
+
+  let textStep = readTextStep();
+
+  function applyTextSize() {
+    const step = TEXT_STEPS[textStep];
+    document.documentElement.style.setProperty('--tscale', step.scale);
+    const btn = $('#textBtn');
+    if (btn) {
+      $('[data-text-icon]').textContent = step.glyph;
+      btn.title = step.label + ' — tap to change';
+      btn.setAttribute('aria-label', step.label);
+    }
+  }
+
+  const textBtn = $('#textBtn');
+  if (textBtn) {
+    textBtn.addEventListener('click', () => {
+      textStep = (textStep + 1) % TEXT_STEPS.length;
+      try { localStorage.setItem(TEXT_KEY, TEXT_STEPS[textStep].id); } catch (e) { /* private mode */ }
+      applyTextSize();
+      sfx.tap();
+    });
+  }
+
   /* keyboard: 1-4 to answer, enter to advance */
   document.addEventListener('keydown', e => {
     if (!$('#screen-quiz').classList.contains('is-active')) return;
@@ -1364,6 +1437,10 @@
 
   /* ---------------- boot ---------------- */
 
+  $('[data-topics-all]').addEventListener('click', () => setAllTopics(true));
+  $('[data-topics-none]').addEventListener('click', () => setAllTopics(false));
+
+  applyTextSize();
   migrateLegacy();
   dropSeededManager();
 

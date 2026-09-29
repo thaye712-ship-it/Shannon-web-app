@@ -10,6 +10,51 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-29 — Photos on every question, text size, topic pills
+
+- **Every product question now shows the product.** Photos were limited to
+  Photo ID; they now appear on history, designer, materials, year and style
+  questions too, so the piece is on screen while the associate answers about
+  it. Set in `buildDeck` rather than in each generator, so it holds for any
+  generator added later.
+- **The "which came first" question shows both pieces**, in the same order
+  as the options. A single photo there would have read as "this piece" and
+  pointed at the wrong one.
+- **A dead photo URL now hides itself** instead of leaving a broken-image
+  icon mid-question. Worth having now that photos appear on most questions:
+  they are hotlinked from the manufacturer's CDN and can disappear without
+  notice.
+- **Text size control** (the **A** in the top bar): Normal / Large / Larger,
+  stored per device. All 102 `font-size` declarations were mechanically
+  rewritten to `calc(<size> * var(--tscale))`, so one variable resizes
+  everything; padding is untouched so buttons grow with their text.
+- **Select all / Select none pills** on the topic picker.
+
+### A pre-existing bug this surfaced
+
+Checking for overflow at larger text showed the top bar **already ran wider
+than a phone screen**: 158px of horizontal overflow at 400px wide on the
+live build, before any of today's changes. Two causes, both now fixed:
+
+- The bar never wrapped, so its controls ran off the edge. Below 600px they
+  now drop to their own row and wrap within it.
+- `.m-text` in the mastery cards had no `min-width:0`, so a long topic name
+  ("Designers & Makers") refused to shrink and widened the page.
+
+Verified at 320, 360, 400, 480, 768 and 1024px across all three text sizes:
+**zero horizontal overflow in every combination, with every top-bar control
+on screen and tappable.** Sprint, Deep Dive, browsing, product detail and
+flashcards all still run with no JavaScript errors.
+
+### What still has no photo
+
+Product know-how questions cover vocabulary — "eight-way hand-tied",
+"cane webbing" — not objects, so there is nothing to show; they are about a
+third of a full-mix deck. Beyond those, coverage is 98.3%, the remainder
+being the three products that have no photo at all.
+
+---
+
 ## 2026-09-28 — Photo ID now offers comparable pieces
 
 Photo ID was drawing its three wrong answers from the whole catalog, so a

@@ -37,6 +37,9 @@
       <button class="stat tappable" id="soundBtn" title="Sound on or off" aria-pressed="true">
         <span class="stat-icon" data-sound-icon>🔊</span>
       </button>
+      <button class="stat tappable textsize" id="textBtn" title="Text size">
+        <span class="stat-icon" data-text-icon>A</span>
+      </button>
       <div class="usermenu">
         <button class="stat tappable" id="userBtn" title="Switch profile"
                 aria-haspopup="true" aria-expanded="false">
@@ -248,6 +251,10 @@
     <button class="back" data-back>← Back</button>
     <h1 class="screen-title">What should this cover?</h1>
     <p class="screen-sub">Pick as many as you like. Leave everything on for a full mix, or narrow it down to drill one thing.</p>
+    <div class="pick-actions">
+      <button class="pill" data-topics-all>Select all</button>
+      <button class="pill" data-topics-none>Select none</button>
+    </div>
     <div class="topic-picks" data-topic-picks></div>
     <button class="btn primary wide" data-topics-continue>Continue <span class="arrow">→</span></button>
   </section>
@@ -342,7 +349,7 @@
     </div>
 
     <div class="q-topic" data-q-topic>History &amp; Story</div>
-    <div class="q-photo" data-q-photo hidden><img data-q-photo-img alt=""></div>
+    <div class="q-photo" data-q-photo hidden></div>
     <h2 class="q-prompt" data-q-prompt></h2>
     <div class="answers" data-answers></div>
 

@@ -274,12 +274,22 @@ const GENERATORS = [
     const older = product.year < other.year ? product : other;
     const younger = older === product ? other : product;
     const options = shuffle([product.name, other.name]);
+    /*
+      This question is about two pieces, so it carries two photos in the
+      same order as the options. A single photo here would read as "this
+      piece" and point at the wrong thing.
+    */
+    const byName = {};
+    byName[product.name] = product.photo;
+    byName[other.name] = other.photo;
+    const images = options.map(n => byName[n]).filter(Boolean);
     return {
       type: 'choice',
       topic: 'history',
       tag: product.id,
       prompt: 'Which of these two designs came first?',
       options,
+      images: images.length === 2 ? images : null,
       answer: options.indexOf(older.name),
       why: 'The ' + older.name + ' arrived in ' + older.year + ', ' +
            (younger.year - older.year) + ' years before the ' + younger.name + '.'
@@ -332,8 +342,20 @@ function buildDeck(count, topics) {
       q = knowHowQuestion(knowHowPool[knowHowIndex++]);
     } else {
       const gen = pick(productGens);
-      q = gen(pick(PRODUCTS));
+      const subject = pick(PRODUCTS);
+      q = gen(subject);
       if (q && !allowed.includes(q.topic)) q = null;
+      /*
+        Every question about a product shows that product, not just Photo
+        ID. Seeing the piece while answering about its designer, year or
+        materials is how the name and the object get wired together, which
+        is the thing an associate actually needs on the floor.
+
+        Set here rather than in each generator so it holds for any
+        generator added later. Generators that set their own image or
+        images (Photo ID, and the two-piece comparison) keep theirs.
+      */
+      if (q && !q.image && !q.images && subject.photo) q.image = subject.photo;
     }
 
     if (!q) continue;
