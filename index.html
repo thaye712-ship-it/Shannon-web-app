@@ -26,6 +26,7 @@
   </button>
   <div class="topbar-right">
     <button class="navlink" id="galleryBtn">Products</button>
+    <button class="navlink" id="designersBtn">Designers</button>
     <button class="navlink" id="aboutBtn">About</button>
     <div class="topstats">
       <div class="stat" id="streakStat" title="Day streak">
@@ -144,6 +145,17 @@
       </span>
       <span class="mode-tags"><i>Photo front</i><i>Self-paced</i><i>Track what you know</i></span>
       <span class="mode-go">Start browsing <span class="arrow">→</span></span>
+    </button>
+    <button class="mode-card mode-designers" data-open-designers>
+      <span class="mode-emoji">✏️</span>
+      <span class="mode-time">Read and watch</span>
+      <span class="mode-name">The Designers</span>
+      <span class="mode-desc">
+        The people behind every piece: who they were, what they believed, and
+        short films from the makers and museums that know them best.
+      </span>
+      <span class="mode-tags"><i>Profiles</i><i>Their pieces</i><i>Videos</i></span>
+      <span class="mode-go">Meet the designers <span class="arrow">→</span></span>
     </button>
 
     <h2 class="section-label">Your mastery</h2>
@@ -291,9 +303,30 @@
     <div class="gallery-grid" data-gallery></div>
   </section>
 
+  <!-- ============ DESIGNERS ============ -->
+  <section class="screen" id="screen-designers">
+    <button class="back" data-back>← Back</button>
+    <h1 class="screen-title">The designers</h1>
+    <p class="screen-sub">
+      Knowing who made a piece, and why, is what turns "it's a nice chair" into
+      a real conversation. Tap anyone to read their story, see their pieces and
+      watch films about their work.
+    </p>
+    <input class="designer-search" data-designer-search type="search"
+           placeholder="Search designers" aria-label="Search designers">
+    <p class="group-count" data-designer-count></p>
+    <div class="designer-grid" data-designer-grid></div>
+  </section>
+
+  <!-- ============ DESIGNER DETAIL ============ -->
+  <section class="screen" id="screen-designer">
+    <button class="back" data-back-designers>← All designers</button>
+    <div class="designer-detail" data-designer-detail></div>
+  </section>
+
   <!-- ============ PRODUCT DETAIL ============ -->
   <section class="screen" id="screen-product">
-    <button class="back" data-back-gallery>← Back to browsing</button>
+    <button class="back" data-back-gallery data-back-label>← Back to browsing</button>
     <div class="product-detail" data-product-detail></div>
   </section>
 
@@ -397,6 +430,7 @@
 
 <script src="js/firebase-config.js"></script>
 <script src="js/data.js"></script>
+<script src="js/designers.js"></script>
 <script src="js/questions.js"></script>
 <script src="js/app.js"></script>
 <!-- Loads after the app and stays inert unless firebase-config.js opts in. -->

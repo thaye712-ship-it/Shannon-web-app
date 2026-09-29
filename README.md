@@ -113,6 +113,43 @@ the bottom of `js/data.js`. `category` stays granular because the quiz asks
 about it directly; the groups are only for browsing. A category that isn't
 listed in any group falls into an "Other" bucket rather than disappearing.
 
+## Designers
+
+The **Designers** screen (top bar, or the card on the home screen) has a
+profile for each of the 63 people, duos and studios behind the catalog: who
+they were, three talking points worth saying on the floor, every piece of
+theirs DWR sells, and short films about their work. Product pages link back
+to their designers, and a shared piece like the LC4 links to all three of
+its designers. Back buttons return to wherever you came from.
+
+Profiles live in `js/designers.js` and link to products through `credits`,
+the exact `designer` strings used in `data.js`. Dates and origins come from
+each designer's Wikipedia article or, where there isn't one, their own site
+or manufacturer page (named in `source`); where no reliable date exists the
+field is blank rather than guessed. Every number in every bio was checked
+against that source material.
+
+### Videos
+
+54 videos across 37 designers, from official manufacturers (Herman Miller,
+Vitra, Fritz Hansen, Carl Hansen & Søn, Kartell, Ligne Roset, Emeco,
+Fredericia, DWR), museums and archives (Eames Office, Noguchi Museum, Vitra
+Design Museum, Cranbrook, The Henry Ford, Barbican, Duke Libraries), press
+(WSJ, PBS NewsHour, Surface, TED) and design-education channels. Buttons
+open YouTube in a new tab; nothing is embedded.
+
+**Never add a video id from a search result without checking it.** While
+building this list, three ids from search results did not exist and two
+were mislabelled (a "design history" video that was a restoration job, and
+a DIY replica build). Check each id before adding it:
+
+```sh
+curl -s "https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=VIDEO_ID"
+```
+
+A 404 means the video doesn't exist. Otherwise use the `title` and
+`author_name` it returns, not the search snippet's.
+
 ## Text size
 
 The **A** control in the top bar cycles Normal / Large / Larger. It sets
@@ -147,6 +184,7 @@ this to a real backend involves; the storage layer is isolated behind a
 | `index.html` | Screen shells for home, setup, learn, quiz and results |
 | `css/style.css` | All styling, animation and the dark mode palette |
 | `js/data.js` | **The catalog.** Products and product know-how entries |
+| `js/designers.js` | Designer profiles and the verified video list |
 | `js/questions.js` | Turns catalog records into questions and chapters |
 | `js/app.js` | Screens, scoring, timers, progress, confetti, sound |
 

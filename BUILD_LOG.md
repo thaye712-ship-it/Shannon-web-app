@@ -10,6 +10,49 @@ step). A change is live within a few minutes of landing on `main`.
 
 ---
 
+## 2026-09-29 — Designers tab, with verified videos
+
+- **63 designer profiles**, one for every person, duo and studio credited in
+  the catalog — every product maps to at least one profile, and no profile
+  is empty. Each has dates and origin, a short bio, three talking points
+  "worth saying on the floor", all of their pieces DWR sells, and a source
+  link.
+- **Sourcing.** Dates come from Wikipedia (fetched through its API) or, for
+  the 15 designers without an article, from their own site or manufacturer
+  page, confirmed by web search. Where no reliable date exists — Russell
+  Woodard, Sean Yoo, Niels Bendtsen, Nathan Yong — it is left blank. Bios
+  were written only from that material and the catalog's own product
+  entries, and an automated check confirmed every number in every bio
+  traces back to it.
+- **Two traps caught along the way.** Wikipedia's "Fritz Haller" is an
+  American slalom canoeist, not the Swiss architect behind USM Haller, and
+  "Tom Dixon" resolved to a disambiguation page. Neither was used.
+- **54 YouTube videos across 37 designers**, 34 also linked to specific
+  products. Every id was confirmed through YouTube's oEmbed endpoint, and the
+  displayed title and channel are what YouTube returned. This mattered:
+  three ids from search results did not exist, one listed as Thomas
+  Heatherwick discussing the Spun Chair was a different channel's review,
+  one listed as a Cherner Chair design video was a restoration job, and one
+  "Making the Noguchi coffee table" was a DIY replica. Only manufacturers,
+  museums and archives, established press and design-education channels
+  made the cut; foreign-language videos were left out.
+- **Navigation both ways.** Product pages link to their designers (all three
+  for the LC4); a designer's pieces open their product pages; back buttons
+  return to wherever you came from and say where that is.
+- **Catalog correction.** The Anglepoise 1227 history said Carwardine's
+  employer "went bankrupt in 1929"; Anglepoise's own account is that he
+  left Horstmann in 1924 to start his own business. Corrected.
+- **Top bar now wraps at any width.** The extra Designers link pushed the
+  profile button off-screen on tablets at the largest text size, because the
+  bar only wrapped below 600px. Verified clean across 6 widths × 3 text
+  sizes × 2 screens.
+
+Open question, left as is: the Pollock Executive Chair is dated 1963 in the
+catalog while Wikipedia says it was introduced in 1965. That is plausibly
+design year versus launch year rather than an error.
+
+---
+
 ## 2026-09-29 — Photos on every question, text size, topic pills
 
 - **Every product question now shows the product.** Photos were limited to

@@ -2133,8 +2133,8 @@ const CATALOG = {
       materials: ['Spun aluminum shade', 'Aluminum arms', 'Cast-iron base'],
       knownFor: 'borrowing car suspension spring theory to hold a lamp in any position',
       history:
-        'Carwardine spent years engineering vehicle suspension systems before his employer went bankrupt ' +
-        'in 1929. Working from a home workshop in Bath, he applied spring-and-lever thinking to lighting, ' +
+        'Carwardine was chief designer at the Horstmann car company, engineering vehicle suspension, until ' +
+        'he left in 1924 to start his own business. Working from a home workshop in Bath, he applied spring-and-lever thinking to lighting, ' +
         'and a new kind of spring let him build an arm that moves freely yet holds position. It carries a ' +
         'lifetime warranty.',
       facts: [

@@ -83,7 +83,11 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
   animation:pop-in .5s cubic-bezier(.34,1.56,.64,1) both;
 }
 .wordmark{font-family:var(--display);font-weight:800;font-size:calc(19px * var(--tscale));letter-spacing:-.02em}
-.topbar-right{display:flex;align-items:center;gap:14px}
+/* Wraps whenever it runs out of room, at any width: a fixed breakpoint
+   missed tablets at the largest text size once the Designers link was
+   added. With room to spare it stays on one line. */
+.topbar{flex-wrap:wrap}
+.topbar-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
 .navlink{font-weight:700;font-size:calc(13.5px * var(--tscale));color:var(--ink-soft);padding:6px 4px;transition:color .2s}
 .navlink:hover{color:var(--grape)}
 @media (prefers-color-scheme:dark){.navlink:hover{color:#C9B4FF}}
@@ -677,3 +681,65 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* ---------- designers ---------- */
+.designer-search{
+  width:100%;margin:0 0 12px;padding:12px 16px;border-radius:999px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);
+  font:inherit;font-size:calc(15px * var(--tscale))
+}
+.designer-search:focus{outline:2px solid var(--grape);outline-offset:1px}
+.designer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.designer-card{
+  text-align:left;padding:0;font-family:inherit;color:inherit;cursor:pointer;
+  border-radius:var(--r-md);overflow:hidden;background:var(--card);
+  border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s;
+  display:flex;flex-direction:column
+}
+.designer-card:hover{transform:translateY(-3px)}
+.designer-card-photo{width:100%;aspect-ratio:4/3;object-fit:contain;background:#fff;display:block}
+.designer-card-info{padding:10px 12px 12px;display:grid;gap:3px;min-width:0}
+.designer-card-info b{font-size:calc(14px * var(--tscale));line-height:1.25;overflow-wrap:anywhere}
+.designer-card-info span{font-size:calc(11.5px * var(--tscale));color:var(--ink-soft)}
+.designer-card-info .designer-card-meta{color:var(--grape);font-weight:700}
+.designer-kicker{
+  margin:8px 0 4px;font-size:calc(12.5px * var(--tscale));font-weight:700;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--grape)
+}
+.designer-source{margin:26px 0 0;font-size:calc(13px * var(--tscale));color:var(--ink-soft)}
+.designer-source a{color:var(--grape);font-weight:700}
+
+/* Designer links on a product page. */
+.designer-links{display:grid;gap:10px}
+.designer-link{
+  display:grid;gap:3px;text-align:left;padding:14px 16px;cursor:pointer;
+  font-family:inherit;color:inherit;border-radius:var(--r-md);
+  background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)
+}
+.designer-link b{font-family:var(--display);font-size:calc(17px * var(--tscale))}
+.designer-link span{font-size:calc(13px * var(--tscale));color:var(--ink-soft)}
+.designer-link .designer-link-go{color:var(--grape);font-weight:700}
+.designer-link:hover{border-color:var(--grape)}
+
+/* Video buttons: open YouTube in a new tab. */
+.video-list{display:grid;gap:10px}
+.video-btn{
+  display:flex;gap:12px;align-items:center;padding:8px;text-decoration:none;color:inherit;
+  border-radius:var(--r-md);background:var(--card);border:1px solid var(--line);
+  box-shadow:var(--shadow);transition:border-color .15s,transform .15s;min-width:0
+}
+.video-btn:hover{border-color:var(--grape);transform:translateY(-2px)}
+.video-thumb{
+  position:relative;flex:0 0 132px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;
+  background:linear-gradient(135deg,var(--grape),var(--bubble))
+}
+.video-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.video-play{
+  position:absolute;inset:0;margin:auto;width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;background:rgba(0,0,0,.62);color:#fff;
+  font-size:calc(13px * var(--tscale));padding-left:3px
+}
+.video-text{display:grid;gap:4px;min-width:0}
+.video-text b{font-size:calc(14px * var(--tscale));line-height:1.3;overflow-wrap:anywhere}
+.video-text span{font-size:calc(12px * var(--tscale));color:var(--ink-soft)}
+@media (max-width:420px){.video-thumb{flex-basis:104px}}

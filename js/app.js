@@ -702,11 +702,26 @@
       card.appendChild(info);
       card.addEventListener('click', () => {
         sfx.tap();
-        renderProduct(p);
-        show('product');
+        openProduct(p, null);
       });
       wrap.appendChild(card);
     });
+  }
+
+  /*
+    Where the product page's back button goes. A piece opened from a
+    designer's profile should return to that designer, not dump the
+    associate back at the top of the catalog.
+  */
+  let productReturn = null;
+
+  function openProduct(p, fromDesigner) {
+    productReturn = fromDesigner;
+    const back = $('[data-back-label]');
+    back.textContent = fromDesigner ? '← Back to ' + fromDesigner.name : '← Back to browsing';
+    renderProduct(p);
+    show('product');
+    window.scrollTo(0, 0);
   }
 
   function renderProduct(p) {
@@ -742,6 +757,181 @@
     const mats = el('div', 'chips');
     p.materials.forEach(m => mats.appendChild(el('span', 'chip', m)));
     wrap.appendChild(mats);
+
+    const vids = videosForProduct(p.id);
+    if (vids.length) {
+      wrap.appendChild(el('h2', 'detail-label', 'Watch'));
+      wrap.appendChild(videoList(vids));
+    }
+
+    const makers = designersOf(p);
+    if (makers.length) {
+      wrap.appendChild(el('h2', 'detail-label',
+        makers.length > 1 ? 'About the designers' : 'About the designer'));
+      const links = el('div', 'designer-links');
+      makers.forEach(d => {
+        const b = el('button', 'designer-link');
+        b.appendChild(el('b', null, d.name));
+        b.appendChild(el('span', null, d.role));
+        b.appendChild(el('span', 'designer-link-go', 'Read their story →'));
+        b.addEventListener('click', () => { sfx.tap(); openDesigner(d, p); });
+        links.appendChild(b);
+      });
+      wrap.appendChild(links);
+    }
+  }
+
+  /* ---------------- designers ---------------- */
+
+  /*
+    Video buttons open YouTube in a new tab rather than embedding a player:
+    no third-party player loads until someone asks for it, and a video
+    taken down later costs one dead link rather than a broken page. Every
+    id in VIDEOS was checked against YouTube's oEmbed endpoint when added.
+  */
+  function videoList(vids) {
+    const list = el('div', 'video-list');
+    vids.forEach(v => {
+      const a = el('a', 'video-btn');
+      a.href = youtubeUrl(v);
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.setAttribute('aria-label', 'Watch on YouTube: ' + v.title + ', from ' + v.channel);
+
+      const thumb = el('span', 'video-thumb');
+      const img = document.createElement('img');
+      img.alt = '';
+      img.loading = 'lazy';
+      img.addEventListener('error', () => img.remove());
+      img.src = 'https://i.ytimg.com/vi/' + v.yt + '/mqdefault.jpg';
+      thumb.appendChild(img);
+      thumb.appendChild(el('span', 'video-play', '▶'));
+      a.appendChild(thumb);
+
+      const text = el('span', 'video-text');
+      text.appendChild(el('b', null, v.title));
+      text.appendChild(el('span', null, v.channel + '  ·  YouTube ↗'));
+      a.appendChild(text);
+      a.addEventListener('click', () => sfx.tap());
+      list.appendChild(a);
+    });
+    return list;
+  }
+
+  function designerThumb(d) {
+    const withPhoto = productsBy(d).find(p => p.photo);
+    return withPhoto ? withPhoto.photo : null;
+  }
+
+  function renderDesigners() {
+    const q = ($('[data-designer-search]').value || '').trim().toLowerCase();
+    const list = DESIGNERS
+      .filter(d => !q ||
+        d.name.toLowerCase().includes(q) ||
+        d.origin.toLowerCase().includes(q) ||
+        productsBy(d).some(p => p.name.toLowerCase().includes(q)))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    $('[data-designer-count]').textContent =
+      list.length + (list.length === 1 ? ' designer' : ' designers');
+
+    const wrap = $('[data-designer-grid]');
+    wrap.innerHTML = '';
+    list.forEach(d => {
+      const card = el('button', 'designer-card');
+      const src = designerThumb(d);
+      if (src) {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        img.loading = 'lazy';
+        img.className = 'designer-card-photo';
+        card.appendChild(img);
+      } else {
+        card.appendChild(el('div', 'gallery-noimg', '✏️'));
+      }
+      const info = el('div', 'designer-card-info');
+      info.appendChild(el('b', null, d.name));
+      info.appendChild(el('span', null, [d.years, d.origin].filter(Boolean).join('  ·  ')));
+      const n = productsBy(d).length, v = videosForDesigner(d.id).length;
+      info.appendChild(el('span', 'designer-card-meta',
+        n + (n === 1 ? ' piece' : ' pieces') + (v ? '  ·  ▶ ' + v + (v === 1 ? ' video' : ' videos') : '')));
+      card.appendChild(info);
+      card.addEventListener('click', () => { sfx.tap(); openDesigner(d, null); });
+      wrap.appendChild(card);
+    });
+  }
+
+  /* Same idea as productReturn: a designer opened from a product page
+     returns to that product. */
+  let designerReturn = null;
+
+  function openDesigner(d, fromProduct) {
+    designerReturn = fromProduct;
+    $('[data-back-designers]').textContent =
+      fromProduct ? '← Back to ' + fromProduct.name : '← All designers';
+    renderDesigner(d);
+    show('designer');
+    window.scrollTo(0, 0);
+  }
+
+  function renderDesigner(d) {
+    const wrap = $('[data-designer-detail]');
+    wrap.innerHTML = '';
+
+    wrap.appendChild(el('p', 'designer-kicker', d.role));
+    wrap.appendChild(el('h1', 'detail-title', d.name));
+    wrap.appendChild(el('p', 'detail-sub', [d.years, d.origin].filter(Boolean).join('  ·  ')));
+    wrap.appendChild(el('p', 'detail-body', d.bio));
+
+    if (d.facts && d.facts.length) {
+      wrap.appendChild(el('h2', 'detail-label', 'Worth saying on the floor'));
+      const ul = el('ul', 'about-list');
+      d.facts.forEach(f => ul.appendChild(el('li', null, f)));
+      wrap.appendChild(ul);
+    }
+
+    const vids = videosForDesigner(d.id);
+    if (vids.length) {
+      wrap.appendChild(el('h2', 'detail-label', 'Watch'));
+      wrap.appendChild(videoList(vids));
+    }
+
+    const pieces = productsBy(d).sort((a, b) => a.name.localeCompare(b.name));
+    wrap.appendChild(el('h2', 'detail-label',
+      'Their pieces at DWR (' + pieces.length + ')'));
+    const grid = el('div', 'gallery-grid');
+    pieces.forEach(p => {
+      const card = el('button', 'gallery-card');
+      if (p.photo) {
+        const img = document.createElement('img');
+        img.src = p.photo;
+        img.alt = p.name;
+        img.loading = 'lazy';
+        img.className = 'gallery-photo';
+        card.appendChild(img);
+      } else {
+        card.appendChild(el('div', 'gallery-noimg', '🪑'));
+      }
+      const info = el('div', 'gallery-info');
+      info.appendChild(el('b', null, p.name));
+      info.appendChild(el('span', null, p.manufacturer + (p.year == null ? '' : ' · ' + p.year)));
+      card.appendChild(info);
+      card.addEventListener('click', () => { sfx.tap(); openProduct(p, d); });
+      grid.appendChild(card);
+    });
+    wrap.appendChild(grid);
+
+    if (d.source && d.source.url) {
+      const src = el('p', 'designer-source');
+      src.appendChild(document.createTextNode('Source: '));
+      const a = el('a', null, d.source.label + ' ↗');
+      a.href = d.source.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      src.appendChild(a);
+      wrap.appendChild(src);
+    }
   }
 
   /* ---------------- flashcards ---------------- */
@@ -1264,7 +1454,23 @@
     show('gallery');
   }
 
-  $('[data-back-gallery]').addEventListener('click', () => show('gallery'));
+  $('[data-back-gallery]').addEventListener('click', () => {
+    if (productReturn) { openDesigner(productReturn, null); return; }
+    show('gallery');
+  });
+
+  function openDesigners() {
+    renderDesigners();
+    show('designers');
+    window.scrollTo(0, 0);
+  }
+  $('#designersBtn').addEventListener('click', () => { sfx.tap(); openDesigners(); });
+  $('[data-open-designers]').addEventListener('click', () => { sfx.tap(); openDesigners(); });
+  $('[data-designer-search]').addEventListener('input', renderDesigners);
+  $('[data-back-designers]').addEventListener('click', () => {
+    if (designerReturn) { openProduct(designerReturn, null); return; }
+    openDesigners();
+  });
 
   $('#userBtn').addEventListener('click', e => {
     e.stopPropagation();
